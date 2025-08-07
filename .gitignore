@@ -2,3 +2,4 @@
 /bucket/**
 /dist/**
 process.tsv
+output.tsv
