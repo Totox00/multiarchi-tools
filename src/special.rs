@@ -369,16 +369,16 @@ fn to_string(yaml: &Yaml) -> String {
                 })
                 .collect();
 
-            if relevant_entries.len() > 1 {
-                format!("{{{}}}", relevant_entries.join(", "))
+            if relevant_entries.is_empty() {
+                format!("{{{}}}", linked_hash_map.keys().map(to_string).collect::<Vec<_>>().join(", "))
+            } else if relevant_entries.len() == 1 {
+                if let Some((value, _)) = relevant_entries[0].split_once(':') {
+                    String::from(value)
+                } else {
+                    String::from("none")
+                }
             } else {
-                to_string(
-                    linked_hash_map
-                        .iter()
-                        .find(|(_, weight)| as_i64(weight).is_some_and(|weight| weight > 0))
-                        .expect("Weighted selection contains no entries with weight > 0")
-                        .0,
-                )
+                format!("{{{}}}", relevant_entries.join(", "))
             }
         }
 
