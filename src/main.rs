@@ -8,7 +8,6 @@ mod valid_games;
 mod write;
 
 use std::{
-    collections::HashMap,
     fmt::Write as FmtWrite,
     fs::{read_to_string, File},
     io::Write,
@@ -56,13 +55,13 @@ fn main() {
 }
 
 fn process_file(name: &str, id: &str) -> (Vec<(String, u32)>, Vec<String>) {
-    let mut games_in_file = HashMap::new();
+    let mut games_in_file = vec![];
     let mut notes = vec![];
     let content = match read_to_string(PathBuf::from(BUCKET_PATH).join(format!("bucket ({id}).yaml"))) {
         Ok(content) => content.trim_matches(|char: char| char == '\n' || char == '\r' || char == '\u{feff}').to_owned(),
         Err(err) => {
             println!("Error when reading 'bucket ({id}).yaml': {err}");
-            return (games_in_file.into_iter().collect(), notes);
+            return (games_in_file, notes);
         }
     };
 
@@ -72,22 +71,22 @@ fn process_file(name: &str, id: &str) -> (Vec<(String, u32)>, Vec<String>) {
         Ok(documents) => documents,
         Err(err) => {
             println!("Error when loading 'bucket ({id}).yaml': {err}");
-            return (games_in_file.into_iter().collect(), notes);
+            return (games_in_file, notes);
         }
     };
 
     for doc in &mut documents {
         let game = if let Some(game) = choose_game(doc) {
             let game_str = game.as_str().expect("Game should be a string");
-            if let Some(count) = games_in_file.get_mut(game_str) {
+            if let Some((_, count)) = games_in_file.last_mut().filter(|(existing_game, _)| existing_game == game_str) {
                 *count += 1;
             } else {
-                games_in_file.insert(game_str.to_string(), 1);
+                games_in_file.push((game_str.to_string(), 1));
             }
 
             game
         } else {
-            return (games_in_file.into_iter().collect(), notes);
+            return (games_in_file, notes);
         };
 
         if game.as_str().is_some_and(|game| game == "Chrono Trigger Jets of Time") {
@@ -119,5 +118,5 @@ fn process_file(name: &str, id: &str) -> (Vec<(String, u32)>, Vec<String>) {
         }
     };
 
-    (games_in_file.into_iter().collect(), notes)
+    (games_in_file, notes)
 }
