@@ -2,6 +2,9 @@ mod comments;
 mod game;
 mod name;
 mod read;
+mod special;
+mod util;
+mod valid_games;
 mod write;
 
 use std::{
@@ -19,6 +22,7 @@ use crate::{
     game::choose_game,
     name::set_name,
     read::read_process_list,
+    special::handle_special,
     write::write_to_output_list,
 };
 
@@ -37,23 +41,30 @@ fn main() {
     };
 
     for (name, id) in process_list {
-        let games: Vec<_> = process_file(&name, &id).into_iter().collect();
-        write_to_output_list(&mut output_writer, &name, &games);
+        let (games, notes) = process_file(&name, &id);
+
+        if let Some((_, count)) = games.iter().find(|(game, _)| game == "Keymaster's Keep") {
+            if *count > 1 {
+                println!("'{name}.yaml' contains {count} Keymaster's Keeps");
+            } else {
+                println!("'{name}.yaml' contains {count} Keymaster's Keep");
+            }
+        }
+
+        write_to_output_list(&mut output_writer, &name, &games, &notes);
     }
 }
 
-fn process_file(name: &str, id: &str) -> HashMap<String, u32> {
+fn process_file(name: &str, id: &str) -> (Vec<(String, u32)>, Vec<String>) {
     let mut games_in_file = HashMap::new();
-    let content =
-        match read_to_string(PathBuf::from(BUCKET_PATH).join(format!("bucket ({id}).yaml"))) {
-            Ok(content) => content
-                .trim_matches(|char: char| char == '\n' || char == '\r' || char == '\u{feff}')
-                .to_owned(),
-            Err(err) => {
-                println!("Error when reading 'bucket ({id}).yaml': {err}");
-                return games_in_file;
-            }
-        };
+    let mut notes = vec![];
+    let content = match read_to_string(PathBuf::from(BUCKET_PATH).join(format!("bucket ({id}).yaml"))) {
+        Ok(content) => content.trim_matches(|char: char| char == '\n' || char == '\r' || char == '\u{feff}').to_owned(),
+        Err(err) => {
+            println!("Error when reading 'bucket ({id}).yaml': {err}");
+            return (games_in_file.into_iter().collect(), notes);
+        }
+    };
 
     let comments = get_comments(&content);
 
@@ -61,7 +72,7 @@ fn process_file(name: &str, id: &str) -> HashMap<String, u32> {
         Ok(documents) => documents,
         Err(err) => {
             println!("Error when loading 'bucket ({id}).yaml': {err}");
-            return games_in_file;
+            return (games_in_file.into_iter().collect(), notes);
         }
     };
 
@@ -76,9 +87,16 @@ fn process_file(name: &str, id: &str) -> HashMap<String, u32> {
 
             game
         } else {
-            return games_in_file;
+            return (games_in_file.into_iter().collect(), notes);
         };
-        set_name(doc, &format!("{name}{{NUMBER}}"), &game);
+
+        if game.as_str().is_some_and(|game| game == "Chrono Trigger Jets of Time") {
+            println!("'{name}.yaml' contains a Chrono Trigger Jets of Time");
+        } else {
+            set_name(doc, &format!("{name}{{NUMBER}}"), &game);
+        }
+
+        notes.extend(handle_special(doc, &game, name));
     }
     if documents.len() > 8 {
         println!("'{name}.yaml' contains {} games.", documents.len());
@@ -95,13 +113,11 @@ fn process_file(name: &str, id: &str) -> HashMap<String, u32> {
     let lines = insert_comments(output_buf, &comments, id);
 
     match File::create(PathBuf::from(DIST_PATH).join(format!("{name}.yaml"))) {
-        Ok(mut writer) => writer
-            .write_all(lines.join("\n").as_bytes())
-            .unwrap_or_else(|_| println!("Error when writing to '{name}.yaml'")),
+        Ok(mut writer) => writer.write_all(lines.join("\n").as_bytes()).unwrap_or_else(|_| println!("Error when writing to '{name}.yaml'")),
         Err(err) => {
             println!("Error when creating '{name}.yaml': {err}")
         }
     };
 
-    games_in_file
+    (games_in_file.into_iter().collect(), notes)
 }
