@@ -8,6 +8,7 @@ mod valid_games;
 mod write;
 
 use std::{
+    env::args,
     fmt::Write as FmtWrite,
     fs::{read_to_string, rename, File},
     io::Write,
@@ -52,11 +53,14 @@ fn main() {
         }
 
         write_to_output_list(&mut output_writer, &name, &games, &notes);
-        if let Err(err) = rename(
-            PathBuf::from(BUCKET_PATH).join(format!("bucket ({id}).yaml")),
-            PathBuf::from(USED_PATH).join(format!("bucket ({id}).yaml")),
-        ) {
-            println!("Failed to move 'bucket ({id}).yaml' to used directory: {err}");
+
+        if args().any(|arg| arg == "--move-files") {
+            if let Err(err) = rename(
+                PathBuf::from(BUCKET_PATH).join(format!("bucket ({id}).yaml")),
+                PathBuf::from(USED_PATH).join(format!("bucket ({id}).yaml")),
+            ) {
+                println!("Failed to move 'bucket ({id}).yaml' to used directory: {err}");
+            }
         }
     }
 }
