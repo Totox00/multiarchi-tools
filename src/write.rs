@@ -20,7 +20,12 @@ pub fn write_to_output_list<T: Write>(writer: &mut T, name: &str, games: &[(Stri
         _ => (),
     }
 
-    if games.len() == 1 {
+    if games.is_empty() {
+        if let Err(err) = writeln!(writer) {
+            println!("Failed to write to output file: {err}");
+        }
+        println!("'{name}.yaml' has no game specified");
+    } else if games.len() == 1 {
         if games[0].1 > 1 {
             if let Err(err) = write!(writer, "{} *{}", games[0].0, games[0].1) {
                 println!("Failed to write to output file: {err}");
