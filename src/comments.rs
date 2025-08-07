@@ -2,6 +2,7 @@ pub struct Comment<'a> {
     last_key: Option<&'a str>,
     comment: String,
     inline: bool,
+    indent: String,
 }
 
 pub fn get_comments(content: &str) -> Vec<Comment<'_>> {
@@ -13,22 +14,24 @@ pub fn get_comments(content: &str) -> Vec<Comment<'_>> {
             last_key = Some(key);
             new_key = true;
         }
-        if let Some((_, comment)) = line.split_once('#') {
+        if let Some((indent, comment)) = line.split_once('#') {
             if let Some(Comment {
                 last_key: last_last_key,
                 comment: last_comment,
                 inline: _,
+                indent: _,
             }) = comments.last_mut()
             {
                 if last_key == *last_last_key {
                     last_comment.push('\n');
+                    last_comment.push_str(indent);
                     last_comment.push('#');
                     last_comment.push_str(comment);
                 } else {
-                    comments.push(Comment::new(last_key, comment.to_string(), new_key));
+                    comments.push(Comment::new(last_key, comment.to_string(), new_key, indent.to_string()));
                 }
             } else {
-                comments.push(Comment::new(last_key, comment.to_string(), new_key));
+                comments.push(Comment::new(last_key, comment.to_string(), new_key, indent.to_string()));
             }
         }
     }
@@ -39,14 +42,9 @@ pub fn get_comments(content: &str) -> Vec<Comment<'_>> {
 pub fn insert_comments(output: String, comments: &[Comment], id: &str) -> Vec<String> {
     let mut lines: Vec<_> = output.lines().map(String::from).collect();
     let mut line_i = 0;
-    'outer: for Comment {
-        last_key,
-        comment,
-        inline,
-    } in comments
-    {
+    'outer: for Comment { last_key, comment, inline, indent } in comments {
         if last_key.is_none() {
-            lines.insert(line_i, format!("#{comment}"));
+            lines.insert(line_i, format!("{indent}#{comment}"));
             line_i += 1;
             continue;
         }
@@ -63,7 +61,7 @@ pub fn insert_comments(output: String, comments: &[Comment], id: &str) -> Vec<St
             lines[line_i].push_str(&format!(" #{comment}"));
         } else {
             line_i += 1;
-            lines.insert(line_i, format!("#{comment}"));
+            lines.insert(line_i, format!("{indent}#{comment}"));
         }
         line_i += 1;
     }
@@ -72,11 +70,7 @@ pub fn insert_comments(output: String, comments: &[Comment], id: &str) -> Vec<St
 }
 
 fn find_key(line: &str) -> Option<&str> {
-    let not_comment = if let Some((content, _)) = line.split_once('#') {
-        content
-    } else {
-        line
-    };
+    let not_comment = if let Some((content, _)) = line.split_once('#') { content } else { line };
 
     if let Some((key, _)) = not_comment.split_once(':') {
         Some(key.trim_start().trim_matches('\'').trim_matches('\"'))
@@ -86,11 +80,7 @@ fn find_key(line: &str) -> Option<&str> {
 }
 
 impl<'a> Comment<'a> {
-    fn new(last_key: Option<&'a str>, comment: String, inline: bool) -> Self {
-        Comment {
-            last_key,
-            comment,
-            inline,
-        }
+    fn new(last_key: Option<&'a str>, comment: String, inline: bool, indent: String) -> Self {
+        Comment { last_key, comment, inline, indent }
     }
 }
