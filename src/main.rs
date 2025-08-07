@@ -9,7 +9,7 @@ mod write;
 
 use std::{
     fmt::Write as FmtWrite,
-    fs::{read_to_string, File},
+    fs::{read_to_string, rename, File},
     io::Write,
     path::PathBuf,
 };
@@ -26,6 +26,7 @@ use crate::{
 };
 
 pub const BUCKET_PATH: &str = "./bucket";
+pub const USED_PATH: &str = "./used";
 pub const DIST_PATH: &str = "./dist";
 pub const PROCESS_LIST_PATH: &str = "./process.tsv";
 pub const OUTPUT_LIST_PATH: &str = "./output.tsv";
@@ -51,6 +52,12 @@ fn main() {
         }
 
         write_to_output_list(&mut output_writer, &name, &games, &notes);
+        if let Err(err) = rename(
+            PathBuf::from(BUCKET_PATH).join(format!("bucket ({id}).yaml")),
+            PathBuf::from(USED_PATH).join(format!("bucket ({id}).yaml")),
+        ) {
+            println!("Failed to move 'bucket ({id}).yaml' to used directory: {err}");
+        }
     }
 }
 
