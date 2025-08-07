@@ -325,6 +325,12 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             push_value_or_default(&mut notes, game_hash, "obscure_tricks", "false");
             push_value_or_default(&mut notes, game_hash, "precise_tricks", "false");
         }
+        Some("DORONKO WANKO") => push_value_or_default(&mut notes, game_hash, "logic", "standard"),
+        Some("Minit") => {
+            push_value_or_default(&mut notes, game_hash, "darkrooms", "minor");
+            push_value_or_default(&mut notes, game_hash, "obscure", "false");
+            push_value_or_default(&mut notes, game_hash, "damage_boosts", "false");
+        }
         _ => (),
     };
 
