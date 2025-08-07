@@ -355,10 +355,10 @@ fn to_string(yaml: &Yaml) -> String {
         Yaml::Integer(int) => int.to_string(),
         Yaml::Boolean(bool) => bool.to_string(),
         Yaml::Array(yamls) => format!("[{}]", yamls.iter().map(to_string).collect::<Vec<_>>().join(", ")),
-        Yaml::Hash(linked_hash_map) => format!(
-            "{{{}}}",
-            linked_hash_map
+        Yaml::Hash(linked_hash_map) => {
+            let relevant_entries: Vec<_> = linked_hash_map
                 .iter()
+                .filter(|(_, weight)| as_i64(weight).is_some_and(|weight| weight > 0))
                 .map(|(yaml, weight)| {
                     let weight_string = to_string(weight);
                     if weight_string == "~" {
@@ -367,9 +367,21 @@ fn to_string(yaml: &Yaml) -> String {
                         format!("{}: {weight_string}", to_string(yaml))
                     }
                 })
-                .collect::<Vec<_>>()
-                .join(", ")
-        ),
+                .collect();
+
+            if relevant_entries.len() > 1 {
+                format!("{{{}}}", relevant_entries.join(", "))
+            } else {
+                to_string(
+                    linked_hash_map
+                        .iter()
+                        .find(|(_, weight)| as_i64(weight).is_some_and(|weight| weight > 0))
+                        .expect("Weighted selection contains no entries with weight > 0")
+                        .0,
+                )
+            }
+        }
+
         Yaml::Alias(_) => String::from("Unknown"),
         Yaml::Null => String::from("~"),
         Yaml::BadValue => String::from("Invalid"),
