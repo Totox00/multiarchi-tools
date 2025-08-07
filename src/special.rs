@@ -389,15 +389,28 @@ fn to_string(yaml: &Yaml) -> String {
 }
 
 fn option_can_be(hash: &LinkedHashMap<Yaml, Yaml>, key: &str, default: &Yaml, cmp: &Yaml) -> bool {
-    if let Some(value) = hash.get(&Yaml::from_str(key)) {
-        if value == cmp {
+    if let Some(value) = hash.get(&Yaml::from_str(key)).cloned().map(handle_non_string_strings) {
+        if value == *cmp {
             true
         } else if let Some(hash) = value.as_hash() {
-            hash.iter().any(|(value, weight)| value == cmp && as_i64(weight).is_some_and(|weight| weight > 0))
+            hash.iter()
+                .any(|(value, weight)| handle_non_string_strings(value.clone()) == *cmp && as_i64(weight).is_some_and(|weight| weight > 0))
         } else {
             false
         }
     } else {
         default == cmp
+    }
+}
+
+fn handle_non_string_strings(yaml: Yaml) -> Yaml {
+    if let Some(str) = yaml.as_str() {
+        match str.to_lowercase().as_str() {
+            "true" => Yaml::Boolean(true),
+            "false" => Yaml::Boolean(false),
+            _ => yaml,
+        }
+    } else {
+        yaml
     }
 }
