@@ -92,9 +92,8 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                     _ => (),
                 }
             }
-            if let Some(trap_items) = game_hash.remove(&Yaml::from_str("trap_items")) {
-                game_hash.insert(Yaml::from_str("trap_difficulty"), trap_items);
-            }
+
+            change_option_name(game_hash, "trap_items", "trap_difficulty");
             push_value_or_default(&mut notes, game_hash, "mods", "[]");
         }
         Some("osu!") => {
@@ -226,6 +225,10 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             resolve_weighted_option(game_hash, "game_version");
 
             push_value_or_default(&mut notes, game_hash, "game_version", "N/A");
+
+            if option_can_be_other_than(game_hash, "trainer_name", &Yaml::from_str("choose_in_game"), &Yaml::from_str("choose_in_game")) {
+                println!("'{name}.yaml' contains a chosen trainer name");
+            }
         }
         Some("Risk of Rain 2") => push_value_or_default(&mut notes, game_hash, "dlc_sotv", "false"),
         Some("A Short Hike") => push_value_or_default(&mut notes, game_hash, "golden_feather_progression", "normal"),
@@ -263,7 +266,10 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             push_value_or_default(&mut notes, game_hash, "item_logic", "false");
         }
         Some("A Link Between Worlds") => push_value_or_default(&mut notes, game_hash, "logic_mode", "normal"),
-        Some("Banjo-Tooie") => push_value_or_default(&mut notes, game_hash, "logic_type", "intended"),
+        Some("Banjo-Tooie") => {
+            push_value_or_default(&mut notes, game_hash, "logic_type", "intended");
+            change_option_name(game_hash, "game_length", "world_requirements");
+        }
         Some("Duke Nukem 3D") => push_value_or_default(&mut notes, game_hash, "logic_difficulty", "medium"),
         Some("The Legend of Zelda - Oracle of Ages") => push_value_or_default(&mut notes, game_hash, "logic_difficulty", "casual"),
         Some("The Legend of Zelda - Oracle of Seasons") => push_value_or_default(&mut notes, game_hash, "logic_difficulty", "casual"),
@@ -410,6 +416,21 @@ fn option_can_be(hash: &LinkedHashMap<Yaml, Yaml>, key: &str, default: &Yaml, cm
     }
 }
 
+fn option_can_be_other_than(hash: &LinkedHashMap<Yaml, Yaml>, key: &str, default: &Yaml, cmp: &Yaml) -> bool {
+    if let Some(value) = hash.get(&Yaml::from_str(key)).cloned().map(handle_non_string_strings) {
+        if value != *cmp {
+            true
+        } else if let Some(hash) = value.as_hash() {
+            hash.iter()
+                .any(|(value, weight)| handle_non_string_strings(value.clone()) != *cmp && as_i64(weight).is_some_and(|weight| weight > 0))
+        } else {
+            false
+        }
+    } else {
+        default != cmp
+    }
+}
+
 fn handle_non_string_strings(yaml: Yaml) -> Yaml {
     if let Some(str) = yaml.as_str() {
         match str.to_lowercase().as_str() {
@@ -419,5 +440,11 @@ fn handle_non_string_strings(yaml: Yaml) -> Yaml {
         }
     } else {
         yaml
+    }
+}
+
+fn change_option_name(hash: &mut LinkedHashMap<Yaml, Yaml>, old_name: &str, new_name: &str) {
+    if let Some(trap_items) = hash.remove(&Yaml::from_str(old_name)) {
+        hash.insert(Yaml::from_str(new_name), trap_items);
     }
 }
