@@ -2,13 +2,13 @@ use std::io::Write;
 
 use crate::valid_games::VALID_GAMES;
 
-pub fn write_to_output_list<T: Write>(writer: &mut T, name: &str, games: &[(String, u32)], notes: &[String]) {
+pub fn write_to_output_list<T: Write>(writer: &mut T, name: &str, games: &[(String, u32, Vec<String>)]) {
     if let Err(err) = write!(writer, "{name}\t") {
         println!("Failed to write to output file: {err}");
     }
 
     let mut invalid_games = vec![];
-    for (game, count) in games {
+    for (game, count, _) in games {
         if *count > 0 && !VALID_GAMES.contains(&game.as_str()) {
             invalid_games.push(game.as_str());
         }
@@ -35,7 +35,7 @@ pub fn write_to_output_list<T: Write>(writer: &mut T, name: &str, games: &[(Stri
             println!("Failed to write to output file: {err}");
         }
 
-        for (game, count) in &games[0..games.len() - 1] {
+        for (game, count, _) in &games[0..games.len() - 1] {
             if *count > 1 {
                 if let Err(err) = write!(writer, "{} *{} AND\n ", game, count) {
                     println!("Failed to write to output file: {err}");
@@ -45,7 +45,7 @@ pub fn write_to_output_list<T: Write>(writer: &mut T, name: &str, games: &[(Stri
             }
         }
 
-        let (game, count) = games.last().expect("Last game does not exist");
+        let (game, count, _) = games.last().expect("Last game does not exist");
         if *count > 1 {
             if let Err(err) = write!(writer, "{} *{}\"", game, count) {
                 println!("Failed to write to output file: {err}");
@@ -55,11 +55,22 @@ pub fn write_to_output_list<T: Write>(writer: &mut T, name: &str, games: &[(Stri
         }
     }
 
-    if notes.is_empty() {
+    let mut note_lines = vec![];
+    for (_, _, notes) in games {
+        if !notes.is_empty() {
+            note_lines.push(notes.join(", "));
+        }
+    }
+
+    if note_lines.is_empty() {
         if let Err(err) = writeln!(writer) {
             println!("Failed to write to output file: {err}");
         }
-    } else if let Err(err) = writeln!(writer, "\t{}", notes.iter().map(String::as_str).collect::<Vec<_>>().join(", ")) {
+    } else if note_lines.len() == 1 {
+        if let Err(err) = writeln!(writer, "\t{}", note_lines[0]) {
+            println!("Failed to write to output file: {err}");
+        }
+    } else if let Err(err) = writeln!(writer, "\t\"{}\"", note_lines.iter().map(String::as_str).collect::<Vec<_>>().join("\n")) {
         println!("Failed to write to output file: {err}");
     }
 }

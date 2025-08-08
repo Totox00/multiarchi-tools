@@ -42,17 +42,17 @@ fn main() {
     };
 
     for (name, id) in process_list {
-        let (games, notes) = process_file(&name, &id);
+        let games = process_file(&name, &id);
 
-        if let Some((_, count)) = games.iter().find(|(game, _)| game == "Keymaster's Keep") {
+        if let Some((_, count, _)) = games.iter().find(|(game, _, _)| game == "Keymaster's Keep") {
             if *count > 1 {
                 println!("'{name}.yaml' contains {count} Keymaster's Keeps");
             } else {
-                println!("'{name}.yaml' contains {count} Keymaster's Keep");
+                println!("'{name}.yaml' contains a Keymaster's Keep");
             }
         }
 
-        write_to_output_list(&mut output_writer, &name, &games, &notes);
+        write_to_output_list(&mut output_writer, &name, &games);
 
         if args().any(|arg| arg == "--move-files") {
             if let Err(err) = rename(
@@ -65,14 +65,13 @@ fn main() {
     }
 }
 
-fn process_file(name: &str, id: &str) -> (Vec<(String, u32)>, Vec<String>) {
+fn process_file(name: &str, id: &str) -> Vec<(String, u32, Vec<String>)> {
     let mut games_in_file = vec![];
-    let mut notes = vec![];
     let content = match read_to_string(PathBuf::from(BUCKET_PATH).join(format!("bucket ({id}).yaml"))) {
         Ok(content) => content.trim_matches(|char: char| char == '\n' || char == '\r' || char == '\u{feff}').to_owned(),
         Err(err) => {
             println!("Error when reading 'bucket ({id}).yaml': {err}");
-            return (games_in_file, notes);
+            return games_in_file;
         }
     };
 
@@ -82,31 +81,28 @@ fn process_file(name: &str, id: &str) -> (Vec<(String, u32)>, Vec<String>) {
         Ok(documents) => documents,
         Err(err) => {
             println!("Error when loading 'bucket ({id}).yaml': {err}");
-            return (games_in_file, notes);
+            return games_in_file;
         }
     };
 
     for doc in &mut documents {
-        let game = if let Some(game) = choose_game(doc) {
+        if let Some(game) = choose_game(doc) {
             let game_str = game.as_str().expect("Game should be a string");
-            if let Some((_, count)) = games_in_file.last_mut().filter(|(existing_game, _)| existing_game == game_str) {
+            if let Some((_, count, last_notes)) = games_in_file.last_mut().filter(|(existing_game, _, _)| existing_game == game_str) {
                 *count += 1;
+                last_notes.extend(handle_special(doc, &game, name));
             } else {
-                games_in_file.push((game_str.to_string(), 1));
+                games_in_file.push((game_str.to_string(), 1, handle_special(doc, &game, name)));
             }
 
-            game
+            if game.as_str().is_some_and(|game| game == "Chrono Trigger Jets of Time") {
+                println!("'{name}.yaml' contains a Chrono Trigger Jets of Time");
+            } else {
+                set_name(doc, &format!("{name}{{NUMBER}}"), Some(&game));
+            }
         } else {
-            return (games_in_file, notes);
-        };
-
-        if game.as_str().is_some_and(|game| game == "Chrono Trigger Jets of Time") {
-            println!("'{name}.yaml' contains a Chrono Trigger Jets of Time");
-        } else {
-            set_name(doc, &format!("{name}{{NUMBER}}"), &game);
+            set_name(doc, &format!("{name}{{NUMBER}}"), None);
         }
-
-        notes.extend(handle_special(doc, &game, name));
     }
     if documents.len() > 8 {
         println!("'{name}.yaml' contains {} games.", documents.len());
@@ -129,5 +125,5 @@ fn process_file(name: &str, id: &str) -> (Vec<(String, u32)>, Vec<String>) {
         }
     };
 
-    (games_in_file, notes)
+    games_in_file
 }

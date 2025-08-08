@@ -1,7 +1,7 @@
 use hashlink::LinkedHashMap;
 use yaml_rust2::Yaml;
 
-use crate::util::as_i64;
+use crate::util::{as_i64, resolve_weighted_option};
 
 pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
     let mut notes = vec![];
@@ -222,6 +222,9 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 new_hash.insert(Yaml::from_str("blue"), Yaml::Integer(50));
                 game_hash.insert(Yaml::from_str("game_version"), Yaml::Hash(new_hash));
             }
+
+            resolve_weighted_option(game_hash, "game_version");
+
             push_value_or_default(&mut notes, game_hash, "game_version", "N/A");
         }
         Some("Risk of Rain 2") => push_value_or_default(&mut notes, game_hash, "dlc_sotv", "false"),
@@ -281,6 +284,9 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 new_hash.insert(Yaml::from_str("leafgreen"), Yaml::Integer(50));
                 game_hash.insert(Yaml::from_str("game_version"), Yaml::Hash(new_hash));
             }
+
+            resolve_weighted_option(game_hash, "game_version");
+
             push_value_or_default(&mut notes, game_hash, "game_version", "N/A");
             push_value_or_default(&mut notes, game_hash, "evolutions_required", "[HM Requirement, Oak's Aides, Dexsanity]");
             push_value_or_default(
@@ -331,6 +337,7 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             push_value_or_default(&mut notes, game_hash, "obscure", "false");
             push_value_or_default(&mut notes, game_hash, "damage_boosts", "false");
         }
+        Some("Majora's Mask Recompiled") => push_value_or_default(&mut notes, game_hash, "logic_difficulty", "normal"),
         _ => (),
     };
 

@@ -1,6 +1,6 @@
 use yaml_rust2::Yaml;
 
-pub fn set_name(doc: &mut Yaml, name: &str, game: &Yaml) {
+pub fn set_name(doc: &mut Yaml, name: &str, game: Option<&Yaml>) {
     let name_key = Yaml::from_str("name");
     let triggers_key = Yaml::from_str("triggers");
     let name_value = Yaml::from_str(name);
@@ -11,10 +11,12 @@ pub fn set_name(doc: &mut Yaml, name: &str, game: &Yaml) {
         return;
     };
 
-    if let Some(game_options) = hash.get_mut(game) {
-        if let Some(game_options_hash) = game_options.as_mut_hash() {
-            if let Some(triggers) = game_options_hash.get_mut(&triggers_key) {
-                strip_name_changes_from_triggers(triggers);
+    if let Some(game) = game {
+        if let Some(game_options) = hash.get_mut(game) {
+            if let Some(game_options_hash) = game_options.as_mut_hash() {
+                if let Some(triggers) = game_options_hash.get_mut(&triggers_key) {
+                    strip_name_changes_from_triggers(triggers);
+                }
             }
         }
     }
