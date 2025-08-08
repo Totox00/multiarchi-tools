@@ -49,8 +49,13 @@ pub fn insert_comments(output: String, comments: &[Comment], id: &str) -> Vec<St
             continue;
         }
 
+        if line_i == lines.len() {
+            println!("Failed to preserve all comments from 'bucket ({id}).yaml'");
+            break 'outer;
+        }
         while find_key(&lines[line_i]) != *last_key {
             line_i += 1;
+
             if line_i == lines.len() {
                 println!("Failed to preserve all comments from 'bucket ({id}).yaml'");
                 break 'outer;
