@@ -418,13 +418,11 @@ fn option_can_be(hash: &LinkedHashMap<Yaml, Yaml>, key: &str, default: &Yaml, cm
 
 fn option_can_be_other_than(hash: &LinkedHashMap<Yaml, Yaml>, key: &str, default: &Yaml, cmp: &Yaml) -> bool {
     if let Some(value) = hash.get(&Yaml::from_str(key)).cloned().map(handle_non_string_strings) {
-        if value != *cmp {
-            true
-        } else if let Some(hash) = value.as_hash() {
+        if let Some(hash) = value.as_hash() {
             hash.iter()
                 .any(|(value, weight)| handle_non_string_strings(value.clone()) != *cmp && as_i64(weight).is_some_and(|weight| weight > 0))
         } else {
-            false
+            value != *cmp
         }
     } else {
         default != cmp
