@@ -85,6 +85,8 @@ fn process_file(name: &str, id: &str) -> Vec<(String, u32, Vec<String>)> {
         }
     };
 
+    let single_game = documents.len() == 1;
+
     for doc in &mut documents {
         if let Some(game) = choose_game(doc) {
             let game_str = game.as_str().expect("Game should be a string");
@@ -97,11 +99,15 @@ fn process_file(name: &str, id: &str) -> Vec<(String, u32, Vec<String>)> {
 
             if game.as_str().is_some_and(|game| game == "Chrono Trigger Jets of Time") {
                 println!("'{name}.yaml' contains a Chrono Trigger Jets of Time");
+            } else if single_game {
+                set_name(doc, name, Some(&game));
             } else {
-                set_name(doc, &format!("{name}{{NUMBER}}"), Some(&game));
+                set_name(doc, &format!("{name}{{number}}"), None);
             }
+        } else if single_game {
+            set_name(doc, name, None);
         } else {
-            set_name(doc, &format!("{name}{{NUMBER}}"), None);
+            set_name(doc, &format!("{name}{{number}}"), None);
         }
     }
     if documents.len() > 8 {
