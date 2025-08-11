@@ -29,68 +29,15 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         }
         Some("Stardew Valley") => {
             if let Some(goal) = game_hash.get_mut(&Yaml::from_str("goal")) {
-                match goal.as_str() {
-                    Some("Perfection") => *goal = Yaml::from_str("random"),
-                    Some("allsanity") => println!("'{name}.yaml' has goal 'allsanity'"),
-                    None => {
-                        if let Some(goal_hash) = goal.as_mut_hash() {
-                            if let Some(weight) = goal_hash.get(&Yaml::from_str("Perfection")) {
-                                if let Some(weight) = as_i64(weight) {
-                                    if weight > 0 {
-                                        goal_hash.remove(&Yaml::from_str("Perfection"));
-                                        if let Some(existing_weight) = goal_hash.get_mut(&Yaml::from_str("random")) {
-                                            if let Some(existing_value) = existing_weight.as_i64() {
-                                                *existing_weight = Yaml::Integer(existing_value + weight);
-                                            } else if let Some(existing_value) = existing_weight.as_f64() {
-                                                *existing_weight = Yaml::Integer(existing_value as i64 + weight);
-                                            } else {
-                                                goal_hash.insert(Yaml::from_str("random"), Yaml::Integer(weight));
-                                            }
-                                        } else {
-                                            goal_hash.insert(Yaml::from_str("random"), Yaml::Integer(weight));
-                                        }
-                                    }
-                                }
-                            }
-                            if let Some(weight) = goal_hash.get(&Yaml::from_str("allsanity")) {
-                                if let Some(weight) = as_i64(weight) {
-                                    if weight > 0 {
-                                        println!("'{name}.yaml' has a chance of goal 'allsanity'");
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    _ => (),
-                }
+                move_option_weight(goal, "Perfection", "random");
             }
+
+            if option_can_be(game_hash, "goal", &Yaml::from_str("random"), &Yaml::from_str("allsanity")) {
+                println!("'{name}.yaml' has goal 'allsanity'");
+            }
+
             if let Some(entrance_randomization) = game_hash.get_mut(&Yaml::from_str("entrance_randomization")) {
-                match entrance_randomization.as_str() {
-                    Some("chaos") => *entrance_randomization = Yaml::from_str("disabled"),
-                    None => {
-                        if let Some(entrance_randomization_hash) = entrance_randomization.as_mut_hash() {
-                            if let Some(weight) = entrance_randomization_hash.get(&Yaml::from_str("chaos")) {
-                                if let Some(weight) = as_i64(weight) {
-                                    if weight > 0 {
-                                        entrance_randomization_hash.remove(&Yaml::from_str("chaos"));
-                                        if let Some(existing_weight) = entrance_randomization_hash.get_mut(&Yaml::from_str("disabled")) {
-                                            if let Some(existing_value) = existing_weight.as_i64() {
-                                                *existing_weight = Yaml::Integer(existing_value + weight);
-                                            } else if let Some(existing_value) = existing_weight.as_f64() {
-                                                *existing_weight = Yaml::Integer(existing_value as i64 + weight);
-                                            } else {
-                                                entrance_randomization_hash.insert(Yaml::from_str("disabled"), Yaml::Integer(weight));
-                                            }
-                                        } else {
-                                            entrance_randomization_hash.insert(Yaml::from_str("disabled"), Yaml::Integer(weight));
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    _ => (),
-                }
+                move_option_weight(entrance_randomization, "chaos", "disabled");
             }
 
             change_option_name(game_hash, "trap_items", "trap_difficulty");
@@ -131,28 +78,9 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         }
         Some("Overcooked! 2") => {
             if let Some(star_threshold_scale) = game_hash.get_mut(&Yaml::from_str("star_threshold_scale")) {
-                if let Some(value) = star_threshold_scale.as_i64() {
-                    if value >= 90 {
-                        *star_threshold_scale = Yaml::from_str("random-range-50-90");
-                    }
-                } else if let Some(star_threshold_scale_hash) = star_threshold_scale.as_mut_hash() {
-                    let mut new_weight = star_threshold_scale_hash
-                        .get_mut(&Yaml::from_str("random-range-50-90"))
-                        .map(|existing_weight| as_i64(existing_weight).unwrap_or(0))
-                        .unwrap_or(0);
-
-                    for (value, weight) in star_threshold_scale_hash.iter() {
-                        if as_i64(value).is_some_and(|value| value >= 90) {
-                            new_weight += as_i64(weight).unwrap_or(0);
-                        }
-                    }
-                    star_threshold_scale_hash.retain(|value, _| as_i64(value).is_none_or(|value| value < 90));
-
-                    if new_weight > 0 {
-                        star_threshold_scale_hash.insert(Yaml::from_str("random-range-50-90"), Yaml::Integer(new_weight));
-                    }
-                }
+                move_option_weight_matches(star_threshold_scale, |yaml| as_i64(yaml).is_some_and(|v| v >= 90), "random-range-50-90");
             }
+
             push_value_or_default(&mut notes, game_hash, "include_dlcs", "['Story', 'Seasonal']");
         }
         Some("Blasphemous") => push_value_or_default(&mut notes, game_hash, "Difficulty", "normal"),
@@ -224,6 +152,16 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
 
             resolve_weighted_option(game_hash, "game_version");
 
+            if let Some(goal) = game_hash.get_mut(&Yaml::from_str("require_itemfinder")) {
+                move_option_weight(goal, "true", "hard_required");
+                move_option_weight(goal, "false", "not_required");
+            }
+
+            if let Some(goal) = game_hash.get_mut(&Yaml::from_str("randomize_wilds")) {
+                move_option_weight(goal, "true", "completely_random");
+                move_option_weight(goal, "false", "vanilla");
+            }
+
             push_value_or_default(&mut notes, game_hash, "game_version", "N/A");
 
             if option_can_be_other_than(game_hash, "trainer_name", &Yaml::from_str("choose_in_game"), &Yaml::from_str("choose_in_game")) {
@@ -292,6 +230,21 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             }
 
             resolve_weighted_option(game_hash, "game_version");
+
+            if let Some(goal) = game_hash.get_mut(&Yaml::from_str("goal")) {
+                move_option_weight(goal, "elite_four", "champion");
+                move_option_weight(goal, "elite_four_rematch", "champion_rematch");
+            }
+
+            if let Some(goal) = game_hash.get_mut(&Yaml::from_str("trainersanity")) {
+                move_option_weight(goal, "true", "456");
+                move_option_weight(goal, "false", "0");
+            }
+
+            if let Some(goal) = game_hash.get_mut(&Yaml::from_str("flash_required")) {
+                move_option_weight(goal, "true", "required");
+                move_option_weight(goal, "false", "off");
+            }
 
             push_value_or_default(&mut notes, game_hash, "game_version", "N/A");
             push_value_or_default(&mut notes, game_hash, "evolutions_required", "[HM Requirement, Oak's Aides, Dexsanity]");
@@ -445,5 +398,48 @@ fn handle_non_string_strings(yaml: Yaml) -> Yaml {
 fn change_option_name(hash: &mut LinkedHashMap<Yaml, Yaml>, old_name: &str, new_name: &str) {
     if let Some(trap_items) = hash.remove(&Yaml::from_str(old_name)) {
         hash.insert(Yaml::from_str(new_name), trap_items);
+    }
+}
+
+fn move_option_weight_matches<T: Fn(&Yaml) -> bool>(value: &mut Yaml, from: T, to: &str) {
+    let to = Yaml::from_str(to);
+
+    if from(value) {
+        *value = to;
+    } else if let Some(value_hash) = value.as_mut_hash() {
+        let mut new_weight = value_hash.get(&to).and_then(as_i64).unwrap_or(0);
+        new_weight += value_hash.iter().filter(|(value, _)| from(value)).map(|(_, weight)| as_i64(weight).unwrap_or(0)).sum::<i64>();
+        value_hash.retain(|value, _| !from(value));
+        if new_weight > 0 {
+            value_hash.insert(to, Yaml::Integer(new_weight));
+        }
+    }
+}
+
+fn move_option_weight(value: &mut Yaml, from: &str, to: &str) {
+    let from = Yaml::from_str(from);
+    let to = Yaml::from_str(to);
+
+    if *value == from {
+        *value = to;
+    } else if let Some(hash) = value.as_mut_hash() {
+        if let Some(weight) = hash.get(&from) {
+            if let Some(weight) = as_i64(weight) {
+                if weight > 0 {
+                    hash.remove(&from);
+                    if let Some(existing_weight) = hash.get_mut(&to) {
+                        if let Some(existing_value) = existing_weight.as_i64() {
+                            *existing_weight = Yaml::Integer(existing_value + weight);
+                        } else if let Some(existing_value) = existing_weight.as_f64() {
+                            *existing_weight = Yaml::Integer(existing_value as i64 + weight);
+                        } else {
+                            hash.insert(to, Yaml::Integer(weight));
+                        }
+                    } else {
+                        hash.insert(to, Yaml::Integer(weight));
+                    }
+                }
+            }
+        }
     }
 }
