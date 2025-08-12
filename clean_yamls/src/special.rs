@@ -135,7 +135,10 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         Some("Kingdom Hearts 2") => push_value_or_default(&mut notes, game_hash, "FightLogic", "normal"),
         Some("A Link to the Past") => push_value_or_default(&mut notes, game_hash, "glitches_required", "no_glitches"),
         Some("Links Awakening DX") => push_value_or_default(&mut notes, game_hash, "logic", "normal"),
-        Some("Mario & Luigi Superstar Saga") => push_value_or_default(&mut notes, game_hash, "difficult_logic", "FALSE"),
+        Some("Mario & Luigi Superstar Saga") => {
+            game_hash.remove(&Yaml::from_str("harhall_pants"));
+            push_value_or_default(&mut notes, game_hash, "difficult_logic", "FALSE");
+        }
         Some("The Messenger") => push_value_or_default(&mut notes, game_hash, "logic_level", "normal"),
         Some("Muse Dash") => push_value_or_default(&mut notes, game_hash, "dlc_packs", "[]"),
         Some("Ocarina of Time") => {
