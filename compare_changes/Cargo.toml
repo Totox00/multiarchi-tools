@@ -1,0 +1,8 @@
+[package]
+name = "compare_changes"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+yaml-rust2 = "0.9.0"
+hashlink = "0.9.1"
