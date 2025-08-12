@@ -1,0 +1,75 @@
+Final Fantasy V Career Day.yaml: No longer exists
+ChecksMate.yaml: No longer exists
+Wargroove 2.yaml: custom_early_level_playlist: Order changed from [Swimming at the Docks, Floran Trap, Ancient Discoveries, Observation Isle, Majestic Mountain] to [Swimming at the Docks, Majestic Mountain, Observation Isle, Floran Trap, Ancient Discoveries]
+Wargroove 2.yaml: custom_main_level_playlist: Order changed from [Portal Peril, Frantic Inlet, Enmity Cliffs, Kraken Strait, Grand Theft Village, Skydiving, Precarious Cliffs, Nuru's Vengeance, Spire Fire, Gnarled Mountaintop, Air Support, Tenri's Mistake, Operation Seagull, Finishing Blow, Split Valley, Bridge Brigade, A Ribbitting Time, Den-Two-Away, Gold Rush, Cherrystone Landing, Wagon Freeway, Towers of the Abyss, Slippery Bridge, Terrible Tributaries, Beached, Riflemen Blockade, Sunken Forest, Fortification] to [Cherrystone Landing, Den-Two-Away, Terrible Tributaries, Precarious Cliffs, Grand Theft Village, Gnarled Mountaintop, Enmity Cliffs, Beached, Frantic Inlet, Finishing Blow, Bridge Brigade, Riflemen Blockade, Wagon Freeway, Fortification, Skydiving, Split Valley, Portal Peril, Spire Fire, A Ribbitting Time, Nuru's Vengeance, Kraken Strait, Tenri's Mistake, Gold Rush, Slippery Bridge, Towers of the Abyss, Operation Seagull, Sunken Forest, Air Support]
+Wargroove 2.yaml: custom_final_level_playlist: Order changed from [Disastrous Crossing, Dementia Castle, Doomed Metropolis, Dark Mirror] to [Disastrous Crossing, Dementia Castle, Dark Mirror, Doomed Metropolis]
+Reventure.yaml: Key `endings` removed
+Reventure.yaml: Key `randomizeGems` removed
+Reventure.yaml: Key `gemsInPool` removed
+Reventure.yaml: Key `gemsRequired` removed
+Reventure.yaml: Key `hardjumps` removed
+Reventure.yaml: Key `hardcombat` removed
+Reventure.yaml: Key `treasureSword` removed
+Reventure.yaml: Key `experimentalRegionGraph` removed
+Stardew Valley.yaml: enabled_filler_buffs: Order changed from [Bite Rate, Defense, Luck] to [Luck, Defense, Bite Rate]
+Celeste.yaml: No longer exists
+Manual_serenitylock_dragorrod.yaml: No longer exists
+Autopelago.yaml: enabled_buffs: Order changed from [Energized, Stylish, Lucky, Confident, Well Fed, Smart] to [Well Fed, Confident, Lucky, Smart, Stylish, Energized]
+Autopelago.yaml: enabled_traps: Order changed from [Conspiratorial, Sluggish, Unlucky, Upset Tummy, Startled, Distracted] to [Startled, Sluggish, Unlucky, Conspiratorial, Distracted, Upset Tummy]
+Super Metroid Map Rando.yaml: spin_lock_buttons: Order changed from [X, Up, L, R] to [X, Up, R, L]
+Super Metroid Map Rando.yaml: quick_reload_buttons: Order changed from [Select, Start, L, R] to [L, R, Start, Select]
+Donkey Kong Country 2.yaml: shuffle_abilities: Order changed from [Carry, Team Attack, Swim, Helicopter Spin, Cartwheel, Climb, Cling] to [Team Attack, Carry, Climb, Helicopter Spin, Cling, Swim, Cartwheel]
+Donkey Kong Country 2.yaml: shuffle_animals: Order changed from [Squitter, Rattly, Glimmer, Rambi, Clapper, Squawks, Skull Kart, Enguarde] to [Clapper, Skull Kart, Glimmer, Squitter, Rambi, Enguarde, Squawks, Rattly]
+Donkey Kong Country 2.yaml: shuffle_barrels: Order changed from [Controllable Barrels, Barrel Kannons, Kong Barrels, Warp Barrels, Exclamation Barrels] to [Warp Barrels, Kong Barrels, Barrel Kannons, Controllable Barrels, Exclamation Barrels]
+Yooka-Laylee.yaml: Key `force_local_first_item` removed
+Yooka-Laylee.yaml: Key `prevent_tropics_bk` removed
+Yooka-Laylee.yaml: Key `flappy_flight_location` removed
+Yooka-Laylee.yaml: Key `capital_b_pagie_count` removed
+Yooka-Laylee.yaml: Key `randomize_grand_tomes` removed
+Yooka-Laylee.yaml: Key `disable_quizzes` removed
+Yooka-Laylee.yaml: Key `death_link` removed
+Manual_simplelock_dragorrod.yaml: No longer exists
+Keymaster's Keep.yaml: rabbit_and_steel_unlocked_characters: Order changed from [Bruiser Rabbit, Sniper Rabbit, Ancient Rabbit, Spellsword Rabbit, Defender Rabbit] to [Spellsword Rabbit, Bruiser Rabbit, Sniper Rabbit, Ancient Rabbit, Defender Rabbit]
+Manual_fragments_dragorrod.yaml: No longer exists
+Xenoblade X.yaml: No longer exists
+Brotato.yaml: include_base_game_characters: Order changed from [Golem, Bull, Streamer, Crazy, Cyborg, Wildling, Chunky, Saver, Renegade, Lucky, Doctor, Explorer, Farmer, Lich, Engineer, Pacifist, Demon, Vampire, Cryptid, Speedy, Glutton, Old, Jack, Baby, Brawler, Generalist, Artificer, Fisherman, Soldier, Vagabond, Ghost, Masochist, Technomage, Arms Dealer, Loud, Mutant, Ranger, Knight, Well Rounded, Gladiator, Hunter, King, Entrepreneur, One Armed, Mage, Apprentice, Sick, Multitasker] to [Cryptid, Engineer, Chunky, Multitasker, Artificer, Apprentice, Demon, Knight, Gladiator, Lucky, Doctor, Saver, Vagabond, Pacifist, Mage, Cyborg, Masochist, Golem, Soldier, Technomage, Vampire, Crazy, Baby, Sick, Mutant, Well Rounded, Ghost, Hunter, Jack, Generalist, Lich, Fisherman, King, Entrepreneur, Explorer, One Armed, Streamer, Bull, Speedy, Wildling, Glutton, Arms Dealer, Farmer, Renegade, Ranger, Loud, Old, Brawler]
+Brotato.yaml: include_abyssal_terrors_characters: Order changed from [Creature, Sailor, Chef, Gangster, Dwarf, Diver, Buccaneer, Hiker, Romantic, Ogre, Captain, Druid, Builder, Curious] to [Curious, Ogre, Gangster, Hiker, Captain, Chef, Creature, Dwarf, Romantic, Druid, Diver, Builder, Sailor, Buccaneer]
+Don't Starve Together.yaml: day_phases: Order changed from [Night, Day, Dusk] to [Day, Night, Dusk]
+UFO 50.yaml: No longer exists
+Manual_goldenlock_dragorrod.yaml: No longer exists
+Muse Dash.yaml: Key `goal_song` added
+Rogue Legacy.yaml: available_classes: Order changed from [Dragon, Shinobi, Lich, Knave, Traitor, Spellthief, Mage, Barbarian, Miner, Knight] to [Traitor, Lich, Dragon, Knight, Miner, Shinobi, Knave, Spellthief, Barbarian, Mage]
+ULTRAKILL.yaml: skipped_levels: Order changed from [P-2, 1-E, 0-E, P-1] to [P-2, 1-E, P-1, 0-E]
+Manual_gazillionaire_dragorrod.yaml: No longer exists
+Dark Souls III.yaml: exclude_locations: Order changed from [Miscellaneous, Hidden, Small Souls, Small Crystal Lizards, Upgrade] to [Hidden, Miscellaneous, Upgrade, Small Crystal Lizards, Small Souls]
+The Legend of Zelda - Oracle of Seasons.yaml: excluded_rings: Order changed from [Victory Ring, Slayer's Ring, Octo Ring, Like Like Ring, Friendship Ring, Subrosian Ring, GBA Nature Ring, Moblin Ring, 100th Ring, First Gen Ring, Rupee Ring, GBA Time Ring, Cursed Ring, Sign Ring] to [Moblin Ring, Friendship Ring, Subrosian Ring, First Gen Ring, Slayer's Ring, Victory Ring, Sign Ring, Cursed Ring, GBA Nature Ring, 100th Ring, GBA Time Ring, Octo Ring, Like Like Ring, Rupee Ring]
+XCOM 2 War of the Chosen.yaml: progressive_items: Order changed from [GREMLINTech, MeleeWeaponTech, PsionicsTech, ArmorTech, RifleTech] to [GREMLINTech, PsionicsTech, MeleeWeaponTech, RifleTech, ArmorTech]
+XCOM 2 War of the Chosen.yaml: skip_mission_types: Order changed from [CouncilMission, SupplyRaid, ResistanceOp] to [SupplyRaid, CouncilMission, ResistanceOp]
+Final Fantasy IV Free Enterprise.yaml: No longer exists
+Yu-Gi-Oh! 2006.yaml: structure_deck: Key `worst` removed
+Yu-Gi-Oh! 2006.yaml: structure_deck: Key `random_singles` removed
+Yu-Gi-Oh! 2006.yaml: structure_deck: Key `random_playsets` removed
+Yu-Gi-Oh! 2006.yaml: structure_deck: Key `custom` removed
+Yu-Gi-Oh! 2006.yaml: structure_deck: Key `none` added
+Yu-Gi-Oh! 2006.yaml: Key `starter_deck` removed
+Yu-Gi-Oh! 2006.yaml: final_campaign_boss_challenges: Key `5` removed
+Yu-Gi-Oh! 2006.yaml: final_campaign_boss_challenges: Key `10` added
+Yu-Gi-Oh! 2006.yaml: fourth_tier_5_campaign_boss_challenges: Key `3` removed
+Yu-Gi-Oh! 2006.yaml: fourth_tier_5_campaign_boss_challenges: Key `5` added
+Yu-Gi-Oh! 2006.yaml: third_tier_5_campaign_boss_challenges: Key `1` removed
+Yu-Gi-Oh! 2006.yaml: third_tier_5_campaign_boss_challenges: Key `2` added
+Yu-Gi-Oh! 2006.yaml: Key `normalize_booster_pack_prices` removed
+Yu-Gi-Oh! 2006.yaml: Key `normalize_booster_pack_rarities` removed
+Yu-Gi-Oh! 2006.yaml: Key `randomize_pack_contents` removed
+Yu-Gi-Oh! 2006.yaml: Key `custom_structure_deck` removed
+Yu-Gi-Oh! 2006.yaml: Key `custom_starter_deck` removed
+Yu-Gi-Oh! 2006.yaml: Key `final_campaign_boss_unlock_condition` added
+Yu-Gi-Oh! 2006.yaml: Key `fourth_tier_5_campaign_boss_unlock_condition` added
+Yu-Gi-Oh! 2006.yaml: Key `third_tier_5_campaign_boss_unlock_condition` added
+Yu-Gi-Oh! 2006.yaml: Key `normalize_boosters_packs` added
+Subnautica.yaml: Key `empty_tanks` added
+Sonic Adventure DX.yaml: mission_blacklist: Order changed from [53, 49, 58, 54] to [54, 58, 53, 49]
+Hades.yaml: No longer exists
+Links Awakening DX.yaml: gfxmod: Key `Link` removed
+Links Awakening DX.yaml: gfxmod: Key `false` added
+Links Awakening DX.yaml: gfxmod: Key `true` added

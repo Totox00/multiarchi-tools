@@ -2,7 +2,7 @@
 /bucket/**
 /dist/**
 /used/**
-/compare_from/**
-/compare_to/**
+/compare_old/**
+/compare_new/**
 process.tsv
 output.tsv
