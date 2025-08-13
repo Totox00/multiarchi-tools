@@ -307,6 +307,7 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 move_option_weight(randomize_secondary_fire, "false", "disabled");
             }
         }
+        Some("Against the Storm") => push_value_or_default(&mut notes, game_hash, "enable_dlc", "false"),
         _ => (),
     };
 
