@@ -314,6 +314,12 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         }
         Some("Against the Storm") => push_value_or_default(&mut notes, game_hash, "enable_dlc", "false"),
         Some("Guild Wars 2") => push_value_or_default(&mut notes, game_hash, "storyline", "core"),
+        Some("Paper Mario") => {
+            if let Some(super_multi_blocks) = game_hash.get_mut(&Yaml::from_str("super_multi_blocks")) {
+                move_option_weight(super_multi_blocks, "true", "anywhere");
+                move_option_weight(super_multi_blocks, "false", "off");
+            }
+        }
         _ => (),
     };
 
