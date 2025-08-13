@@ -239,14 +239,19 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 move_option_weight(goal, "elite_four_rematch", "champion_rematch");
             }
 
-            if let Some(goal) = game_hash.get_mut(&Yaml::from_str("trainersanity")) {
-                move_option_weight(goal, "true", "456");
-                move_option_weight(goal, "false", "0");
+            if let Some(trainersanity) = game_hash.get_mut(&Yaml::from_str("trainersanity")) {
+                move_option_weight(trainersanity, "true", "all");
+                move_option_weight(trainersanity, "false", "off");
             }
 
-            if let Some(goal) = game_hash.get_mut(&Yaml::from_str("flash_required")) {
-                move_option_weight(goal, "true", "required");
-                move_option_weight(goal, "false", "off");
+            if let Some(provide_hints) = game_hash.get_mut(&Yaml::from_str("provide_hints")) {
+                move_option_weight(provide_hints, "true", "456");
+                move_option_weight(provide_hints, "false", "0");
+            }
+
+            if let Some(flash_required) = game_hash.get_mut(&Yaml::from_str("flash_required")) {
+                move_option_weight(flash_required, "true", "required");
+                move_option_weight(flash_required, "false", "off");
             }
 
             push_value_or_default(&mut notes, game_hash, "game_version", "N/A");
