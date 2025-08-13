@@ -308,6 +308,7 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             }
         }
         Some("Against the Storm") => push_value_or_default(&mut notes, game_hash, "enable_dlc", "false"),
+        Some("Guild Wars 2") => push_value_or_default(&mut notes, game_hash, "storyline", "core"),
         _ => (),
     };
 
