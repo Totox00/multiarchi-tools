@@ -82,6 +82,7 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             }
 
             push_value_or_default(&mut notes, game_hash, "include_dlcs", "['Story', 'Seasonal']");
+            push_value_or_default(&mut notes, game_hash, "ramp_tricks", "false");
         }
         Some("Blasphemous") => push_value_or_default(&mut notes, game_hash, "Difficulty", "normal"),
         Some("Bomb Rush Cyberfunk") => push_value_or_default(&mut notes, game_hash, "logic", "glitchless"),
