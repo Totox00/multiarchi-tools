@@ -234,7 +234,7 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
 
             resolve_weighted_option(game_hash, "game_version");
 
-            if let Some(goal) = game_hash.get_mut(&Yaml::from_str("goal")) {
+            if let Some(goal) = game_hash.get_mut(&Yaml::from_str("Goal")) {
                 move_option_weight(goal, "elite_four", "champion");
                 move_option_weight(goal, "elite_four_rematch", "champion_rematch");
             }
