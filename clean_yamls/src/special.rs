@@ -161,11 +161,6 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 move_option_weight(goal, "false", "not_required");
             }
 
-            if let Some(goal) = game_hash.get_mut(&Yaml::from_str("randomize_wilds")) {
-                move_option_weight(goal, "true", "completely_random");
-                move_option_weight(goal, "false", "vanilla");
-            }
-
             push_value_or_default(&mut notes, game_hash, "game_version", "N/A");
 
             if option_can_be_other_than(game_hash, "trainer_name", &Yaml::from_str("choose_in_game"), &Yaml::from_str("choose_in_game")) {
@@ -331,6 +326,12 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 move_option_weight(traps_frequency, "extreme", "50");
             }
         }
+        Some("Pokemon Crystal") => {
+            if let Some(randomize_wilds) = game_hash.get_mut(&Yaml::from_str("randomize_wilds")) {
+                move_option_weight(randomize_wilds, "true", "completely_random");
+                move_option_weight(randomize_wilds, "false", "vanilla");
+            }
+        }
         _ => (),
     };
 
@@ -449,17 +450,33 @@ fn move_option_weight_matches<T: Fn(&Yaml) -> bool>(value: &mut Yaml, from: T, t
     }
 }
 
-fn move_option_weight(value: &mut Yaml, from: &str, to: &str) {
-    let from = Yaml::from_str(from);
-    let to = Yaml::from_str(to);
+fn move_option_weight(value: &mut Yaml, from_str: &str, to_str: &str) {
+    let from = Yaml::from_str(from_str);
+    let from_str = Yaml::String(String::from(from_str));
+    let to = Yaml::from_str(to_str);
 
-    if *value == from {
+    if *value == from || *value == from_str {
         *value = to;
     } else if let Some(hash) = value.as_mut_hash() {
-        if let Some(weight) = hash.get(&from) {
-            if let Some(weight) = as_i64(weight) {
+        if let Some(weight) = hash.remove(&from) {
+            if let Some(weight) = as_i64(&weight) {
                 if weight > 0 {
-                    hash.remove(&from);
+                    if let Some(existing_weight) = hash.get_mut(&to) {
+                        if let Some(existing_value) = existing_weight.as_i64() {
+                            *existing_weight = Yaml::Integer(existing_value + weight);
+                        } else if let Some(existing_value) = existing_weight.as_f64() {
+                            *existing_weight = Yaml::Integer(existing_value as i64 + weight);
+                        } else {
+                            hash.insert(to, Yaml::Integer(weight));
+                        }
+                    } else {
+                        hash.insert(to, Yaml::Integer(weight));
+                    }
+                }
+            }
+        } else if let Some(weight) = hash.remove(&from_str) {
+            if let Some(weight) = as_i64(&weight) {
+                if weight > 0 {
                     if let Some(existing_weight) = hash.get_mut(&to) {
                         if let Some(existing_value) = existing_weight.as_i64() {
                             *existing_weight = Yaml::Integer(existing_value + weight);
