@@ -213,6 +213,8 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         Some("Ori and the Blind Forest") => push_value_or_default(&mut notes, game_hash, "logic_difficulty", "casual"),
         Some("Ori and the Will of the Wisps") => push_value_or_default(&mut notes, game_hash, "difficulty", "moki"),
         Some("Outer Wilds") => {
+            game_hash.insert(Yaml::from_str("enable_hn2_mod"), Yaml::Boolean(false));
+
             push_value_or_default(&mut notes, game_hash, "enable_eote_dlc", "false");
             push_value_or_default(&mut notes, game_hash, "enable_hn1_mod", "false");
             push_value_or_default(&mut notes, game_hash, "enable_outsider_mod", "false");
