@@ -46,6 +46,24 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         Some("osu!") => {
             game_hash.insert(Yaml::from_str("explicit_lyrics"), Yaml::Boolean(false));
 
+            if let Some(minimum_difficulty) = game_hash.remove(&Yaml::from_str("minimum_difficulty")) {
+                game_hash.insert(Yaml::from_str("minimum_difficulty_standard"), minimum_difficulty.clone());
+                game_hash.insert(Yaml::from_str("minimum_difficulty_catch"), minimum_difficulty.clone());
+                game_hash.insert(Yaml::from_str("minimum_difficulty_taiko"), minimum_difficulty.clone());
+                game_hash.insert(Yaml::from_str("minimum_difficulty_4k"), minimum_difficulty.clone());
+                game_hash.insert(Yaml::from_str("minimum_difficulty_7k"), minimum_difficulty.clone());
+                game_hash.insert(Yaml::from_str("minimum_difficulty_other_keys"), minimum_difficulty);
+            }
+
+            if let Some(maximum_difficulty) = game_hash.remove(&Yaml::from_str("maximum_difficulty")) {
+                game_hash.insert(Yaml::from_str("maximum_difficulty_standard"), maximum_difficulty.clone());
+                game_hash.insert(Yaml::from_str("maximum_difficulty_catch"), maximum_difficulty.clone());
+                game_hash.insert(Yaml::from_str("maximum_difficulty_taiko"), maximum_difficulty.clone());
+                game_hash.insert(Yaml::from_str("maximum_difficulty_4k"), maximum_difficulty.clone());
+                game_hash.insert(Yaml::from_str("maximum_difficulty_7k"), maximum_difficulty.clone());
+                game_hash.insert(Yaml::from_str("maximum_difficulty_other_keys"), maximum_difficulty);
+            }
+
             push_value_or_default(&mut notes, game_hash, "minimum_grade", "off");
             push_value_or_default(&mut notes, game_hash, "disable_difficulty_reduction", "false");
             if option_can_be(game_hash, "exclude_standard", &Yaml::Boolean(false), &Yaml::Boolean(false)) {
