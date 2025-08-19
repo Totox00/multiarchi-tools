@@ -357,6 +357,16 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 move_option_weight(randomize_wilds, "false", "vanilla");
             }
         }
+        Some("The Witness") => {
+            if let Some(elevators_come_to_you) = game_hash.get_mut(&Yaml::from_str("elevators_come_to_you")) {
+                move_option_weight_to_yaml(
+                    elevators_come_to_you,
+                    "true",
+                    Yaml::Array(vec![Yaml::from_str("Quarry Elevator"), Yaml::from_str("Swamp Long Bridge"), Yaml::from_str("Bunker Elevator")]),
+                );
+                move_option_weight_to_yaml(elevators_come_to_you, "false", Yaml::Hash(LinkedHashMap::new()));
+            }
+        }
         _ => (),
     };
 
@@ -476,9 +486,12 @@ fn move_option_weight_matches<T: Fn(&Yaml) -> bool>(value: &mut Yaml, from: T, t
 }
 
 fn move_option_weight(value: &mut Yaml, from_str: &str, to_str: &str) {
+    move_option_weight_to_yaml(value, from_str, Yaml::from_str(to_str));
+}
+
+fn move_option_weight_to_yaml(value: &mut Yaml, from_str: &str, to: Yaml) {
     let from = Yaml::from_str(from_str);
     let from_str = Yaml::String(String::from(from_str));
-    let to = Yaml::from_str(to_str);
 
     if *value == from || *value == from_str {
         *value = to;
