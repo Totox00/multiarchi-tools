@@ -179,11 +179,6 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
 
             resolve_weighted_option(game_hash, "game_version");
 
-            if let Some(goal) = game_hash.get_mut(&Yaml::from_str("require_itemfinder")) {
-                move_option_weight(goal, "true", "hard_required");
-                move_option_weight(goal, "false", "not_required");
-            }
-
             push_value_or_default(&mut notes, game_hash, "game_version", "N/A");
 
             if option_can_be_other_than(game_hash, "trainer_name", &Yaml::from_str("choose_in_game"), &Yaml::from_str("choose_in_game")) {
@@ -352,6 +347,11 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             }
         }
         Some("Pokemon Crystal") => {
+            if let Some(require_itemfinder) = game_hash.get_mut(&Yaml::from_str("require_itemfinder")) {
+                move_option_weight(require_itemfinder, "true", "hard_required");
+                move_option_weight(require_itemfinder, "false", "not_required");
+            }
+
             if let Some(randomize_wilds) = game_hash.get_mut(&Yaml::from_str("randomize_wilds")) {
                 move_option_weight(randomize_wilds, "true", "completely_random");
                 move_option_weight(randomize_wilds, "false", "vanilla");
