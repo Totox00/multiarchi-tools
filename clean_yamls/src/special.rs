@@ -29,7 +29,7 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         }
         Some("Stardew Valley") => {
             if let Some(goal) = game_hash.get_mut(&Yaml::from_str("goal")) {
-                move_option_weight(goal, "Perfection", "random");
+                move_option_weight(goal, "perfection", "random");
             }
 
             if option_can_be(game_hash, "goal", &Yaml::from_str("random"), &Yaml::from_str("allsanity")) {
