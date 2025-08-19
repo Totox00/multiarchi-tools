@@ -1,4 +1,4 @@
-pub const VALID_GAMES: [&str; 253] = [
+pub const VALID_GAMES: [&str; 255] = [
     "Adventure",
     "Aquaria",
     "Blasphemous",
@@ -179,6 +179,8 @@ pub const VALID_GAMES: [&str; 253] = [
     "Pokemon FireRed and LeafGreen",
     "Pokemon Mystery Dungeon Explorers of Sky",
     "PokéPark Wii: Pikachu's Adventure [JP]",
+    "PokéPark",
+    "PokePark",
     "Powerwash Simulator",
     "Prodigal",
     "Pseudoregalia",
