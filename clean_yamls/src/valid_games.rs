@@ -196,7 +196,7 @@ pub const VALID_GAMES: [&str; 255] = [
     "Rusted Moss",
     "Satisfactory",
     "Scooby Doo No100F",
-    "Sentinels of the multiverse",
+    "Sentinels of the Multiverse",
     "Shadow the Hedgehog",
     "Sid Meier's Civilization V",
     "Simon Tatham's Portable Puzzle Collection",
