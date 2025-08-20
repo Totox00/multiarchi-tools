@@ -6,4 +6,5 @@
 /compare_new/**
 process.tsv
 output.tsv
+bot_output.txt
 changes.txt

@@ -23,7 +23,7 @@ use crate::{
     name::set_name,
     read::read_process_list,
     special::handle_special,
-    write::write_to_output_list,
+    write::{write_to_bot_output, write_to_output_list},
 };
 
 pub const BUCKET_PATH: &str = "./bucket";
@@ -31,6 +31,7 @@ pub const USED_PATH: &str = "./used";
 pub const DIST_PATH: &str = "./dist";
 pub const PROCESS_LIST_PATH: &str = "./process.tsv";
 pub const OUTPUT_LIST_PATH: &str = "./output.tsv";
+pub const OUTPUT_BOT_PATH: &str = "./bot_output.txt";
 
 fn main() {
     let process_list = read_process_list();
@@ -38,6 +39,13 @@ fn main() {
         Ok(writer) => writer,
         Err(err) => {
             panic!("Error when creating output file: {err}");
+        }
+    };
+
+    let mut bot_output_writer = match File::create(PathBuf::from(OUTPUT_BOT_PATH)) {
+        Ok(writer) => writer,
+        Err(err) => {
+            panic!("Error when creating bot output file: {err}");
         }
     };
 
@@ -53,6 +61,7 @@ fn main() {
         }
 
         write_to_output_list(&mut output_writer, &name, &games);
+        write_to_bot_output(&mut bot_output_writer, &name, &games);
 
         if args().any(|arg| arg == "--move-files") {
             if let Err(err) = rename(

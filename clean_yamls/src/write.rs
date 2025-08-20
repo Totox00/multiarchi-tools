@@ -74,3 +74,14 @@ pub fn write_to_output_list<T: Write>(writer: &mut T, name: &str, games: &[(Stri
         println!("Failed to write to output file: {err}");
     }
 }
+
+pub fn write_to_bot_output<T: Write>(writer: &mut T, name: &str, games: &[(String, u32, Vec<String>)]) {
+    if let Err(err) = writeln!(
+        writer,
+        "{name}\n{}\n{}",
+        games.iter().map(|(game, count, _)| format!("{game} x{count}")).collect::<Vec<_>>().join(", "),
+        games.iter().flat_map(|(_, _, notes)| notes).map(|string| string.as_str()).collect::<Vec<_>>().join(", ")
+    ) {
+        println!("Failed to write to bot output file: {err}");
+    }
+}
