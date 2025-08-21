@@ -256,13 +256,13 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             }
 
             if let Some(trainersanity) = game_hash.get_mut(&Yaml::from_str("trainersanity")) {
-                move_option_weight(trainersanity, "true", "all");
-                move_option_weight(trainersanity, "false", "off");
+                move_option_weight(trainersanity, "true", "456");
+                move_option_weight(trainersanity, "false", "0");
             }
 
             if let Some(provide_hints) = game_hash.get_mut(&Yaml::from_str("provide_hints")) {
-                move_option_weight(provide_hints, "true", "456");
-                move_option_weight(provide_hints, "false", "0");
+                move_option_weight(provide_hints, "true", "all");
+                move_option_weight(provide_hints, "false", "off");
             }
 
             if let Some(flash_required) = game_hash.get_mut(&Yaml::from_str("flash_required")) {
