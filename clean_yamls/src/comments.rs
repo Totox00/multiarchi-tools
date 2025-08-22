@@ -8,11 +8,14 @@ pub struct Comment<'a> {
 pub fn get_comments(content: &str) -> Vec<Comment<'_>> {
     let mut last_key = None;
     let mut comments = vec![];
+    let mut can_extend = true;
+
     for line in content.lines() {
         let mut new_key = false;
         if let Some(key) = find_key(line) {
             last_key = Some(key);
             new_key = true;
+            can_extend = false;
         }
         if let Some((indent, comment)) = line.split_once('#') {
             if let Some(Comment {
@@ -22,16 +25,18 @@ pub fn get_comments(content: &str) -> Vec<Comment<'_>> {
                 indent: _,
             }) = comments.last_mut()
             {
-                if last_key == *last_last_key {
+                if can_extend && last_key == *last_last_key {
                     last_comment.push('\n');
                     last_comment.push_str(indent);
                     last_comment.push('#');
                     last_comment.push_str(comment);
                 } else {
                     comments.push(Comment::new(last_key, comment.to_string(), new_key, indent.to_string()));
+                    can_extend = true;
                 }
             } else {
                 comments.push(Comment::new(last_key, comment.to_string(), new_key, indent.to_string()));
+                can_extend = true;
             }
         }
     }
