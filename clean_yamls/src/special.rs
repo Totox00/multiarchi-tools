@@ -380,6 +380,9 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         }
         Some("Rain World") => {
             game_hash.remove(&Yaml::from_str("which_game_version"));
+            push_value_or_default(&mut notes, game_hash, "which_game_version", "1_10_4");
+            push_value_or_default(&mut notes, game_hash, "is_msc_enabled", "false");
+            push_value_or_default(&mut notes, game_hash, "is_watcher_enabled", "false");
         }
         _ => (),
     };
