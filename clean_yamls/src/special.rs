@@ -384,6 +384,24 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             push_value_or_default(&mut notes, game_hash, "is_msc_enabled", "false");
             push_value_or_default(&mut notes, game_hash, "is_watcher_enabled", "false");
         }
+        Some("Sentinels of the Multiverse") => {
+            if let Some(filler_weights) = game_hash.get_mut(&Yaml::from_str("filler_weights")).and_then(|yaml| yaml.as_mut_vec()) {
+                for entry in filler_weights {
+                    if let Some(hash) = entry.as_mut_hash() {
+                        hash.remove(&Yaml::from_str("typed"));
+                    }
+                }
+            }
+            if let Some(pool_size) = game_hash.get_mut(&Yaml::from_str("pool_size")).and_then(|yaml| yaml.as_mut_hash()) {
+                for (_, v) in pool_size {
+                    if let Some(str) = v.as_str() {
+                        if let Some((val, _)) = str.split_once('+') {
+                            *v = Yaml::from_str(val);
+                        }
+                    }
+                }
+            }
+        }
         _ => (),
     };
 
