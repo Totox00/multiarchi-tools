@@ -1,9 +1,8 @@
+use common::valid_games::VALID_GAMES;
 use hashlink::LinkedHashMap;
 use rand::thread_rng;
 use rand_distr::{Distribution, WeightedIndex};
 use yaml_rust2::Yaml;
-
-use crate::valid_games::VALID_GAMES;
 
 pub fn choose_game(doc: &mut Yaml) -> Option<Yaml> {
     let game_key = Yaml::from_str("game");

@@ -1,7 +1,7 @@
 [package]
-name = "clean_yamls"
+name = "common"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 
 [dependencies]
 yaml-rust2 = "0.9.0"
@@ -9,4 +9,3 @@ hashlink = "0.9.1"
 rand = "0.8.5"
 rand_distr = "0.4.3"
 serde_json = "1.0.143"
-common = { version = "0.1.0", path = "../common" }

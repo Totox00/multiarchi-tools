@@ -44,7 +44,7 @@ pub fn get_comments(content: &str) -> Vec<Comment<'_>> {
     comments
 }
 
-pub fn insert_comments(output: String, comments: &[Comment], id: &str) -> Vec<String> {
+pub fn insert_comments(output: String, comments: &[Comment], source: &str) -> Vec<String> {
     let mut lines: Vec<_> = output.lines().map(String::from).collect();
     let mut line_i = 0;
     'outer: for Comment { last_key, comment, inline, indent } in comments {
@@ -55,14 +55,14 @@ pub fn insert_comments(output: String, comments: &[Comment], id: &str) -> Vec<St
         }
 
         if line_i == lines.len() {
-            println!("Failed to preserve all comments from 'bucket ({id}).yaml'");
+            println!("Failed to preserve all comments from '{source}'");
             break 'outer;
         }
         while find_key(&lines[line_i]) != *last_key {
             line_i += 1;
 
             if line_i == lines.len() {
-                println!("Failed to preserve all comments from 'bucket ({id}).yaml'");
+                println!("Failed to preserve all comments from '{source}'");
                 break 'outer;
             }
         }

@@ -1,11 +1,6 @@
-mod comments;
 mod game;
 mod name;
 mod read;
-mod special;
-mod util;
-mod valid_games;
-mod write;
 
 use std::{
     env::args,
@@ -15,16 +10,14 @@ use std::{
     path::PathBuf,
 };
 
-use yaml_rust2::{YamlEmitter, YamlLoader};
-
-use crate::{
+use common::{
     comments::{get_comments, insert_comments},
-    game::choose_game,
-    name::set_name,
-    read::read_process_list,
     special::handle_special,
     write::{write_to_bot_output, write_to_output_list},
 };
+use yaml_rust2::{YamlEmitter, YamlLoader};
+
+use crate::{game::choose_game, name::set_name, read::read_process_list};
 
 pub const BUCKET_PATH: &str = "./bucket";
 pub const USED_PATH: &str = "./used";
@@ -131,7 +124,7 @@ fn process_file(name: &str, id: &str) -> Vec<(String, u32, Vec<String>)> {
         let _ = output_buf.write_char('\n');
     }
 
-    let lines = insert_comments(output_buf, &comments, id);
+    let lines = insert_comments(output_buf, &comments, &format!("bucket ({id}).yaml"));
 
     match File::create(PathBuf::from(DIST_PATH).join(format!("{name}.yaml"))) {
         Ok(mut writer) => writer.write_all(lines.join("\n").as_bytes()).unwrap_or_else(|_| println!("Error when writing to '{name}.yaml'")),

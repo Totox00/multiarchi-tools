@@ -36,6 +36,18 @@ checksum = "9555578bc9e57714c812a1f84e4fc5b4d21fcb063490c624de019f7464c91268"
 name = "clean_yamls"
 version = "0.1.0"
 dependencies = [
+ "common",
+ "hashlink",
+ "rand",
+ "rand_distr",
+ "serde_json",
+ "yaml-rust2",
+]
+
+[[package]]
+name = "common"
+version = "0.1.0"
+dependencies = [
  "hashlink",
  "rand",
  "rand_distr",
@@ -194,6 +206,15 @@ checksum = "32cb0b9bc82b0a0876c2dd994a7e7a2683d3e7390ca40e6886785ef0c7e3ee31"
 dependencies = [
  "num-traits",
  "rand",
+]
+
+[[package]]
+name = "reprocess_yamls"
+version = "0.1.0"
+dependencies = [
+ "common",
+ "hashlink",
+ "yaml-rust2",
 ]
 
 [[package]]

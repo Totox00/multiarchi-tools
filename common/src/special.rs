@@ -395,10 +395,10 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             }
             if let Some(pool_size) = game_hash.get_mut(&Yaml::from_str("pool_size")).and_then(|yaml| yaml.as_mut_hash()) {
                 for (_, v) in pool_size {
-                    if let Some(str) = v.as_str() {
-                        if let Some((val, _)) = str.split_once('+') {
-                            *v = Yaml::from_str(val);
-                        }
+                    if let Some(str) = v.as_str()
+                        && let Some((val, _)) = str.split_once('+')
+                    {
+                        *v = Yaml::from_str(val);
                     }
                 }
             }
@@ -459,11 +459,7 @@ fn to_string(yaml: &Yaml) -> String {
                 .filter(|(_, weight)| as_i64(weight).is_some_and(|weight| weight > 0))
                 .map(|(yaml, weight)| {
                     let weight_string = to_string(weight);
-                    if weight_string == "~" {
-                        to_string(yaml)
-                    } else {
-                        format!("{}: {weight_string}", to_string(yaml))
-                    }
+                    if weight_string == "~" { to_string(yaml) } else { format!("{}: {weight_string}", to_string(yaml)) }
                 })
                 .collect();
 
@@ -559,36 +555,35 @@ fn move_option_weight_to_yaml(value: &mut Yaml, from_str: &str, to: Yaml) {
         *value = to;
     } else if let Some(hash) = value.as_mut_hash() {
         if let Some(weight) = hash.remove(&from) {
-            if let Some(weight) = as_i64(&weight) {
-                if weight > 0 {
-                    if let Some(existing_weight) = hash.get_mut(&to) {
-                        if let Some(existing_value) = existing_weight.as_i64() {
-                            *existing_weight = Yaml::Integer(existing_value + weight);
-                        } else if let Some(existing_value) = existing_weight.as_f64() {
-                            *existing_weight = Yaml::Integer(existing_value as i64 + weight);
-                        } else {
-                            hash.insert(to, Yaml::Integer(weight));
-                        }
+            if let Some(weight) = as_i64(&weight)
+                && weight > 0
+            {
+                if let Some(existing_weight) = hash.get_mut(&to) {
+                    if let Some(existing_value) = existing_weight.as_i64() {
+                        *existing_weight = Yaml::Integer(existing_value + weight);
+                    } else if let Some(existing_value) = existing_weight.as_f64() {
+                        *existing_weight = Yaml::Integer(existing_value as i64 + weight);
                     } else {
                         hash.insert(to, Yaml::Integer(weight));
                     }
+                } else {
+                    hash.insert(to, Yaml::Integer(weight));
                 }
             }
-        } else if let Some(weight) = hash.remove(&from_str) {
-            if let Some(weight) = as_i64(&weight) {
-                if weight > 0 {
-                    if let Some(existing_weight) = hash.get_mut(&to) {
-                        if let Some(existing_value) = existing_weight.as_i64() {
-                            *existing_weight = Yaml::Integer(existing_value + weight);
-                        } else if let Some(existing_value) = existing_weight.as_f64() {
-                            *existing_weight = Yaml::Integer(existing_value as i64 + weight);
-                        } else {
-                            hash.insert(to, Yaml::Integer(weight));
-                        }
-                    } else {
-                        hash.insert(to, Yaml::Integer(weight));
-                    }
+        } else if let Some(weight) = hash.remove(&from_str)
+            && let Some(weight) = as_i64(&weight)
+            && weight > 0
+        {
+            if let Some(existing_weight) = hash.get_mut(&to) {
+                if let Some(existing_value) = existing_weight.as_i64() {
+                    *existing_weight = Yaml::Integer(existing_value + weight);
+                } else if let Some(existing_value) = existing_weight.as_f64() {
+                    *existing_weight = Yaml::Integer(existing_value as i64 + weight);
+                } else {
+                    hash.insert(to, Yaml::Integer(weight));
                 }
+            } else {
+                hash.insert(to, Yaml::Integer(weight));
             }
         }
     }
