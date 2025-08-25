@@ -405,17 +405,29 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         }
         Some("Hatsune Miku Project Diva Mega Mix+") => {
             push_value_or_default(&mut notes, game_hash, "allow_megamix_dlc_songs", "false");
-            notes.push(format!(
-                "megamix_mod_data: [{}]",
-                game_hash
-                    .get(&Yaml::from_str("megamix_mod_data"))
-                    .and_then(|yaml| yaml.as_str())
-                    .and_then(|str| serde_json::from_str(str).ok())
-                    .and_then(|value| if let Value::Object(map) = value { Some(map) } else { None })
-                    .map(|map| map.keys().cloned().collect())
-                    .unwrap_or(vec![])
-                    .join(", ")
-            ));
+            let mod_str = if let Some(yaml) = game_hash.get_mut(&Yaml::from_str("megamix_mod_data")) {
+                if let Some(Value::Object(mut map)) = yaml.as_str().and_then(|str| serde_json::from_str(str).ok()) {
+                    let mut changed = false;
+                    changed |= map.remove("EdenDarkPack").is_some();
+                    let mod_str = map.keys().cloned().collect::<Vec<_>>().join(", ");
+                    if changed {
+                        if let Ok(new) = serde_json::to_string(&Value::Object(map)) {
+                            *yaml = Yaml::from_str(&new);
+                        } else {
+                            game_hash.remove(&Yaml::from_str("megamix_mod_data"));
+
+                            println!("Failed to serialize new mod list for '{name}.yaml', all mods have been removed");
+                        }
+                    }
+                    mod_str
+                } else {
+                    String::new()
+                }
+            } else {
+                String::new()
+            };
+
+            notes.push(format!("megamix_mod_data: [{mod_str}]",));
         }
         _ => (),
     };
