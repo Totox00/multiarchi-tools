@@ -1,4 +1,5 @@
 use hashlink::LinkedHashMap;
+use serde_json::Value;
 use yaml_rust2::Yaml;
 
 use crate::util::{as_i64, resolve_weighted_option};
@@ -401,6 +402,20 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                     }
                 }
             }
+        }
+        Some("Hatsune Miku Project Diva Mega Mix+") => {
+            push_value_or_default(&mut notes, game_hash, "allow_megamix_dlc_songs", "false");
+            notes.push(format!(
+                "megamix_mod_data: [{}]",
+                game_hash
+                    .get(&Yaml::from_str("megamix_mod_data"))
+                    .and_then(|yaml| yaml.as_str())
+                    .and_then(|str| serde_json::from_str(str).ok())
+                    .and_then(|value| if let Value::Object(map) = value { Some(map) } else { None })
+                    .map(|map| map.keys().cloned().collect())
+                    .unwrap_or(vec![])
+                    .join(", ")
+            ));
         }
         _ => (),
     };
