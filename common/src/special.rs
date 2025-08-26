@@ -202,7 +202,13 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 push_value_or_default(&mut notes, game_hash, "varia_custom_preset", "N/A");
             }
         }
-        Some("Terraria") => push_value_or_default(&mut notes, game_hash, "calamity", "false"),
+        Some("Terraria") => {
+            if option_can_be(game_hash, "goal", &Yaml::Null, &Yaml::from_str("boss_rush")) {
+                notes.push(String::from("calamity: true"));
+            } else {
+                push_value_or_default(&mut notes, game_hash, "calamity", "false")
+            };
+        }
         Some("TUNIC") => {
             push_value_or_default(&mut notes, game_hash, "combat_logic", "off");
             push_value_or_default(&mut notes, game_hash, "lanternless", "false");
