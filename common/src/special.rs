@@ -165,7 +165,10 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             push_value_or_default(&mut notes, game_hash, "difficult_logic", "FALSE");
         }
         Some("The Messenger") => push_value_or_default(&mut notes, game_hash, "logic_level", "normal"),
-        Some("Muse Dash") => push_value_or_default(&mut notes, game_hash, "dlc_packs", "[]"),
+        Some("Muse Dash") => {
+            push_value_or_default(&mut notes, game_hash, "dlc_packs", "[]");
+            game_hash.remove(&Yaml::from_str("available_trap_types"));
+        }
         Some("Ocarina of Time") => {
             push_value_or_default(&mut notes, game_hash, "logic_rules", "glitchless");
             push_value_or_default(&mut notes, game_hash, "logic_tricks", "[]")
@@ -334,6 +337,11 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 move_option_weight(randomize_secondary_fire, "true", "split");
                 move_option_weight(randomize_secondary_fire, "false", "disabled");
             }
+
+            game_hash.remove(&Yaml::from_str("goal"));
+            game_hash.remove(&Yaml::from_str("include_secret_mission_completion"));
+            game_hash.remove(&Yaml::from_str("boss_rewards"));
+            game_hash.remove(&Yaml::from_str("starting_weapon"));
         }
         Some("Against the Storm") => push_value_or_default(&mut notes, game_hash, "enable_dlc", "false"),
         Some("Guild Wars 2") => {
@@ -434,6 +442,21 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             };
 
             notes.push(format!("megamix_mod_data: [{mod_str}]",));
+        }
+        Some("Jigsaw") => {
+            game_hash.remove(&Yaml::from_str("permillage_of_checks_out_of_logic"));
+            game_hash.remove(&Yaml::from_str("maximum_number_of_real_items"));
+        }
+        Some("Psychonauts") => {
+            if let Some(goal) = game_hash.get_mut(&Yaml::from_str("goal")) {
+                move_option_weight(goal, "braintank_and_brainhunt", "asylum_brain_tank_and_brain_hunt");
+            }
+        }
+        Some("Luigi's Mansion") => {
+            if let Some(door_rando) = game_hash.get_mut(&Yaml::from_str("door_rando")) {
+                move_option_weight(door_rando, "true", "randomized");
+                move_option_weight(door_rando, "false", "off");
+            }
         }
         _ => (),
     };
