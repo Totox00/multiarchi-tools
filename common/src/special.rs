@@ -448,7 +448,7 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             game_hash.remove(&Yaml::from_str("maximum_number_of_real_items"));
         }
         Some("Psychonauts") => {
-            if let Some(goal) = game_hash.get_mut(&Yaml::from_str("goal")) {
+            if let Some(goal) = game_hash.get_mut(&Yaml::from_str("Goal")) {
                 move_option_weight(goal, "braintank_and_brainhunt", "asylum_brain_tank_and_brain_hunt");
             }
         }
