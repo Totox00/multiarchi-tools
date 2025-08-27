@@ -114,14 +114,16 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         Some("Final Fantasy Mystic Quest") => push_value_or_default(&mut notes, game_hash, "logic", "standard"),
         Some("A Hat in Time") => {
             push_value_or_default(&mut notes, game_hash, "LogicDifficulty", "normal");
-            push_value_or_default(&mut notes, game_hash, "EnableDLC1", "false");
+
+            if option_can_be(game_hash, "EnableDeathWish", &Yaml::Boolean(false), &Yaml::Boolean(true)) && !option_can_be(game_hash, "EnableDLC1", &Yaml::Boolean(false), &Yaml::Boolean(true)) {
+                notes.push(String::from("EnableDLC1: deathwishonly"));
+            } else {
+                push_value_or_default(&mut notes, game_hash, "EnableDLC1", "false");
+            }
+
             push_value_or_default(&mut notes, game_hash, "EnableDLC2", "false");
             push_value_or_default(&mut notes, game_hash, "DWEnableBonus", "false");
             push_value_or_default(&mut notes, game_hash, "DWExcludeAnnoyingContracts", "true");
-
-            if option_can_be(game_hash, "EnableDeathWish", &Yaml::Boolean(false), &Yaml::Boolean(true)) && option_can_be(game_hash, "EnableDLC1", &Yaml::Boolean(false), &Yaml::Boolean(true)) {
-                notes.push(String::from("EnableDLC1: deathwishonly"));
-            }
 
             if option_can_be(game_hash, "DWShuffle", &Yaml::Boolean(false), &Yaml::Boolean(true)) && option_can_be(game_hash, "DWEnableBonus", &Yaml::Boolean(false), &Yaml::Boolean(true)) {
                 push_value_or_default(&mut notes, game_hash, "DWExcludeAnnoyingBonuses", "true");
