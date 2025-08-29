@@ -236,6 +236,11 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         Some("Banjo-Tooie") => {
             push_value_or_default(&mut notes, game_hash, "logic_type", "intended");
             change_option_name(game_hash, "game_length", "world_requirements");
+            if let Some(open_silos) = game_hash.get_mut(&Yaml::from_str("open_silos")) {
+                move_option_weight(open_silos, "none", "1");
+                move_option_weight(open_silos, "one", "2");
+                move_option_weight(open_silos, "all", "7");
+            }
         }
         Some("Duke Nukem 3D") => push_value_or_default(&mut notes, game_hash, "logic_difficulty", "medium"),
         Some("The Legend of Zelda - Oracle of Ages") => push_value_or_default(&mut notes, game_hash, "logic_difficulty", "casual"),
@@ -314,7 +319,14 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             }
         }
         Some("Super Metroid Map Rando") => push_value_or_default(&mut notes, game_hash, "preset", "hard"),
-        Some("Sonic Adventure DX") => push_value_or_default(&mut notes, game_hash, "logic_level", "normal_logic"),
+        Some("Sonic Adventure DX") => {
+            push_value_or_default(&mut notes, game_hash, "logic_level", "normal_logic");
+
+            if let Some(lazy_fishing) = game_hash.get_mut(&Yaml::from_str("lazy_fishing")) {
+                move_option_weight(lazy_fishing, "true", "enabled_all");
+                move_option_weight(lazy_fishing, "false", "disabled");
+            }
+        }
         Some("Tyrian") => push_value_or_default(&mut notes, game_hash, "logic_difficulty", "standard"),
         Some("ANIMAL WELL") => {
             push_value_or_default(&mut notes, game_hash, "tanking_damage", "false");
@@ -448,6 +460,8 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         Some("Jigsaw") => {
             game_hash.remove(&Yaml::from_str("permillage_of_checks_out_of_logic"));
             game_hash.remove(&Yaml::from_str("maximum_number_of_real_items"));
+            game_hash.remove(&Yaml::from_str("minimum_number_of_pieces_per_real_item"));
+            game_hash.remove(&Yaml::from_str("enable_forced_local_filler_items"));
         }
         Some("Psychonauts") => {
             if let Some(goal) = game_hash.get_mut(&Yaml::from_str("Goal")) {
