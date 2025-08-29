@@ -76,7 +76,7 @@ pub const VALID_GAMES: [&str; 250] = [
     "An Untitled Story",
     "ANIMAL WELL",
     "Anodyne",
-    "Another Crab's Treasure",
+    "Another Crabs Treasure",
     "APBingo",
     "Ape Escape 3",
     "Astalon",
