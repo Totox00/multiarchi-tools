@@ -112,6 +112,7 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         Some("DOOM II") => push_value_or_default(&mut notes, game_hash, "pro", "false"),
         Some("Final Fantasy") => push_value_or_default(&mut notes, game_hash, "permalink", "N/A"),
         Some("Final Fantasy Mystic Quest") => push_value_or_default(&mut notes, game_hash, "logic", "standard"),
+        Some("Final Fantasy 12 Open World") => push_value_or_default(&mut notes, game_hash, "character_progression_scaling", "true"),
         Some("A Hat in Time") => {
             push_value_or_default(&mut notes, game_hash, "LogicDifficulty", "normal");
 
