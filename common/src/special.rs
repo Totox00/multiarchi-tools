@@ -431,6 +431,12 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                     }
                 }
             }
+            if let Some(location_density) = game_hash.get_mut(&Yaml::from_str("location_density")).and_then(|yaml| yaml.as_mut_hash()) {
+                let key = Yaml::from_str("hero");
+                if !location_density.contains_key(&key) {
+                    location_density.insert(key, Yaml::Integer(0));
+                }
+            }
             push_value_or_default(&mut notes, game_hash, "enabled_sets", "[Official]");
         }
         Some("Hatsune Miku Project Diva Mega Mix+") => {
