@@ -75,6 +75,10 @@ fn process_file(path: &Path, name: &str) -> Vec<(String, u32, Vec<String>)> {
             if game.as_str().is_some_and(|game| game == "Chrono Trigger Jets of Time") {
                 println!("'{name}.yaml' contains a Chrono Trigger Jets of Time");
             }
+
+            if game.as_str().is_some_and(|game| game == "Final Fantasy") {
+                println!("'{name}.yaml' contains a Final Fantasy");
+            }
         }
     }
     if documents.len() > 8 {
