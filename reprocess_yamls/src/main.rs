@@ -8,12 +8,13 @@ use std::{
 use common::{
     comments::{get_comments, insert_comments},
     special::handle_special,
-    write::write_to_output_list,
+    write::{write_to_bot_output, write_to_output_list},
 };
 use yaml_rust2::{Yaml, YamlEmitter, YamlLoader};
 
 pub const DIST_PATH: &str = "./dist";
 pub const OUTPUT_LIST_PATH: &str = "./output.tsv";
+pub const OUTPUT_BOT_PATH: &str = "./bot_output.txt";
 
 fn main() {
     if let Ok(dir) = Path::new(DIST_PATH).read_dir() {
@@ -21,6 +22,13 @@ fn main() {
             Ok(writer) => writer,
             Err(err) => {
                 panic!("Error when creating output file: {err}");
+            }
+        };
+
+        let mut bot_output_writer = match File::create(PathBuf::from(OUTPUT_BOT_PATH)) {
+            Ok(writer) => writer,
+            Err(err) => {
+                panic!("Error when creating bot output file: {err}");
             }
         };
 
@@ -38,6 +46,7 @@ fn main() {
             }
 
             write_to_output_list(&mut output_writer, &name, &games);
+            write_to_bot_output(&mut bot_output_writer, &name, &games);
         }
     }
 }
