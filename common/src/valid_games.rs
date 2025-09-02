@@ -1,4 +1,4 @@
-pub const VALID_GAMES: [&str; 250] = [
+pub const VALID_GAMES: [&str; 249] = [
     "Adventure",
     "Aquaria",
     "Blasphemous",
@@ -117,7 +117,6 @@ pub const VALID_GAMES: [&str; 250] = [
     "Final Fantasy 6 Worlds Collide",
     "Final Fantasy XII: Trial Mode",
     "Fire Emblem Sacred Stones",
-    "FNaFW",
     "Gauntlet Legends",
     "Getting Over It with Bennett Foddy",
     "Golden Sun The Lost Age",
