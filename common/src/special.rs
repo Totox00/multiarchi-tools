@@ -218,6 +218,8 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             };
         }
         Some("TUNIC") => {
+            game_hash.remove(&Yaml::from_str("logic_rules"));
+
             push_value_or_default(&mut notes, game_hash, "combat_logic", "off");
             push_value_or_default(&mut notes, game_hash, "lanternless", "false");
             push_value_or_default(&mut notes, game_hash, "maskless", "false");
@@ -482,6 +484,11 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             if let Some(door_rando) = game_hash.get_mut(&Yaml::from_str("door_rando")) {
                 move_option_weight(door_rando, "true", "randomized");
                 move_option_weight(door_rando, "false", "off");
+            }
+        }
+        Some("Factorio") => {
+            if let Some(world_gen) = game_hash.get_mut(&Yaml::from_str("world_gen")).and_then(|yaml| yaml.as_mut_hash()) {
+                world_gen.remove(&Yaml::from_str("terrain_segmentation"));
             }
         }
         _ => (),
