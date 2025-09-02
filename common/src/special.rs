@@ -25,8 +25,10 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
 
     match game.as_str() {
         Some("OpenRCT2") => {
-            println!("'{name}.yaml' contains an OpenRCT2");
-            game_hash.insert(Yaml::from_str("scenario"), Yaml::from_str("To review"));
+            println!(
+                "'{name}.yaml' contains an OpenRCT2 with scenario: {}",
+                get_value_or_default(game_hash, "scenario", "archipelago_madness_vanilla")
+            );
         }
         Some("Stardew Valley") => {
             if let Some(goal) = game_hash.get_mut(&Yaml::from_str("goal")) {
