@@ -113,6 +113,10 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             }
         }
         Some("Keymaster's Keep") => {
+            if option_can_be(game_hash, "include_adult_only_or_unrated_games", &Yaml::Boolean(false), &Yaml::Boolean(true)) {
+                println!("'{name}.yaml' may have adult only or unrated games in Keymaster's Keep");
+            }
+
             game_hash.insert(Yaml::from_str("include_adult_only_or_unrated_games"), Yaml::Boolean(false));
         }
         Some("Overcooked! 2") => {
