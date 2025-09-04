@@ -70,28 +70,46 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             push_value_or_default(&mut notes, game_hash, "minimum_grade", "off");
             push_value_or_default(&mut notes, game_hash, "disable_difficulty_reduction", "false");
             if option_can_be(game_hash, "exclude_standard", &Yaml::Boolean(false), &Yaml::Boolean(false)) {
-                push_value_or_default(&mut notes, game_hash, "minimum_difficulty_standard", "0");
-                push_value_or_default(&mut notes, game_hash, "maximum_difficulty_standard", "1000");
+                notes.push(format!(
+                    "standard: {}-{}",
+                    get_value_or_default(game_hash, "minimum_difficulty_standard", "0"),
+                    get_value_or_default(game_hash, "maximum_difficulty_standard", "1000")
+                ));
             }
             if option_can_be(game_hash, "exclude_catch", &Yaml::Boolean(false), &Yaml::Boolean(false)) {
-                push_value_or_default(&mut notes, game_hash, "minimum_difficulty_catch", "0");
-                push_value_or_default(&mut notes, game_hash, "maximum_difficulty_catch", "1000");
+                notes.push(format!(
+                    "catch: {}-{}",
+                    get_value_or_default(game_hash, "minimum_difficulty_catch", "0"),
+                    get_value_or_default(game_hash, "maximum_difficulty_catch", "1000")
+                ));
             }
             if option_can_be(game_hash, "exclude_taiko", &Yaml::Boolean(false), &Yaml::Boolean(false)) {
-                push_value_or_default(&mut notes, game_hash, "minimum_difficulty_taiko", "0");
-                push_value_or_default(&mut notes, game_hash, "maximum_difficulty_taiko", "1000");
+                notes.push(format!(
+                    "taiko: {}-{}",
+                    get_value_or_default(game_hash, "minimum_difficulty_taiko", "0"),
+                    get_value_or_default(game_hash, "maximum_difficulty_taiko", "1000")
+                ));
             }
             if option_can_be(game_hash, "exclude_4k", &Yaml::Boolean(false), &Yaml::Boolean(false)) {
-                push_value_or_default(&mut notes, game_hash, "minimum_difficulty_4k", "0");
-                push_value_or_default(&mut notes, game_hash, "maximum_difficulty_4k", "1000");
+                notes.push(format!(
+                    "4k: {}-{}",
+                    get_value_or_default(game_hash, "minimum_difficulty_4k", "0"),
+                    get_value_or_default(game_hash, "maximum_difficulty_4k", "1000")
+                ));
             }
             if option_can_be(game_hash, "exclude_7k", &Yaml::Boolean(false), &Yaml::Boolean(false)) {
-                push_value_or_default(&mut notes, game_hash, "minimum_difficulty_7k", "0");
-                push_value_or_default(&mut notes, game_hash, "maximum_difficulty_7k", "1000");
+                notes.push(format!(
+                    "7k: {}-{}",
+                    get_value_or_default(game_hash, "minimum_difficulty_7k", "0"),
+                    get_value_or_default(game_hash, "maximum_difficulty_7k", "1000")
+                ));
             }
             if option_can_be(game_hash, "exclude_other_keys", &Yaml::Boolean(false), &Yaml::Boolean(false)) {
-                push_value_or_default(&mut notes, game_hash, "minimum_difficulty_other_keys", "0");
-                push_value_or_default(&mut notes, game_hash, "maximum_difficulty_other_keys", "1000");
+                notes.push(format!(
+                    "other_keys: {}-{}",
+                    get_value_or_default(game_hash, "minimum_difficulty_other_keys", "0"),
+                    get_value_or_default(game_hash, "maximum_difficulty_other_keys", "1000")
+                ));
             }
         }
         Some("Keymaster's Keep") => {
