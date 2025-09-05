@@ -5,13 +5,8 @@ use crate::valid_games::VALID_GAMES;
 
 const SKIPPED_GAMES: [&str; 1] = ["Clique"];
 const POINTS_OVERRIDE: phf::Map<&'static str, u32> = phf_map! {
-    "Clique" => 0,
-    "Autopelago" => 0,
-    "ArchipIDLE" => 0,
-    "Archipelago" => 0,
-    "APBingo" => 0,
-    "Keymaster's Keep" => 2,
-    "Stardew Valley" => 2
+    "Clique" | "Autopelago" | "ArchipIDLE" | "Archipelago" | "APBingo" => 0,
+    "Keymaster's Keep" | "Stardew Valley" => 2
 };
 
 pub fn write_to_output_list<T: Write>(writer: &mut T, name: &str, games: &[(String, u32, Vec<String>)]) {
