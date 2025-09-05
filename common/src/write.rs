@@ -1,16 +1,39 @@
+use phf::phf_map;
 use std::io::Write;
 
 use crate::valid_games::VALID_GAMES;
+
+const SKIPPED_GAMES: [&str; 1] = ["Clique"];
+const POINTS_OVERRIDE: phf::Map<&'static str, u32> = phf_map! {
+    "Clique" => 0,
+    "Autopelago" => 0,
+    "ArchipIDLE" => 0,
+    "Archipelago" => 0,
+    "APBingo" => 0,
+    "Keymaster's Keep" => 2,
+    "Stardew Valley" => 2
+};
 
 pub fn write_to_output_list<T: Write>(writer: &mut T, name: &str, games: &[(String, u32, Vec<String>)]) {
     if let Err(err) = write!(writer, "{name}\t") {
         println!("Failed to write to output file: {err}");
     }
 
+    let mut counted_games = 0;
+    let mut points = 1;
     let mut invalid_games = vec![];
     for (game, count, _) in games {
         if *count > 0 && !VALID_GAMES.contains(&game.as_str()) {
             invalid_games.push(game.as_str());
+        }
+
+        if counted_games < 8 && !SKIPPED_GAMES.contains(&game.as_str()) {
+            counted_games += 1;
+            if let Some(new_points) = POINTS_OVERRIDE.get(game.as_str()) {
+                points += *new_points;
+            } else {
+                points += 1;
+            }
         }
     }
 
@@ -63,22 +86,39 @@ pub fn write_to_output_list<T: Write>(writer: &mut T, name: &str, games: &[(Stri
     }
 
     if note_lines.is_empty() {
-        if let Err(err) = writeln!(writer) {
+        if let Err(err) = write!(writer, "\t") {
             println!("Failed to write to output file: {err}");
         }
     } else if note_lines.len() == 1 {
-        if let Err(err) = writeln!(writer, "\t{}", note_lines[0]) {
+        if let Err(err) = write!(writer, "\t{}", note_lines[0]) {
             println!("Failed to write to output file: {err}");
         }
-    } else if let Err(err) = writeln!(writer, "\t\"{}\"", note_lines.iter().map(String::as_str).collect::<Vec<_>>().join("\n")) {
+    } else if let Err(err) = write!(writer, "\t\"{}\"", note_lines.iter().map(String::as_str).collect::<Vec<_>>().join("\n")) {
+        println!("Failed to write to output file: {err}");
+    }
+
+    if let Err(err) = writeln!(writer, "\t{points}") {
         println!("Failed to write to output file: {err}");
     }
 }
 
 pub fn write_to_bot_output<T: Write>(writer: &mut T, name: &str, games: &[(String, u32, Vec<String>)]) {
+    let mut counted_games = 0;
+    let mut points = 1;
+    for (game, _, _) in games {
+        if counted_games < 8 && !SKIPPED_GAMES.contains(&game.as_str()) {
+            counted_games += 1;
+            if let Some(new_points) = POINTS_OVERRIDE.get(game.as_str()) {
+                points += *new_points;
+            } else {
+                points += 1;
+            }
+        }
+    }
+
     if let Err(err) = writeln!(
         writer,
-        "{name}\n{}\n{}",
+        "{name}\n{}\n{}\n{points}",
         games.iter().map(|(game, count, _)| format!("{game} x{count}")).collect::<Vec<_>>().join(", "),
         games.iter().flat_map(|(_, _, notes)| notes).map(|string| string.as_str()).collect::<Vec<_>>().join(", ")
     ) {
