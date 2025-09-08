@@ -462,6 +462,11 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 if !location_density.contains_key(&key) {
                     location_density.insert(key, Yaml::Integer(0));
                 }
+                if let Some(value) = location_density.remove(&Yaml::from_str("variant")) {
+                    location_density.insert(Yaml::from_str("variant_unlock"), value);
+                } else {
+                    location_density.insert(Yaml::from_str("variant_unlock"), Yaml::Integer(0));
+                }
             }
             push_value_or_default(&mut notes, game_hash, "enabled_sets", "[Official]");
         }
