@@ -518,6 +518,7 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 world_gen.remove(&Yaml::from_str("terrain_segmentation"));
             }
         }
+        Some("Ty the Tasmanian Tiger") => push_value_or_default(&mut notes, game_hash, "logic_difficulty", "standard"),
         _ => (),
     };
 
