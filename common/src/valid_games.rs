@@ -1,4 +1,4 @@
-pub const VALID_GAMES: [&str; 249] = [
+pub const VALID_GAMES: [&str; 258] = [
     "Adventure",
     "Aquaria",
     "Blasphemous",
@@ -69,7 +69,6 @@ pub const VALID_GAMES: [&str; 249] = [
     "Yoshi's Island",
     "Yu-Gi-Oh! 2006",
     "Zillion",
-    "A Difficult Game About Climbing",
     "A Link Between Worlds",
     "Against the Storm",
     "Air Delivery",
@@ -223,7 +222,7 @@ pub const VALID_GAMES: [&str; 249] = [
     "The Legend of Zelda: Phantom Hourglass",
     "The Simpsons Hit And Run",
     "The Sims 4",
-    "Trackmania Random Campaign",
+    "Trackmania",
     "TurnipBoy",
     "Twilight Princess",
     "Ty the Tasmanian Tiger",
@@ -248,4 +247,14 @@ pub const VALID_GAMES: [&str; 249] = [
     "Bumper Stickers",
     "Archipelago",
     "Risk of Rain",
+    "Ape Escape",
+    "Christmas Delivery",
+    "Final Fantasy 4 Free Enterprise",
+    "Frogmonster",
+    "Mario is Missing",
+    "Sea of Thieves",
+    "Severed Soul",
+    "UFO 50",
+    "Void Stranger",
+    "Wargroove 2",
 ];
