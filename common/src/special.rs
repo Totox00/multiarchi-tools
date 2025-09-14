@@ -292,6 +292,8 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 game_hash.insert(Yaml::from_str("game_version"), Yaml::Hash(new_hash));
             }
 
+            game_hash.remove(&Yaml::from_str("shop_prices"));
+
             resolve_weighted_option(game_hash, "game_version");
 
             if let Some(goal) = game_hash.get_mut(&Yaml::from_str("goal")) {
@@ -312,6 +314,11 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             if let Some(flash_required) = game_hash.get_mut(&Yaml::from_str("flash_required")) {
                 move_option_weight(flash_required, "true", "required");
                 move_option_weight(flash_required, "false", "off");
+            }
+
+            if let Some(randomize_fly_destinations) = game_hash.get_mut(&Yaml::from_str("randomize_fly_destinations")) {
+                move_option_weight(randomize_fly_destinations, "true", "completely_random");
+                move_option_weight(randomize_fly_destinations, "false", "off");
             }
 
             push_value_or_default(&mut notes, game_hash, "game_version", "N/A");
@@ -519,6 +526,42 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             }
         }
         Some("Ty the Tasmanian Tiger") => push_value_or_default(&mut notes, game_hash, "logic_difficulty", "standard"),
+        Some("Paper Mario The Thousand Year Door") => {
+            if let Some(chapter_clears) = game_hash.remove(&Yaml::from_str("chapter_clears")) {
+                game_hash.insert(Yaml::from_str("goal_stars"), chapter_clears.clone());
+                game_hash.insert(Yaml::from_str("palace_stars"), chapter_clears);
+                game_hash.insert(Yaml::from_str("goal"), Yaml::from_str("crystal_stars"));
+            }
+        }
+        Some("Golden Sun The Lost Age") => {
+            if let Some(enemy_elemental_resistance) = game_hash.get_mut(&Yaml::from_str("enemy_elemental_resistance")) {
+                move_option_weight(enemy_elemental_resistance, "shuffle_elemmental_res", "shuffle_elemental_res");
+            }
+        }
+        Some("The Minish Cap") => {
+            if option_can_be(game_hash, "goal_vaati", &Yaml::Boolean(true), &Yaml::Boolean(false)) {
+                game_hash.insert(Yaml::from_str("goal"), Yaml::from_str("pedestal"));
+            } else {
+                game_hash.remove(&Yaml::from_str("goal_vaati"));
+            }
+        }
+        Some("Minishoot Adventures") => {
+            if let Some(completion_goals) = game_hash.get_mut(&Yaml::from_str("completion_goals")) {
+                move_option_weight(completion_goals, "both", "dungeon_5_and_snow");
+            }
+        }
+        Some("Stacklands") => {
+            if option_can_be(game_hash, "goal", &Yaml::from_str(""), &Yaml::from_str("kill_wicked_witch")) {
+                game_hash.insert(Yaml::from_str("boards"), Yaml::from_str("mainland_and_forest"));
+            } else if option_can_be(game_hash, "goal", &Yaml::from_str(""), &Yaml::from_str("kill_demon")) {
+                game_hash.insert(Yaml::from_str("boards"), Yaml::from_str("mainland_only"));
+            }
+
+            if let Some(goal) = game_hash.get_mut(&Yaml::from_str("goal")) {
+                move_option_weight(goal, "kill_demon", "random_boss");
+                move_option_weight(goal, "kill_wicked_witch", "random_boss");
+            }
+        }
         _ => (),
     };
 
