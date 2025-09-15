@@ -352,7 +352,10 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 }
             }
         }
-        Some("Super Metroid Map Rando") => push_value_or_default(&mut notes, game_hash, "preset", "hard"),
+        Some("Super Metroid Map Rando") => {
+            push_value_or_default(&mut notes, game_hash, "preset", "hard");
+            println!("'{name}.yaml' contains a Super Metroid Map Rando");
+        }
         Some("Sonic Adventure DX") => {
             push_value_or_default(&mut notes, game_hash, "logic_level", "normal_logic");
 
