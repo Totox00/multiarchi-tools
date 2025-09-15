@@ -562,6 +562,11 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 move_option_weight(goal, "kill_wicked_witch", "random_boss");
             }
         }
+        Some("Oxygen Not Included") => {
+            push_value_or_default(&mut notes, game_hash, "spaced_out", "true");
+            push_value_or_default(&mut notes, game_hash, "frosty", "true");
+            push_value_or_default(&mut notes, game_hash, "bionic", "false");
+        }
         _ => (),
     };
 
