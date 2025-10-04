@@ -535,6 +535,10 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 game_hash.insert(Yaml::from_str("palace_stars"), chapter_clears);
                 game_hash.insert(Yaml::from_str("goal"), Yaml::from_str("crystal_stars"));
             }
+
+            if option_can_be_other_than(game_hash, "yoshi_name", &Yaml::from_str("Yoshi"), &Yaml::from_str("Yoshi")) {
+                println!("'{name}.yaml' has a modified yoshi name");
+            }
         }
         Some("Golden Sun The Lost Age") => {
             if let Some(enemy_elemental_resistance) = game_hash.get_mut(&Yaml::from_str("enemy_elemental_resistance")) {
