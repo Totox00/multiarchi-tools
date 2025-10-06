@@ -3,6 +3,7 @@ mod name;
 mod read;
 
 use std::{
+    collections::HashMap,
     env::args,
     fmt::Write as FmtWrite,
     fs::{read_to_string, rename, File},
@@ -15,9 +16,13 @@ use common::{
     special::handle_special,
     write::{write_to_bot_output, write_to_output_list},
 };
-use yaml_rust2::{YamlEmitter, YamlLoader};
+use yaml_rust2::{Yaml, YamlEmitter, YamlLoader};
 
-use crate::{game::choose_game, name::set_name, read::read_process_list};
+use crate::{
+    game::choose_game,
+    name::{rename_plando_worlds, set_name},
+    read::read_process_list,
+};
 
 pub const BUCKET_PATH: &str = "./bucket";
 pub const USED_PATH: &str = "./used";
@@ -89,7 +94,12 @@ fn process_file(name: &str, id: &str) -> Vec<(String, u32, Vec<String>)> {
 
     let single_game = documents.len() == 1;
 
-    for doc in &mut documents {
+    let mut name_mapping = HashMap::new();
+
+    for (i, doc) in documents.iter_mut().enumerate() {
+        let new_name = if single_game { name.to_string() } else { format!("{name}{}", i + 1) };
+        let mut old_name = None;
+
         if let Some(game) = choose_game(doc) {
             let game_str = game.as_str().expect("Game should be a string");
             if let Some((_, count, last_notes)) = games_in_file.last_mut().filter(|(existing_game, _, _)| existing_game == game_str) {
@@ -103,17 +113,20 @@ fn process_file(name: &str, id: &str) -> Vec<(String, u32, Vec<String>)> {
                 println!("'{name}.yaml' contains a Chrono Trigger Jets of Time");
             } else if game.as_str().is_some_and(|game| game == "Final Fantasy") {
                 println!("'{name}.yaml' contains a Final Fantasy");
-            } else if single_game {
-                set_name(doc, name, Some(&game));
             } else {
-                set_name(doc, &format!("{name}{{number}}"), None);
+                old_name = set_name(doc, &new_name, Some(&game));
             }
-        } else if single_game {
-            set_name(doc, name, None);
         } else {
-            set_name(doc, &format!("{name}{{number}}"), None);
+            old_name = set_name(doc, &new_name, None);
+        }
+
+        if let Some(old_name) = old_name {
+            name_mapping.insert(old_name, Yaml::String(new_name));
         }
     }
+
+    rename_plando_worlds(&name_mapping, &mut documents);
+
     if documents.len() > 8 {
         println!("'{name}.yaml' contains {} games.", documents.len());
     }

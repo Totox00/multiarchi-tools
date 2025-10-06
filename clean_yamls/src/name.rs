@@ -1,15 +1,13 @@
+use std::collections::HashMap;
+
 use yaml_rust2::Yaml;
 
-pub fn set_name(doc: &mut Yaml, name: &str, game: Option<&Yaml>) {
+pub fn set_name(doc: &mut Yaml, name: &str, game: Option<&Yaml>) -> Option<Yaml> {
     let name_key = Yaml::from_str("name");
     let triggers_key = Yaml::from_str("triggers");
     let name_value = Yaml::from_str(name);
 
-    let hash = if let Some(hash) = doc.as_mut_hash() {
-        hash
-    } else {
-        return;
-    };
+    let hash = doc.as_mut_hash()?;
 
     if let Some(game) = game {
         if let Some(game_options) = hash.get_mut(game) {
@@ -26,9 +24,11 @@ pub fn set_name(doc: &mut Yaml, name: &str, game: Option<&Yaml>) {
     }
 
     if let Some(name_entry) = hash.get_mut(&name_key) {
+        let old = name_entry.clone();
         *name_entry = name_value;
+        Some(old)
     } else {
-        hash.insert(name_key, name_value);
+        hash.insert(name_key, name_value)
     }
 }
 
@@ -81,5 +81,33 @@ pub fn strip_name_changes_from_triggers(doc: &mut Yaml) {
                 true
             }
         });
+    }
+}
+
+pub fn rename_plando_worlds(mapping: &HashMap<Yaml, Yaml>, docs: &mut [Yaml]) {
+    let game_key = Yaml::from_str("game");
+    let plando_key = Yaml::from_str("plando_items");
+    let world_key = Yaml::from_str("world");
+
+    for doc in docs {
+        if let Some(hash) = doc.as_mut_hash() {
+            if let Some(options_key) = hash.get_mut(&game_key) {
+                if let Some(plando_items) = options_key.as_mut_hash().and_then(|hash| hash.get_mut(&plando_key)).and_then(|plando_items| plando_items.as_mut_vec()) {
+                    for plando_block in plando_items {
+                        if let Some(world) = plando_block.as_mut_hash().and_then(|hash| hash.get_mut(&world_key)) {
+                            if let Some(new_name) = mapping.get(world) {
+                                *world = new_name.clone();
+                            } else if let Some(worlds) = world.as_mut_vec() {
+                                for world in worlds {
+                                    if let Some(new_name) = mapping.get(world) {
+                                        *world = new_name.clone();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
