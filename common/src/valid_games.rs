@@ -1,4 +1,4 @@
-pub const VALID_GAMES: [&str; 258] = [
+pub const VALID_GAMES: [&str; 259] = [
     "Adventure",
     "Aquaria",
     "Blasphemous",
@@ -169,6 +169,7 @@ pub const VALID_GAMES: [&str; 258] = [
     "Panel De Pon/Tetris Attack",
     "Paper Mario",
     "Paper Mario The Thousand Year Door",
+    "Paper Mario: The Thousand-Year Door",
     "Pizza Tower",
     "Placid Plastic Duck Simulator",
     "plateup",

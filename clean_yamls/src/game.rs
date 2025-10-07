@@ -30,6 +30,9 @@ pub fn choose_game(doc: &mut Yaml) -> Option<Yaml> {
                     if *game == "PokéPark Wii: Pikachu's Adventure [JP]" || *game == "PokéPark" {
                         *game = "PokePark";
                     }
+                    if *game == "Paper Mario The Thousand Year Door" {
+                        *game = "Paper Mario: The Thousand-Year Door";
+                    }
                 }
 
                 if games.iter().any(|(game, weight)| *weight > 0 && VALID_GAMES.contains(game)) {
@@ -42,6 +45,9 @@ pub fn choose_game(doc: &mut Yaml) -> Option<Yaml> {
             Yaml::String(game) => {
                 if *game == "PokéPark Wii: Pikachu's Adventure [JP]" || *game == "PokéPark" {
                     *game = String::from("PokePark");
+                }
+                if *game == "Paper Mario The Thousand Year Door" {
+                    *game = String::from("Paper Mario: The Thousand-Year Door");
                 }
                 Yaml::from_str(game)
             }
