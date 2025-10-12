@@ -627,6 +627,11 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 move_option_weight(dlc_chess_chalice_checks, "false", "disabled");
             }
 
+            if let Some(level_shuffle) = game_hash.get_mut(&Yaml::from_str("level_shuffle")) {
+                move_option_weight(level_shuffle, "true", "enabled");
+                move_option_weight(level_shuffle, "false", "disabled");
+            }
+
             push_value_or_default(&mut notes, game_hash, "dlc_boss_chalice_checks", "disabled");
             push_value_or_default(&mut notes, game_hash, "dlc_rungun_chalice_checks", "disabled");
             push_value_or_default(&mut notes, game_hash, "dlc_kingdice_chalice_checks", "disabled");
