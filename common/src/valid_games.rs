@@ -1,4 +1,4 @@
-pub const VALID_GAMES: [&str; 259] = [
+pub const VALID_GAMES: [&str; 263] = [
     "Adventure",
     "Aquaria",
     "Blasphemous",
@@ -169,7 +169,6 @@ pub const VALID_GAMES: [&str; 259] = [
     "Panel De Pon/Tetris Attack",
     "Paper Mario",
     "Paper Mario The Thousand Year Door",
-    "Paper Mario: The Thousand-Year Door",
     "Pizza Tower",
     "Placid Plastic Duck Simulator",
     "plateup",
@@ -219,8 +218,8 @@ pub const VALID_GAMES: [&str; 259] = [
     "TCG Card Shop Simulator",
     "Tevi",
     "The Binding of Isaac Repentance",
-    "The Legend of Zelda: Minish Cap",
-    "The Legend of Zelda: Phantom Hourglass",
+    "The Minish Cap",
+    "The Legend of Zelda - Phantom Hourglass",
     "The Simpsons Hit And Run",
     "The Sims 4",
     "Trackmania",
@@ -258,4 +257,9 @@ pub const VALID_GAMES: [&str; 259] = [
     "UFO 50",
     "Void Stranger",
     "Wargroove 2",
+    "Haste",
+    "Spyro",
+    "Cupheads",
+    "Kirby Air Ride",
+    "Pokemon Pinball",
 ];
