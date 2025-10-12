@@ -340,9 +340,12 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             push_value_or_default(&mut notes, game_hash, "hard_combat", "false");
         }
         Some("Slay the Spire") => {
+            if let Some(character) = game_hash.remove(&Yaml::from_str("character")) {
+                game_hash.insert(Yaml::from_str("characters"), character);
+            }
             push_value_or_default(&mut notes, game_hash, "downfall", "false");
             if option_can_be(game_hash, "use_advanced_characters", &Yaml::Boolean(false), &Yaml::Boolean(false)) {
-                push_value_or_default(&mut notes, game_hash, "character", "[Ironclad]");
+                push_value_or_default(&mut notes, game_hash, "characters", "[Ironclad]");
             }
             if option_can_be(game_hash, "use_advanced_characters", &Yaml::Boolean(false), &Yaml::Boolean(true)) {
                 if let Some(advanced_characters_hash) = game_hash.get(&Yaml::from_str("advanced_characters")).and_then(Yaml::as_hash) {
@@ -350,6 +353,11 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 } else {
                     notes.push(String::from("advanced_characters: [ironclad]"));
                 }
+            }
+
+            let ascension = Yaml::from_str("ascension");
+            if !game_hash.contains_key(&ascension) {
+                game_hash.insert(ascension, Yaml::Integer(0));
             }
         }
         Some("Super Metroid Map Rando") => {
@@ -413,6 +421,12 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             }
         }
         Some("Pokemon Crystal") => {
+            if let Some(trainer_name) = game_hash.get(&Yaml::from_str("trainer_name")).and_then(|name| name.as_str())
+                && !trainer_name.is_empty()
+            {
+                println!("'{name}.yaml' has trainer_name '{trainer_name}'");
+            }
+
             if let Some(require_itemfinder) = game_hash.get_mut(&Yaml::from_str("require_itemfinder")) {
                 move_option_weight(require_itemfinder, "true", "hard_required");
                 move_option_weight(require_itemfinder, "false", "not_required");
@@ -573,6 +587,96 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             push_value_or_default(&mut notes, game_hash, "spaced_out", "true");
             push_value_or_default(&mut notes, game_hash, "frosty", "true");
             push_value_or_default(&mut notes, game_hash, "bionic", "false");
+        }
+        Some("Monster Sanctuary") => {
+            push_value_or_default(&mut notes, game_hash, "logic_difficulty", "casual");
+            push_value_or_default(&mut notes, game_hash, "tedious_checks", "false");
+        }
+        Some("Spelunky 2") => push_value_or_default(&mut notes, game_hash, "include_hard_locations", "false"),
+        Some("Metroid Zero Mission") => {
+            if let Some(walljumps_in_logic) = game_hash.remove(&Yaml::from_str("walljumps_in_logic")) {
+                game_hash.insert(Yaml::from_str("walljumps"), walljumps_in_logic);
+            }
+
+            push_value_or_default(&mut notes, game_hash, "walljumps", "enabled");
+            push_value_or_default(&mut notes, game_hash, "logic_difficulty", "simple");
+            push_value_or_default(&mut notes, game_hash, "combat_logic_difficulty", "relaxed");
+            push_value_or_default(&mut notes, game_hash, "ibj_in_logic", "none");
+            push_value_or_default(&mut notes, game_hash, "hazard_runs", "disabled");
+            push_value_or_default(&mut notes, game_hash, "tricky_shinesparks", "false");
+            push_value_or_default(&mut notes, game_hash, "tricks_allowed", "[]");
+        }
+        Some("Cuphead") => {
+            if let Some(dlc_boss_chalice_checks) = game_hash.get_mut(&Yaml::from_str("dlc_boss_chalice_checks")) {
+                move_option_weight(dlc_boss_chalice_checks, "true", "enabled");
+                move_option_weight(dlc_boss_chalice_checks, "false", "disabled");
+            }
+
+            if let Some(dlc_rungun_chalice_checks) = game_hash.get_mut(&Yaml::from_str("dlc_rungun_chalice_checks")) {
+                move_option_weight(dlc_rungun_chalice_checks, "true", "enabled");
+                move_option_weight(dlc_rungun_chalice_checks, "false", "disabled");
+            }
+
+            if let Some(dlc_kingdice_chalice_checks) = game_hash.get_mut(&Yaml::from_str("dlc_kingdice_chalice_checks")) {
+                move_option_weight(dlc_kingdice_chalice_checks, "true", "enabled");
+                move_option_weight(dlc_kingdice_chalice_checks, "false", "disabled");
+            }
+
+            if let Some(dlc_chess_chalice_checks) = game_hash.get_mut(&Yaml::from_str("dlc_chess_chalice_checks")) {
+                move_option_weight(dlc_chess_chalice_checks, "true", "enabled");
+                move_option_weight(dlc_chess_chalice_checks, "false", "disabled");
+            }
+
+            push_value_or_default(&mut notes, game_hash, "dlc_boss_chalice_checks", "disabled");
+            push_value_or_default(&mut notes, game_hash, "dlc_rungun_chalice_checks", "disabled");
+            push_value_or_default(&mut notes, game_hash, "dlc_kingdice_chalice_checks", "disabled");
+            push_value_or_default(&mut notes, game_hash, "dlc_chess_chalice_checks", "disabled");
+            push_value_or_default(&mut notes, game_hash, "dlc_cactusgirl_quest", "false");
+        }
+        Some("Metroid Fusion") => {
+            if let Some(tricky_shinesparks_in_region_logic) = game_hash.remove(&Yaml::from_str("TrickyShinesparksInRegionLogic")) {
+                game_hash.insert(Yaml::from_str("ShinesparkTrickDifficulty"), tricky_shinesparks_in_region_logic);
+            }
+
+            push_value_or_default(&mut notes, game_hash, "PointOfNoReturnsInLogic", "true");
+            push_value_or_default(&mut notes, game_hash, "ShinesparkTrickDifficulty", "none");
+            push_value_or_default(&mut notes, game_hash, "WallJumpTrickDifficulty", "none");
+            push_value_or_default(&mut notes, game_hash, "CombatDifficulty", "beginner");
+        }
+        Some("The Simpsons Hit And Run") => {
+            if let Some(goal) = game_hash.get_mut(&Yaml::from_str("goal")) {
+                move_option_weight(goal, "goal: all missions complete!", "goal_all_missions_complete");
+                move_option_weight(goal, "goal: all story missions complete!", "goal_all_story_missions_complete");
+                move_option_weight(goal, "goal: final mission(l7m7)", "goal_final_missionl7m7");
+                move_option_weight(goal, "goal: wasps and cards collected!", "goal_wasps_and_cards_collected");
+            }
+        }
+        Some("Satisfactory") => {
+            if let Some(mut final_elevator_package) = game_hash.remove(&Yaml::from_str("final_elevator_package")) {
+                move_option_weight(&mut final_elevator_package, "one package (tiers 1-2)", "phase 1 (tiers 1-2)");
+                move_option_weight(&mut final_elevator_package, "two packages (tiers 1-4)", "phase 2 (tiers 1-4");
+                move_option_weight(&mut final_elevator_package, "three packages (tiers 1-6)", "phase 3 (tiers 1-6");
+                move_option_weight(&mut final_elevator_package, "four packages (tiers 1-8)", "phase 4 (tiers 1-8)");
+                move_option_weight(&mut final_elevator_package, "five packages (tiers 1-9)", "phase 5 (tiers 1-9)");
+                game_hash.insert(Yaml::from_str("final_elevator_phase"), final_elevator_package);
+            }
+        }
+        Some("Trackmania") => {
+            if let Some(disable_bronze) = game_hash.remove(&Yaml::from_str("disable_bronze")) {
+                game_hash.insert(Yaml::from_str("disable_bronze_locations"), disable_bronze.clone());
+                game_hash.insert(Yaml::from_str("disable_bronze_medals"), disable_bronze);
+            }
+            if let Some(disable_silver) = game_hash.remove(&Yaml::from_str("disable_silver")) {
+                game_hash.insert(Yaml::from_str("disable_silver_locations"), disable_silver.clone());
+                game_hash.insert(Yaml::from_str("disable_silver_medals"), disable_silver);
+            }
+            if let Some(disable_gold) = game_hash.remove(&Yaml::from_str("disable_gold")) {
+                game_hash.insert(Yaml::from_str("disable_gold_locations"), disable_gold.clone());
+                game_hash.insert(Yaml::from_str("disable_gold_medals"), disable_gold);
+            }
+            if let Some(disable_author) = game_hash.remove(&Yaml::from_str("disable_author")) {
+                game_hash.insert(Yaml::from_str("disable_author_locations"), disable_author);
+            }
         }
         _ => (),
     };
