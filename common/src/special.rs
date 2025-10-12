@@ -678,7 +678,13 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 game_hash.insert(Yaml::from_str("disable_author_locations"), disable_author);
             }
         }
-        Some("The Legend of Zelda - Phantom Hourglass") => push_value_or_default(&mut notes, game_hash, "logic", "normal"),
+        Some("The Legend of Zelda - Phantom Hourglass") => {
+            if let Some(randomize_harrow) = game_hash.get_mut(&Yaml::from_str("randomize_harrow")) {
+                move_option_weight(randomize_harrow, "false", "no_harrow");
+                move_option_weight(randomize_harrow, "true", "randomize_without_hints");
+            }
+            push_value_or_default(&mut notes, game_hash, "logic", "normal");
+        }
         _ => (),
     };
 
