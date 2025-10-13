@@ -23,11 +23,11 @@ pub fn write_to_output_list<T: Write>(writer: &mut T, name: &str, games: &[(Stri
         }
 
         if counted_games < 8 && !SKIPPED_GAMES.contains(&game.as_str()) {
-            counted_games += 1;
+            counted_games += *count;
             if let Some(new_points) = POINTS_OVERRIDE.get(game.as_str()) {
-                points += *new_points;
+                points += *new_points * *count;
             } else {
-                points += 1;
+                points += *count;
             }
         }
     }
@@ -100,13 +100,13 @@ pub fn write_to_output_list<T: Write>(writer: &mut T, name: &str, games: &[(Stri
 pub fn write_to_bot_output<T: Write>(writer: &mut T, name: &str, games: &[(String, u32, Vec<String>)]) {
     let mut counted_games = 0;
     let mut points = 1;
-    for (game, _, _) in games {
+    for (game, count, _) in games {
         if counted_games < 8 && !SKIPPED_GAMES.contains(&game.as_str()) {
-            counted_games += 1;
+            counted_games += *count;
             if let Some(new_points) = POINTS_OVERRIDE.get(game.as_str()) {
-                points += *new_points;
+                points += *new_points * *count;
             } else {
-                points += 1;
+                points += *count;
             }
         }
     }
