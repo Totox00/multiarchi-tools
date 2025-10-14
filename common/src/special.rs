@@ -495,6 +495,8 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             push_value_or_default(&mut notes, game_hash, "enabled_sets", "[Official]");
         }
         Some("Hatsune Miku Project Diva Mega Mix+") => {
+            game_hash.remove(&Yaml::from_str("exclude_singers"));
+
             push_value_or_default(&mut notes, game_hash, "allow_megamix_dlc_songs", "false");
             let mod_str = if let Some(yaml) = game_hash.get_mut(&Yaml::from_str("megamix_mod_data")) {
                 if let Some(Value::Object(mut map)) = yaml.as_str().and_then(|str| serde_json::from_str(str).ok()) {
