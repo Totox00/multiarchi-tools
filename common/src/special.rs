@@ -692,6 +692,12 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             }
             push_value_or_default(&mut notes, game_hash, "logic", "normal");
         }
+        Some("Astalon") => {
+            if let Some(fast_blood_chalice) = game_hash.get_mut(&Yaml::from_str("fast_blood_chalice")) {
+                move_option_weight(fast_blood_chalice, "false", "off");
+                move_option_weight(fast_blood_chalice, "true", "always");
+            }
+        }
         _ => (),
     };
 
