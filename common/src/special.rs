@@ -727,6 +727,11 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 move_option_weight(goal_target_override, "disable", "1");
             }
         }
+        Some("Super Mario Land 2") => {
+            if let Some(mario_coin_fragment_percentage) = game_hash.get_mut(&Yaml::from_str("mario_coin_fragment_percentage")) {
+                move_option_weight_matches(mario_coin_fragment_percentage, |yaml| as_i64(yaml).is_some_and(|v| v >= 50), "50");
+            }
+        }
         _ => (),
     };
 
