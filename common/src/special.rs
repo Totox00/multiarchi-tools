@@ -553,11 +553,19 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             }
         }
         Some("Ty the Tasmanian Tiger") => push_value_or_default(&mut notes, game_hash, "logic_difficulty", "standard"),
-        Some("Paper Mario The Thousand Year Door") => {
+        Some("Paper Mario The Thousand Year Door") | Some("Paper Mario The Thousand-Year Door") => {
             if let Some(chapter_clears) = game_hash.remove(&Yaml::from_str("chapter_clears")) {
                 game_hash.insert(Yaml::from_str("goal_stars"), chapter_clears.clone());
                 game_hash.insert(Yaml::from_str("palace_stars"), chapter_clears);
                 game_hash.insert(Yaml::from_str("goal"), Yaml::from_str("crystal_stars"));
+            }
+
+            if let Some(starting_partner) = game_hash.get_mut(&Yaml::from_str("starting_partner")) {
+                move_option_weight(starting_partner, "from_partner", "random");
+            }
+
+            if let Some(yoshi_color) = game_hash.get_mut(&Yaml::from_str("yoshi_color")) {
+                move_option_weight(yoshi_color, "random_color", "random");
             }
 
             if option_can_be_other_than(game_hash, "yoshi_name", &Yaml::from_str("Yoshi"), &Yaml::from_str("Yoshi")) {
