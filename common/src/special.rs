@@ -261,6 +261,14 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         }
         Some("A Link Between Worlds") => push_value_or_default(&mut notes, game_hash, "logic_mode", "normal"),
         Some("Banjo-Tooie") => {
+            if let Some(randomize_world_entrance_loading_zone) = game_hash.remove(&Yaml::from_str("randomize_world_entrance_loading_zone")) {
+                game_hash.insert(Yaml::from_str("randomize_world_entrance_loading_zones"), randomize_world_entrance_loading_zone);
+            }
+
+            if let Some(randomize_boss_loading_zone) = game_hash.remove(&Yaml::from_str("randomize_boss_loading_zone")) {
+                game_hash.insert(Yaml::from_str("randomize_boss_loading_zones"), randomize_boss_loading_zone);
+            }
+
             push_value_or_default(&mut notes, game_hash, "logic_type", "intended");
             change_option_name(game_hash, "game_length", "world_requirements");
             if let Some(open_silos) = game_hash.get_mut(&Yaml::from_str("open_silos")) {
