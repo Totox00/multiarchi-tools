@@ -681,14 +681,17 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 game_hash.insert(Yaml::from_str("disable_bronze_locations"), disable_bronze.clone());
                 game_hash.insert(Yaml::from_str("disable_bronze_medals"), disable_bronze);
             }
+
             if let Some(disable_silver) = game_hash.remove(&Yaml::from_str("disable_silver")) {
                 game_hash.insert(Yaml::from_str("disable_silver_locations"), disable_silver.clone());
                 game_hash.insert(Yaml::from_str("disable_silver_medals"), disable_silver);
             }
+
             if let Some(disable_gold) = game_hash.remove(&Yaml::from_str("disable_gold")) {
                 game_hash.insert(Yaml::from_str("disable_gold_locations"), disable_gold.clone());
                 game_hash.insert(Yaml::from_str("disable_gold_medals"), disable_gold);
             }
+
             if let Some(disable_author) = game_hash.remove(&Yaml::from_str("disable_author")) {
                 game_hash.insert(Yaml::from_str("disable_author_locations"), disable_author);
             }
@@ -704,6 +707,11 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             if let Some(fast_blood_chalice) = game_hash.get_mut(&Yaml::from_str("fast_blood_chalice")) {
                 move_option_weight(fast_blood_chalice, "false", "off");
                 move_option_weight(fast_blood_chalice, "true", "always");
+            }
+        }
+        Some("Anodyne") => {
+            if let Some(red_cave_access) = game_hash.remove(&Yaml::from_str("red_cave_access")) {
+                game_hash.insert(Yaml::from_str("red_grotto_access"), red_cave_access);
             }
         }
         _ => (),
