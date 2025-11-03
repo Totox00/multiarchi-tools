@@ -714,6 +714,11 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 game_hash.insert(Yaml::from_str("red_grotto_access"), red_cave_access);
             }
         }
+        Some("Ape Escape 3") => {
+            if let Some(goal_target_override) = game_hash.get_mut(&Yaml::from_str("goal_target_override")) {
+                move_option_weight(goal_target_override, "disable", "1");
+            }
+        }
         _ => (),
     };
 
