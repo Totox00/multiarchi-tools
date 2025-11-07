@@ -732,6 +732,11 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 move_option_weight_matches(mario_coin_fragment_percentage, |yaml| as_i64(yaml).is_some_and(|v| v >= 50), "50");
             }
         }
+        Some("Donkey Kong 64") => {
+            push_value_or_default(&mut notes, game_hash, "logic_type", "glitchless");
+            push_value_or_default(&mut notes, game_hash, "glitches_selected", "[]");
+            push_value_or_default(&mut notes, game_hash, "hard_shooting", "false");
+        }
         _ => (),
     };
 
