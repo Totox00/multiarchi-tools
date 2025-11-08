@@ -737,6 +737,18 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             push_value_or_default(&mut notes, game_hash, "glitches_selected", "[]");
             push_value_or_default(&mut notes, game_hash, "hard_shooting", "false");
         }
+        Some("Pokemon Black and White") => {
+            if option_can_be(game_hash, "version", &Yaml::from_str("random"), &Yaml::from_str("random")) || game_hash.get(&Yaml::from_str("version")).is_some_and(|value| value.is_hash()) {
+                let mut new_hash = LinkedHashMap::new();
+                new_hash.insert(Yaml::from_str("black"), Yaml::Integer(50));
+                new_hash.insert(Yaml::from_str("white"), Yaml::Integer(50));
+                game_hash.insert(Yaml::from_str("version"), Yaml::Hash(new_hash));
+            }
+
+            resolve_weighted_option(game_hash, "version");
+
+            push_value_or_default(&mut notes, game_hash, "version", "N/A");
+        }
         _ => (),
     };
 
