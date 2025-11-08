@@ -1,3 +1,4 @@
+#[derive(Debug)]
 pub struct Comment<'a> {
     last_key: Option<&'a str>,
     comment: String,
@@ -18,6 +19,10 @@ pub fn get_comments(content: &str) -> Vec<Comment<'_>> {
             can_extend = false;
         }
         if let Some((indent, comment)) = line.split_once('#') {
+            if !indent.trim().is_empty() {
+                continue;
+            }
+
             if let Some(Comment {
                 last_key: last_last_key,
                 comment: last_comment,
