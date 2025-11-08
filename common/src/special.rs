@@ -201,7 +201,9 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             push_value_or_default(&mut notes, game_hash, "logic_tricks", "[]")
         }
         Some("Pokemon Red and Blue") => {
-            if option_can_be(game_hash, "game_version", &Yaml::from_str("random"), &Yaml::from_str("random")) || game_hash.get(&Yaml::from_str("game_version")).is_some_and(|value| value.is_hash()) {
+            resolve_weighted_option(game_hash, "game_version");
+
+            if option_can_be(game_hash, "game_version", &Yaml::from_str("random"), &Yaml::from_str("random")) {
                 let mut new_hash = LinkedHashMap::new();
                 new_hash.insert(Yaml::from_str("red"), Yaml::Integer(50));
                 new_hash.insert(Yaml::from_str("blue"), Yaml::Integer(50));
@@ -293,6 +295,8 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             push_value_or_default(&mut notes, game_hash, "enable_fq_mod", "false");
         }
         Some("Pokemon FireRed and LeafGreen") => {
+            resolve_weighted_option(game_hash, "game_version");
+            
             if option_can_be(game_hash, "game_version", &Yaml::from_str("random"), &Yaml::from_str("random")) {
                 let mut new_hash = LinkedHashMap::new();
                 new_hash.insert(Yaml::from_str("firered"), Yaml::Integer(50));
@@ -738,7 +742,9 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             push_value_or_default(&mut notes, game_hash, "hard_shooting", "false");
         }
         Some("Pokemon Black and White") => {
-            if option_can_be(game_hash, "version", &Yaml::from_str("random"), &Yaml::from_str("random")) || game_hash.get(&Yaml::from_str("version")).is_some_and(|value| value.is_hash()) {
+            resolve_weighted_option(game_hash, "version");
+
+            if option_can_be(game_hash, "version", &Yaml::from_str("random"), &Yaml::from_str("random")) {
                 let mut new_hash = LinkedHashMap::new();
                 new_hash.insert(Yaml::from_str("black"), Yaml::Integer(50));
                 new_hash.insert(Yaml::from_str("white"), Yaml::Integer(50));
@@ -748,6 +754,11 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             resolve_weighted_option(game_hash, "version");
 
             push_value_or_default(&mut notes, game_hash, "version", "N/A");
+        }
+        Some("Mario Kart 64") => {
+            if let Some(logic_difficulty) = game_hash.get_mut(&Yaml::from_str("logic_difficulty")) {
+                move_option_weight(logic_difficulty, "generous", "basic");
+            }
         }
         _ => (),
     };
