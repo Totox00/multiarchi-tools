@@ -249,7 +249,7 @@ pub const VALID_GAMES: [&str; 284] = [
     "Risk of Rain",
     "Ape Escape",
     "Christmas Delivery",
-    "Final Fantasy 4 Free Enterprise",
+    "Final Fantasy IV Free Enterprise",
     "Frogmonster",
     "Mario is Missing",
     "Sea of Thieves",
