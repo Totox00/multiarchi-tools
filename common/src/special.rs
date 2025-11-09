@@ -1,8 +1,21 @@
 use hashlink::LinkedHashMap;
+use phf::phf_map;
 use serde_json::Value;
 use yaml_rust2::Yaml;
 
 use crate::util::{as_i64, resolve_weighted_option};
+
+const ARCHIPELA_GO_DISTANCES: phf::Map<&'static str, i64> = phf_map!(
+    "2k" => 2000,
+    "5k" => 5000,
+    "10k" => 10000,
+    "half_marathon" => 21098,
+    "marathon" => 42195,
+    "50k" => 50000,
+    "50_miler" => 80467,
+    "100k" => 100000,
+    "100_miler" => 160934,
+);
 
 pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
     let mut notes = vec![];
@@ -296,7 +309,7 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         }
         Some("Pokemon FireRed and LeafGreen") => {
             resolve_weighted_option(game_hash, "game_version");
-            
+
             if option_can_be(game_hash, "game_version", &Yaml::from_str("random"), &Yaml::from_str("random")) {
                 let mut new_hash = LinkedHashMap::new();
                 new_hash.insert(Yaml::from_str("firered"), Yaml::Integer(50));
@@ -759,6 +772,46 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             if let Some(logic_difficulty) = game_hash.get_mut(&Yaml::from_str("logic_difficulty")) {
                 move_option_weight(logic_difficulty, "generous", "basic");
             }
+        }
+        Some("Archipela-Go!") => {
+            let max_key = Yaml::from_str("maximum_distance");
+            let min_key = Yaml::from_str("minimum_distance");
+
+            resolve_weighted_option(game_hash, "maximum_distance");
+            resolve_weighted_option(game_hash, "minimum_distance");
+
+            let mut max_distance = match game_hash.get(&max_key) {
+                Some(Yaml::Integer(value)) => *value,
+                Some(Yaml::String(value)) => ARCHIPELA_GO_DISTANCES.get(value).copied().unwrap_or(5000),
+                _ => 5000,
+            };
+
+            let mut min_distance = match game_hash.get(&min_key) {
+                Some(Yaml::Integer(value)) => *value,
+                Some(Yaml::String(value)) => ARCHIPELA_GO_DISTANCES.get(value).copied().unwrap_or(500),
+                _ => 500,
+            };
+
+            if max_distance > 60000 {
+                max_distance = 45000;
+            }
+
+            if min_distance > max_distance {
+                min_distance = max_distance / 2;
+            } else if max_distance > 10000 && min_distance > 20000 {
+                min_distance = 20000;
+            } else if max_distance > 5000 && min_distance > 5000 {
+                min_distance = 5000;
+            }
+
+            game_hash.insert(max_key, Yaml::Integer(max_distance));
+            game_hash.insert(min_key, Yaml::Integer(min_distance));
+
+            notes.push(String::from(match max_distance {
+                ..=5000 => "Walk",
+                5001..=10000 => "Bike",
+                10001.. => "Car Trip",
+            }));
         }
         _ => (),
     };
