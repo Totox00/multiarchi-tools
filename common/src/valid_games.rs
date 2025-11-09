@@ -1,4 +1,4 @@
-pub const VALID_GAMES: [&str; 284] = [
+pub const VALID_GAMES: [&str; 291] = [
     "Adventure",
     "Aquaria",
     "Blasphemous",
@@ -239,7 +239,6 @@ pub const VALID_GAMES: [&str; 284] = [
     "Yu-Gi-Oh! Ultimate Masters: WCT 2006",
     "Zelda II: The Adventure of Link",
     "Zork Grand Inquisitor",
-    "ArchipIDLE",
     "Cat Quest",
     "Digimon World",
     "uper Mario RPG Legend of the Seven Stars",
@@ -283,4 +282,12 @@ pub const VALID_GAMES: [&str; 284] = [
     "Twisty Cube",
     "Vampire Survivors",
     "Voltorb Flip",
+    "Factorio Space Age Without Space",
+    "Ship of Harkinian",
+    "Signalis",
+    "Super Smash Bros Melee",
+    "Total War Warhammer 3",
+    "Choo Choo Charles",
+    "Bomberman 64: The Second Attack!",
+    "Donkey Kong Country backwards",
 ];

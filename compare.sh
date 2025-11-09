@@ -1,0 +1,1 @@
+cargo run --release --bin compare_changes > changes.txt
