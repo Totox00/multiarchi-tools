@@ -242,7 +242,7 @@ pub const VALID_GAMES: [&str; 284] = [
     "ArchipIDLE",
     "Cat Quest",
     "Digimon World",
-    "Super Mario RPG",
+    "uper Mario RPG Legend of the Seven Stars",
     "Skyward Sword",
     "Bumper Stickers",
     "Archipelago",
