@@ -198,6 +198,12 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             }
         }
         Some("Kingdom Hearts 2") => push_value_or_default(&mut notes, game_hash, "FightLogic", "normal"),
+        Some("Kingdom Hearts") => {
+            if let Some(cups) = game_hash.get_mut(&Yaml::from_str("cups")) {
+                move_option_weight(cups, "false", "off");
+                move_option_weight(cups, "true", "cups");
+            }
+        }
         Some("A Link to the Past") => push_value_or_default(&mut notes, game_hash, "glitches_required", "no_glitches"),
         Some("Links Awakening DX") => push_value_or_default(&mut notes, game_hash, "logic", "normal"),
         Some("Mario & Luigi Superstar Saga") => {
@@ -239,7 +245,72 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             push_value_or_default(&mut notes, game_hash, "chao_karate_difficulty", "none");
             push_value_or_default(&mut notes, game_hash, "sadx_music", "sa2b");
         }
-        Some("Starcraft 2") => push_value_or_default(&mut notes, game_hash, "required_tactics", "standard"),
+        Some("Starcraft 2") => {
+            if let Some(mission_order) = game_hash.get_mut(&Yaml::from_str("mission_order")) {
+                move_option_weight(mission_order, "tiny_grid", "grid");
+                move_option_weight(mission_order, "mini_grid", "grid");
+                move_option_weight(mission_order, "medium_grid", "grid");
+                move_option_weight(mission_order, "mini_gauntlet", "gauntlet");
+            }
+
+            if let Some(kerrigan_presence) = game_hash.get_mut(&Yaml::from_str("kerrigan_presence")) {
+                move_option_weight(kerrigan_presence, "not_present_and_no_passives", "not_present");
+                move_option_weight(kerrigan_presence, "kerrigan_max_passive_abilities", "0");
+            }
+
+            if let Some(spear_of_adun_presence) = game_hash.get_mut(&Yaml::from_str("spear_of_adun_presence")) {
+                move_option_weight(spear_of_adun_presence, "lotv_protoss", "vanilla");
+            }
+
+            if let Some(grant_story_tech) = game_hash.get_mut(&Yaml::from_str("grant_story_tech")) {
+                move_option_weight(grant_story_tech, "false", "no_grant");
+                move_option_weight(grant_story_tech, "true", "grant");
+            }
+
+            if let Some(vanilla_locations) = game_hash.get_mut(&Yaml::from_str("vanilla_locations")) {
+                move_option_weight(vanilla_locations, "resources", "filler");
+            }
+
+            if let Some(extra_locations) = game_hash.get_mut(&Yaml::from_str("extra_locations")) {
+                move_option_weight(extra_locations, "resources", "filler");
+            }
+
+            if let Some(challenge_locations) = game_hash.get_mut(&Yaml::from_str("challenge_locations")) {
+                move_option_weight(challenge_locations, "resources", "filler");
+            }
+
+            if let Some(mastery_locations) = game_hash.get_mut(&Yaml::from_str("mastery_locations")) {
+                move_option_weight(mastery_locations, "resources", "filler");
+            }
+
+            let key = Yaml::from_str("enabled_campaigns");
+            if !game_hash.contains_key(&key) {
+                game_hash.insert(
+                    key,
+                    Yaml::Array(
+                        [
+                            ("enable_wol_missions", "Wings of Liberty"),
+                            ("enable_prophecy_missions", "Prophecy"),
+                            ("enable_hots_missions", "Heart of the Swarm"),
+                            ("enable_lotv_prologue_missions", "Whispers of Oblivion (Legacy of the Void: Prologue)"),
+                            ("enable_lotv_missions", "Legacy of the Void"),
+                            ("enable_epilogue_missions", "Into the Void (Legacy of the Void: Epilogue)"),
+                            ("enable_nco_missions", "Nova Covert Ops"),
+                        ]
+                        .into_iter()
+                        .filter(|(option_name, _)| option_can_be(game_hash, option_name, &Yaml::Boolean(true), &Yaml::Boolean(true)))
+                        .map(|(_, campaign_name)| Yaml::from_str(campaign_name))
+                        .collect(),
+                    ),
+                );
+            }
+
+            if let Some(grid_two_start_positions) = game_hash.remove(&Yaml::from_str("grid_two_start_positions")) {
+                game_hash.insert(Yaml::from_str("two_start_positions"), grid_two_start_positions);
+            }
+
+            push_value_or_default(&mut notes, game_hash, "required_tactics", "standard");
+        }
         Some("Super Metroid") => {
             push_value_or_default(&mut notes, game_hash, "preset", "regular");
             push_value_or_default(&mut notes, game_hash, "max_difficulty", "hardcore");
@@ -605,6 +676,11 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 move_option_weight(yoshi_color, "random_color", "random");
             }
 
+            if let Some(star_shuffle) = game_hash.get_mut(&Yaml::from_str("star_shuffle")) {
+                move_option_weight(star_shuffle, "false", "vanilla");
+                move_option_weight(star_shuffle, "true", "all");
+            }
+
             if option_can_be_other_than(game_hash, "yoshi_name", &Yaml::from_str("Yoshi"), &Yaml::from_str("Yoshi")) {
                 println!("'{name}.yaml' has a modified yoshi name");
             }
@@ -746,6 +822,29 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 move_option_weight(randomize_harrow, "false", "no_harrow");
                 move_option_weight(randomize_harrow, "true", "randomize_without_hints");
             }
+
+            if let Some(goal_requirements) = game_hash.get_mut(&Yaml::from_str("goal_requirements")) {
+                move_option_weight(goal_requirements, "complete_dungeons", "defeat_bosses");
+            }
+
+            game_hash.remove(&Yaml::from_str("dungeon_hints"));
+
+            if let Some(shuffle_dungeon_entrances) = game_hash.get_mut(&Yaml::from_str("shuffle_dungeon_entrances")) {
+                move_option_weight(shuffle_dungeon_entrances, "false", "no_shuffle");
+                move_option_weight(shuffle_dungeon_entrances, "true", "shuffle");
+            }
+
+            if let Some(additional_metal_names) = game_hash.get_mut(&Yaml::from_str("additional_metal_names")) {
+                move_option_weight(additional_metal_names, "custom_unique", "custom_prefer_vanilla");
+            }
+
+            if option_can_be(game_hash, "shuffle_island_entrances", &Yaml::Boolean(false), &Yaml::Boolean(true)) {
+                game_hash.insert(Yaml::from_str("shuffle_ports"), Yaml::from_str("shuffle"));
+                game_hash.insert(Yaml::from_str("shuffle_caves"), Yaml::from_str("shuffle"));
+                game_hash.insert(Yaml::from_str("shuffle_houses"), Yaml::from_str("shuffle"));
+                game_hash.remove(&Yaml::from_str("shuffle_island_entrances"));
+            }
+
             push_value_or_default(&mut notes, game_hash, "logic", "normal");
         }
         Some("Astalon") => {
@@ -832,6 +931,20 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 5001..=10000 => "Bike",
                 10001.. => "Car Trip",
             }));
+        }
+        Some("Crystal Project") => {
+            if let Some(regionsanity) = game_hash.get_mut(&Yaml::from_str("regionsanity")) {
+                move_option_weight(regionsanity, "false", "disabled");
+                move_option_weight(regionsanity, "true", "enabled");
+            }
+        }
+        Some("Yu-Gi-Oh! 2006") => {
+            game_hash.remove(&Yaml::from_str("starter_deck"));
+            game_hash.remove(&Yaml::from_str("normalize_booster_pack_prices"));
+            game_hash.remove(&Yaml::from_str("normalize_booster_pack_rarities"));
+            game_hash.remove(&Yaml::from_str("randomize_pack_contents"));
+            game_hash.remove(&Yaml::from_str("custom_structure_deck"));
+            game_hash.remove(&Yaml::from_str("custom_starter_deck"));
         }
         _ => (),
     };
