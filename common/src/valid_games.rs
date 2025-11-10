@@ -202,7 +202,7 @@ pub const VALID_GAMES: [&str; 291] = [
     "Sonic Heroes",
     "Sonic Riders",
     "Sonic Rush",
-    "Sonic the Hedgehog",
+    "Sonic the Hedgehog 1",
     "Soul Blazer",
     "Spelunker",
     "Spelunky 2",
