@@ -552,6 +552,26 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             game_hash.remove(&Yaml::from_str("maximum_number_of_real_items"));
             game_hash.remove(&Yaml::from_str("minimum_number_of_pieces_per_real_item"));
             game_hash.remove(&Yaml::from_str("enable_forced_local_filler_items"));
+
+            let grid_type = game_hash.get(&Yaml::from_str("grid_type")).and_then(Yaml::as_str).unwrap_or("square");
+            let rotations = game_hash.get(&Yaml::from_str("rotations")).and_then(Yaml::as_str).unwrap_or("no_rotation");
+
+            game_hash.insert(
+                Yaml::from_str("grid_type_and_rotations"),
+                Yaml::from_str(match (grid_type, rotations) {
+                    ("square", "no_rotation") => "square_no_rotation",
+                    ("square", "per_90_degrees") => "square_90_rotation",
+                    ("square", "per_180_degrees") => "square_180_rotation",
+                    ("hexagonal", "no_rotation") => "hex_no_rotation",
+                    ("hexagonal", "per_90_degrees") => "hex_60_rotation",
+                    ("hexagonal", "per_180_degrees") => "hex_180_rotation",
+                    ("meme_one_row", "no_rotation") => "meme_one_row_no_rotation",
+                    ("meme_one_row", "per_180_degrees") => "meme_one_row_180_rotation",
+                    ("meme_one_column", "no_rotation") => "meme_one_column_no_rotation",
+                    ("meme_one_column", "per_180_degrees") => "meme_one_column_180_rotation",
+                    (_, _) => "square_no_rotations",
+                }),
+            );
         }
         Some("Psychonauts") => {
             if let Some(goal) = game_hash.get_mut(&Yaml::from_str("Goal")) {
