@@ -624,8 +624,11 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             game_hash.remove(&Yaml::from_str("minimum_number_of_pieces_per_real_item"));
             game_hash.remove(&Yaml::from_str("enable_forced_local_filler_items"));
 
-            let grid_type = game_hash.get(&Yaml::from_str("grid_type")).and_then(Yaml::as_str).unwrap_or("square");
-            let rotations = game_hash.get(&Yaml::from_str("rotations")).and_then(Yaml::as_str).unwrap_or("no_rotation");
+            let grid_type_yaml = game_hash.remove(&Yaml::from_str("grid_type"));
+            let rotatoins_yaml = game_hash.remove(&Yaml::from_str("rotations"));
+
+            let grid_type = grid_type_yaml.as_ref().and_then(Yaml::as_str).unwrap_or("square");
+            let rotations = rotatoins_yaml.as_ref().and_then(Yaml::as_str).unwrap_or("no_rotation");
 
             game_hash.insert(
                 Yaml::from_str("grid_type_and_rotations"),
