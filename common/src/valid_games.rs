@@ -1,4 +1,4 @@
-pub const VALID_GAMES: [&str; 291] = [
+pub const VALID_GAMES: [&str; 292] = [
     "Adventure",
     "Aquaria",
     "Blasphemous",
@@ -271,7 +271,7 @@ pub const VALID_GAMES: [&str; 291] = [
     "Celeste",
     "Dark Cloud",
     "Donkey Kong 64",
-    "Holo8",
+    "holo8",
     "Lego Star Wars: Complete Saga",
     "Lethal Company",
     "Lingo 2",
@@ -288,6 +288,7 @@ pub const VALID_GAMES: [&str; 291] = [
     "Super Smash Bros Melee",
     "Total War Warhammer 3",
     "Choo Choo Charles",
-    "Bomberman 64: The Second Attack!",
+    "Bomberman The Second Attack",
     "Donkey Kong Country backwards",
+    "ChecksMate",
 ];
