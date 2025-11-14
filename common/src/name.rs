@@ -81,7 +81,7 @@ pub fn strip_name_changes_from_triggers(doc: &mut Yaml) {
     }
 }
 
-pub fn rename_plando_worlds(mapping: &HashMap<Yaml, Yaml>, docs: &mut [Yaml]) {
+pub fn rename_plando_worlds(mapping: &HashMap<Yaml, Yaml>, docs: &mut [Yaml], name: &str) {
     let game_key = Yaml::from_str("game");
     let plando_key = Yaml::from_str("plando_items");
     let world_key = Yaml::from_str("world");
@@ -97,6 +97,10 @@ pub fn rename_plando_worlds(mapping: &HashMap<Yaml, Yaml>, docs: &mut [Yaml]) {
         {
             for plando_block in plando_items {
                 if let Some(world) = plando_block.as_mut_hash().and_then(|hash| hash.get_mut(&world_key)) {
+                    if world.as_bool().is_none() {
+                        println!("'{name}.yaml' contains a plando into a named world");
+                    }
+
                     if let Some(new_name) = mapping.get(world) {
                         *world = new_name.clone();
                     } else if let Some(worlds) = world.as_mut_vec() {

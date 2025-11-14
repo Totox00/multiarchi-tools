@@ -121,7 +121,7 @@ fn process_file(name: &str, id: &str) -> Vec<(String, u32, Vec<String>)> {
         }
     }
 
-    rename_plando_worlds(&name_mapping, &mut documents);
+    rename_plando_worlds(&name_mapping, &mut documents, name);
 
     if documents.len() > 8 {
         println!("'{name}.yaml' contains {} games.", documents.len());
