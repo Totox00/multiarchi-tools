@@ -940,7 +940,7 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 move_option_weight(regionsanity, "false", "disabled");
                 move_option_weight(regionsanity, "true", "enabled");
             }
-            
+
             if let Some(shopsanity) = game_hash.get_mut(&Yaml::from_str("shopsanity")) {
                 move_option_weight(shopsanity, "false", "disabled");
                 move_option_weight(shopsanity, "true", "enabled");
@@ -958,6 +958,9 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             game_hash.remove(&Yaml::from_str("randomize_pack_contents"));
             game_hash.remove(&Yaml::from_str("custom_structure_deck"));
             game_hash.remove(&Yaml::from_str("custom_starter_deck"));
+        }
+        Some("XCOM 2 War of the Chosen") => {
+            push_value_or_default(&mut notes, game_hash, "alien_hunters_dlc", "all");
         }
         _ => (),
     };
