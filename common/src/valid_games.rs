@@ -1,4 +1,4 @@
-pub const VALID_GAMES: [&str; 292] = [
+pub const VALID_GAMES: [&str; 291] = [
     "Adventure",
     "Aquaria",
     "Blasphemous",
@@ -166,7 +166,7 @@ pub const VALID_GAMES: [&str; 292] = [
     "osu!",
     "Outer Wilds",
     "Oxygen Not Included",
-    "Panel De Pon/Tetris Attack",
+    "Tetris Attack",
     "Paper Mario",
     "Paper Mario The Thousand Year Door",
     "Pizza Tower",
@@ -257,7 +257,7 @@ pub const VALID_GAMES: [&str; 292] = [
     "Void Stranger",
     "Wargroove 2",
     "Haste",
-    "Spyro",
+    "Spyro the Dragon",
     "Cupheads",
     "Kirby Air Ride",
     "Pokemon Pinball",
@@ -270,7 +270,6 @@ pub const VALID_GAMES: [&str; 292] = [
     "Cassette Beasts",
     "Celeste",
     "Dark Cloud",
-    "Donkey Kong 64",
     "holo8",
     "Lego Star Wars: Complete Saga",
     "Lethal Company",
