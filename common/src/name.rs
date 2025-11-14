@@ -88,8 +88,12 @@ pub fn rename_plando_worlds(mapping: &HashMap<Yaml, Yaml>, docs: &mut [Yaml]) {
 
     for doc in docs {
         if let Some(hash) = doc.as_mut_hash()
-            && let Some(options_key) = hash.get_mut(&game_key)
-            && let Some(plando_items) = options_key.as_mut_hash().and_then(|hash| hash.get_mut(&plando_key)).and_then(|plando_items| plando_items.as_mut_vec())
+            && let Some(options_key) = hash.get(&game_key).cloned()
+            && let Some(plando_items) = hash
+                .get_mut(&options_key)
+                .and_then(|yaml| yaml.as_mut_hash())
+                .and_then(|hash| hash.get_mut(&plando_key))
+                .and_then(|plando_items| plando_items.as_mut_vec())
         {
             for plando_block in plando_items {
                 if let Some(world) = plando_block.as_mut_hash().and_then(|hash| hash.get_mut(&world_key)) {
