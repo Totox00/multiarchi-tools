@@ -940,6 +940,16 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 move_option_weight(regionsanity, "false", "disabled");
                 move_option_weight(regionsanity, "true", "enabled");
             }
+            
+            if let Some(shopsanity) = game_hash.get_mut(&Yaml::from_str("shopsanity")) {
+                move_option_weight(shopsanity, "false", "disabled");
+                move_option_weight(shopsanity, "true", "enabled");
+            }
+
+            if let Some(levelGating) = game_hash.get_mut(&Yaml::from_str("levelGating")) {
+                move_option_weight(levelGating, "false", "none");
+                move_option_weight(levelGating, "true", "level_set");
+            }
         }
         Some("Yu-Gi-Oh! 2006") => {
             game_hash.remove(&Yaml::from_str("starter_deck"));
