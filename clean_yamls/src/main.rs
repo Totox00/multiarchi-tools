@@ -1,5 +1,4 @@
 mod game;
-mod name;
 mod read;
 
 use std::{
@@ -13,16 +12,13 @@ use std::{
 
 use common::{
     comments::{get_comments, insert_comments},
+    name::{rename_plando_worlds, set_name},
     special::handle_special,
     write::{write_to_bot_output, write_to_output_list},
 };
 use yaml_rust2::{Yaml, YamlEmitter, YamlLoader};
 
-use crate::{
-    game::choose_game,
-    name::{rename_plando_worlds, set_name},
-    read::read_process_list,
-};
+use crate::{game::choose_game, read::read_process_list};
 
 pub const BUCKET_PATH: &str = "./bucket";
 pub const USED_PATH: &str = "./used";
