@@ -457,6 +457,11 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             }
         }
         Some("Super Metroid Map Rando") => {
+            if let Some(transition_letters) = game_hash.get_mut(&Yaml::from_str("transition_letters")) {
+                move_option_weight(transition_letters, "true", "letters");
+                move_option_weight(transition_letters, "false", "arrows");
+            }
+
             push_value_or_default(&mut notes, game_hash, "preset", "hard");
             println!("'{name}.yaml' contains a Super Metroid Map Rando");
         }
