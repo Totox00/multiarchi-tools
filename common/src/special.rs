@@ -989,6 +989,23 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         Some("XCOM 2 War of the Chosen") => {
             push_value_or_default(&mut notes, game_hash, "alien_hunters_dlc", "all");
         }
+        Some("League of Legends") => {
+            let champions = if let Some(champions_yaml) = game_hash.get(&Yaml::from_str("champions")) {
+                if let Some(champions) = champions_yaml.as_vec() {
+                    match champions.len() {
+                        ..=20 => to_string(champions_yaml),
+                        21..=170 => champions.len().to_string(),
+                        171.. => String::from("all"),
+                    }
+                } else {
+                    String::from("all")
+                }
+            } else {
+                String::from("all")
+            };
+
+            notes.push(format!("champions: {champions}"));
+        }
         _ => (),
     };
 
