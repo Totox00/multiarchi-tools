@@ -238,7 +238,29 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             }
         }
         Some("Risk of Rain 2") => push_value_or_default(&mut notes, game_hash, "dlc_sotv", "false"),
-        Some("A Short Hike") => push_value_or_default(&mut notes, game_hash, "golden_feather_progression", "normal"),
+        Some("A Short Hike") => {
+            resolve_weighted_option(game_hash, "golden_feathers");
+
+            let mut golden_feather_progression = get_value_or_default(game_hash, "golden_feather_progression", "normal");
+
+            if let Some(golden_feathers) = game_hash.get(&Yaml::from_str("golden_feathers")).and_then(|yaml| match yaml {
+                Yaml::Integer(val) => Some(*val),
+                Yaml::String(val) => val.parse().ok(),
+                _ => None,
+            }) {
+                match (golden_feathers, golden_feather_progression.as_str()) {
+                    (..=1, _) => golden_feather_progression = String::from("glitched"),
+                    (2..4, _) => golden_feather_progression = String::from("extreme"),
+                    (4..7, "easy") | (4..7, "normal") => golden_feather_progression = String::from("hard"),
+                    (7..10, "easy") => golden_feather_progression = String::from("normal"),
+                    _ => (),
+                }
+            } else {
+                golden_feather_progression = String::from("random");
+            }
+
+            notes.push(format!("golden_feather_progression: {golden_feather_progression}"));
+        }
         Some("SMZ3") => push_value_or_default(&mut notes, game_hash, "sm_logic", "normal"),
         Some("Sonic Adventure 2 Battle") => {
             push_value_or_default(&mut notes, game_hash, "logic_difficulty", "standard");
