@@ -1,4 +1,4 @@
-pub const VALID_GAMES: [&str; 291] = [
+pub const VALID_GAMES: [&str; 289] = [
     "Adventure",
     "Aquaria",
     "Blasphemous",
@@ -241,7 +241,6 @@ pub const VALID_GAMES: [&str; 291] = [
     "Zork Grand Inquisitor",
     "Cat Quest",
     "Digimon World",
-    "uper Mario RPG Legend of the Seven Stars",
     "Skyward Sword",
     "Bumper Stickers",
     "Archipelago",
@@ -259,7 +258,6 @@ pub const VALID_GAMES: [&str; 291] = [
     "Haste",
     "Spyro the Dragon",
     "Cupheads",
-    "Kirby Air Ride",
     "Pokemon Pinball",
     "ActRaiser",
     "Archipela-Go",
@@ -277,7 +275,7 @@ pub const VALID_GAMES: [&str; 291] = [
     "Mega Man 3",
     "Pokemon Black and White",
     "Pokemon Platinum",
-    "Rift of the NecroDancer",
+    "Rift of the Necrodancer",
     "Twisty Cube",
     "Vampire Survivors",
     "Voltorb Flip",
