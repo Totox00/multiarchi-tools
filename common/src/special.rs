@@ -143,7 +143,17 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         Some("Blasphemous") => push_value_or_default(&mut notes, game_hash, "difficulty", "normal"),
         Some("Bomb Rush Cyberfunk") => push_value_or_default(&mut notes, game_hash, "logic", "glitchless"),
         Some("Celeste 64") => push_value_or_default(&mut notes, game_hash, "logic_difficulty", "Standard"),
+        Some("Dark Souls II") => {
+            push_value_or_default(&mut notes, game_hash, "game_version", "sotfs");
+            push_value_or_default(&mut notes, game_hash, "old_iron_king_dlc", "false");
+            push_value_or_default(&mut notes, game_hash, "ivory_king_dlc", "false");
+            push_value_or_default(&mut notes, game_hash, "sunken_king_dlc", "false");
+        }
         Some("Dark Souls III") => push_value_or_default(&mut notes, game_hash, "enable_dlc", "false"),
+        Some("Grim Dawn") => {
+            push_value_or_default(&mut notes, game_hash, "dlc_aom", "false");
+            push_value_or_default(&mut notes, game_hash, "dlc_fg", "false");
+        }
         Some("DLCQuest") => push_value_or_default(&mut notes, game_hash, "double_jump_glitch", "none"),
         Some("DOOM 1993") => push_value_or_default(&mut notes, game_hash, "pro", "false"),
         Some("DOOM II") => push_value_or_default(&mut notes, game_hash, "pro", "false"),
