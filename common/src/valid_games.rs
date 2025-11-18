@@ -281,7 +281,7 @@ pub const VALID_GAMES: [&str; 288] = [
     "Factorio Space Age Without Space",
     "Ship of Harkinian",
     "Signalis",
-    "Super Smash Bros Melee",
+    "Super Smash Bros. Melee",
     "Total War Warhammer 3",
     "Choo Choo Charles",
     "Bomberman The Second Attack",
