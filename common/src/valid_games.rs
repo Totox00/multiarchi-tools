@@ -1,4 +1,4 @@
-pub const VALID_GAMES: [&str; 289] = [
+pub const VALID_GAMES: [&str; 288] = [
     "Adventure",
     "Aquaria",
     "Blasphemous",
@@ -171,11 +171,10 @@ pub const VALID_GAMES: [&str; 289] = [
     "Paper Mario The Thousand Year Door",
     "Pizza Tower",
     "Placid Plastic Duck Simulator",
-    "",
     "Pokemon Crystal",
     "Pokemon FireRed and LeafGreen",
     "Pokemon Mystery Dungeon Explorers of Sky",
-    "PokéPark Wii: Pikachu's Adventure [JP]",
+    "PokePark",
     "Powerwash Simulator",
     "Prodigal",
     "Pseudoregalia",
