@@ -146,7 +146,7 @@ pub const VALID_GAMES: [&str; 288] = [
     "Lunacid",
     "Majora's Mask Recompiled",
     "Mario Kart 64",
-    "Mario Kart: Double Dash",
+    "Mario Kart Double Dash",
     "Mega Man X",
     "Mega Man X2",
     "Mega Man X3",
