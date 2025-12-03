@@ -909,6 +909,15 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
 
             notes.push(format!("champions: {champions}"));
         }
+        Some("Rabi-Ribi") => {
+            push_value_or_default(&mut notes, game_hash, "knowledge", "basic");
+            push_value_or_default(&mut notes, game_hash, "trick_difficulty", "normal");
+            push_value_or_default(&mut notes, game_hash, "block_clips_required", "false");
+            push_value_or_default(&mut notes, game_hash, "semi_solid_clips_required", "false");
+            push_value_or_default(&mut notes, game_hash, "zips_required", "false");
+            push_value_or_default(&mut notes, game_hash, "bunstrike_zips_required", "false");
+            push_value_or_default(&mut notes, game_hash, "boring_tricks_required", "false");
+        }
         _ => (),
     };
 
