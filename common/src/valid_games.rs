@@ -256,7 +256,7 @@ pub const VALID_GAMES: [&str; 288] = [
     "Wargroove 2",
     "Haste",
     "Spyro the Dragon",
-    "Cupheads",
+    "Cuphead",
     "Pokemon Pinball",
     "ActRaiser",
     "Archipela-Go",
