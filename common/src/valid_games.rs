@@ -1,4 +1,4 @@
-pub const VALID_GAMES: [&str; 288] = [
+pub const VALID_GAMES: [&str; 287] = [
     "Adventure",
     "Aquaria",
     "Blasphemous",
@@ -165,7 +165,6 @@ pub const VALID_GAMES: [&str; 288] = [
     "Ori and the Will of the Wisps",
     "osu!",
     "Outer Wilds",
-    "Oxygen Not Included",
     "Tetris Attack",
     "Paper Mario",
     "Paper Mario The Thousand Year Door",
