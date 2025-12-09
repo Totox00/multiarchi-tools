@@ -1126,7 +1126,7 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                     _ => None,
                 }
             {
-                game_hash.insert(Yaml::from_str("goal"), Yaml::Array(goals));
+                game_hash.insert(Yaml::from_str("goals"), Yaml::Array(goals));
             }
 
             if let Some(mut split_start_items) = game_hash.remove(&Yaml::from_str("split_start_items")) {
