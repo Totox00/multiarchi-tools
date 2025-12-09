@@ -1,4 +1,4 @@
-pub const VALID_GAMES: [&str; 295] = [
+pub const VALID_GAMES: [&str; 294] = [
     "A Hat in Time",
     "A Link Between Worlds",
     "A Link to the Past",
@@ -293,5 +293,4 @@ pub const VALID_GAMES: [&str; 295] = [
     "TOEM",
     "Spicy Mycena Waffles",
     "Super Cat Planet",
-    "Yooka-Laylee",
 ];
