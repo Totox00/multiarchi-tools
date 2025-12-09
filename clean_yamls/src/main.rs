@@ -13,6 +13,7 @@ use std::{
 use common::{
     comments::{get_comments, insert_comments},
     name::{rename_plando_worlds, set_name},
+    name_changes::{load_name_mapping, remap_common_options, Mapping},
     special::handle_special,
     write::{write_to_bot_output, write_to_output_list},
 };
@@ -43,8 +44,10 @@ fn main() {
         }
     };
 
+    let item_location_mappings = load_name_mapping();
+
     for (name, id) in process_list {
-        let games = process_file(&name, &id);
+        let games = process_file(&item_location_mappings, &name, &id);
 
         if let Some((_, count, _)) = games.iter().find(|(game, _, _)| game == "Keymaster's Keep") {
             if *count > 1 {
@@ -68,7 +71,7 @@ fn main() {
     }
 }
 
-fn process_file(name: &str, id: &str) -> Vec<(String, u32, Vec<String>)> {
+fn process_file(item_location_mappings: &Mapping, name: &str, id: &str) -> Vec<(String, u32, Vec<String>)> {
     let mut games_in_file = vec![];
     let content = match read_to_string(PathBuf::from(BUCKET_PATH).join(format!("bucket ({id}).yaml"))) {
         Ok(content) => content.trim_matches(|char: char| char == '\n' || char == '\r' || char == '\u{feff}').to_owned(),
@@ -111,6 +114,10 @@ fn process_file(name: &str, id: &str) -> Vec<(String, u32, Vec<String>)> {
                 println!("'{name}.yaml' contains a Final Fantasy");
             } else {
                 old_name = set_name(doc, &new_name, Some(&game));
+            }
+
+            if let Some(game_str) = game.as_str() {
+                remap_common_options(item_location_mappings, doc, game_str);
             }
         } else {
             old_name = set_name(doc, &new_name, None);

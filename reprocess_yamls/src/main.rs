@@ -9,6 +9,7 @@ use std::{
 use common::{
     comments::{get_comments, insert_comments},
     name::{rename_plando_worlds, set_name},
+    name_changes::{Mapping, load_name_mapping, remap_common_options},
     special::handle_special,
     write::{write_to_bot_output, write_to_output_list},
 };
@@ -34,10 +35,12 @@ fn main() {
             }
         };
 
+        let item_location_mappings = load_name_mapping();
+
         for yaml in dir.flatten() {
             let buf = PathBuf::from(yaml.file_name());
             let name = buf.file_stem().map(|str| str.to_string_lossy()).unwrap_or_else(|| panic!("Failed to get name from {:?}", yaml.path()));
-            let games = process_file(&yaml.path(), &name);
+            let games = process_file(&item_location_mappings, &yaml.path(), &name);
 
             if let Some((_, count, _)) = games.iter().find(|(game, _, _)| game == "Keymaster's Keep") {
                 if *count > 1 {
@@ -53,7 +56,7 @@ fn main() {
     }
 }
 
-fn process_file(path: &Path, name: &str) -> Vec<(String, u32, Vec<String>)> {
+fn process_file(item_location_mappings: &Mapping, path: &Path, name: &str) -> Vec<(String, u32, Vec<String>)> {
     let mut games_in_file = vec![];
     let content = match read_to_string(path) {
         Ok(content) => content.trim_matches(|char: char| char == '\n' || char == '\r' || char == '\u{feff}').to_owned(),
@@ -96,6 +99,10 @@ fn process_file(path: &Path, name: &str) -> Vec<(String, u32, Vec<String>)> {
                 println!("'{name}.yaml' contains a Final Fantasy");
             } else {
                 old_name = set_name(doc, &new_name, Some(&game));
+            }
+
+            if let Some(game_str) = game.as_str() {
+                remap_common_options(item_location_mappings, doc, game_str);
             }
         } else {
             old_name = set_name(doc, &new_name, None);
