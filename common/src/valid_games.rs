@@ -121,7 +121,7 @@ pub const VALID_GAMES: [&str; 294] = [
     "Kirby's Dream Land 3",
     "Landstalker - The Treasures of King Nole",
     "League of Legends",
-    "Lego Star Wars: Complete Saga",
+    "Lego Star Wars: The Complete Saga",
     "Lethal Company",
     "Lil Gator Game",
     "Lingo",
