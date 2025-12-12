@@ -440,9 +440,13 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
 
             resolve_weighted_option(game_hash, "exp_modifier");
 
-            if let Some(exp_modifier) = game_hash.remove(&Yaml::from_str("exp_modifier")) {
-                let game_options_key = Yaml::from_str("game_options");
+            let game_options_key = Yaml::from_str("game_options");
+            if let Some(game_options) = game_hash.get_mut(&game_options_key).and_then(|yaml| yaml.as_mut_hash()) {
+                game_options.remove(&Yaml::from_str("Experience"));
+                game_options.remove(&Yaml::from_str("Turbo A"));
+            }
 
+            if let Some(exp_modifier) = game_hash.remove(&Yaml::from_str("exp_modifier")) {
                 if let Some(game_options) = game_hash.get_mut(&game_options_key) {
                     if let Some(game_options) = game_options.as_mut_hash() {
                         game_options.insert(Yaml::from_str("Experience Multiplier"), exp_modifier);
