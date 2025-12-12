@@ -287,7 +287,7 @@ pub const VALID_GAMES: [&str; 294] = [
     "Zillion",
     "Zork Grand Inquisitor",
     "APQuest",
-    "Crossword AP",
+    "CrosswordAP",
     "Factorio with Bob Mods",
     "Spyro 3",
     "TOEM",
