@@ -89,7 +89,7 @@ pub const VALID_GAMES: [&str; 294] = [
     "Fire Emblem Sacred Stones",
     "Frogmonster",
     "Gauntlet Legends",
-    "Getting Over It with Bennett Foddy",
+    "Getting Over It",
     "Golden Sun The Lost Age",
     "Grim Dawn",
     "Guild Wars 2",
