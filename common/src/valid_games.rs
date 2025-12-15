@@ -202,7 +202,7 @@ pub const VALID_GAMES: [&str; 294] = [
     "shapez",
     "Ship of Harkinian",
     "Shivers",
-    "Sid Meier's Civilization V",
+    "Civilization V",
     "Signalis",
     "Simon Tatham's Portable Puzzle Collection",
     "Skyward Sword",
