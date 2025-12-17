@@ -3,7 +3,7 @@ pub const VALID_GAMES: [&str; 294] = [
     "A Link Between Worlds",
     "A Link to the Past",
     "A Short Hike",
-    "ActRaiser",
+    "Actraiser",
     "Adventure",
     "Against the Storm",
     "Air Delivery",
