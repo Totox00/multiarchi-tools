@@ -746,7 +746,14 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             push_value_or_default(&mut notes, game_hash, "logic_difficulty", "casual");
             push_value_or_default(&mut notes, game_hash, "tedious_checks", "false");
         }
-        Some("Spelunky 2") => push_value_or_default(&mut notes, game_hash, "include_hard_locations", "false"),
+        Some("Spelunky 2") => {
+            push_value_or_default(&mut notes, game_hash, "include_hard_locations", "false");
+            push_value_or_default(&mut notes, game_hash, "can_ankh_skip", "false");
+            push_value_or_default(&mut notes, game_hash, "can_udjat_skip", "false");
+            push_value_or_default(&mut notes, game_hash, "can_qilin_skip", "false");
+            push_value_or_default(&mut notes, game_hash, "can_kingu_skip", "false");
+            push_value_or_default(&mut notes, game_hash, "can_mothership_skip", "false");
+        }
         Some("Metroid Zero Mission") => {
             if let Some(walljumps_in_logic) = game_hash.remove(&Yaml::from_str("walljumps_in_logic")) {
                 game_hash.insert(Yaml::from_str("walljumps"), walljumps_in_logic);
@@ -1200,6 +1207,11 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             }
 
             game_hash.remove(&Yaml::from_str("required_locations"));
+        }
+        Some("Nine Sols") => push_value_or_default(&mut notes, game_hash, "logic_difficulty", "vanilla"),
+        Some("Lunacid") => {
+            push_value_or_default(&mut notes, game_hash, "tricks_and_glitches", "[]");
+            push_value_or_default(&mut notes, game_hash, "challenges", "off");
         }
         _ => (),
     };
