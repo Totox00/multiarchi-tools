@@ -554,8 +554,25 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 move_option_weight(traps_frequency, "large", "15");
                 move_option_weight(traps_frequency, "extreme", "50");
             }
+
+            if let Some(obelisks) = game_hash.get_mut(&Yaml::from_str("obelisks")) {
+                move_option_weight(obelisks, "none", "false");
+                move_option_weight(obelisks, "all_obelisks", "true");
+            }
+
+            if let Some(mirror_shards) = game_hash.get_mut(&Yaml::from_str("mirror_shards")) {
+                move_option_weight(mirror_shards, "none", "false");
+                move_option_weight(mirror_shards, "all_shards", "true");
+            }
+
+            if let Some(max_difficulty_value) = game_hash.remove(&Yaml::from_str("max_difficulty_value")) {
+                game_hash.insert(Yaml::from_str("max_difficulty"), max_difficulty_value);
+            }
+            game_hash.remove(&Yaml::from_str("max_difficulty_toggle"));
         }
         Some("Pokemon Crystal") => {
+            rename_true_false(game_hash, "enable_mischief", "mild", "off");
+
             if let Some(trainer_name) = game_hash.get(&Yaml::from_str("trainer_name")).and_then(|name| name.as_str())
                 && !trainer_name.is_empty()
             {
@@ -678,6 +695,10 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         Some("Psychonauts") => {
             if let Some(goal) = game_hash.get_mut(&Yaml::from_str("Goal")) {
                 move_option_weight(goal, "braintank_and_brainhunt", "asylum_brain_tank_and_brain_hunt");
+            }
+
+            if game_hash.remove(&Yaml::from_str("LootboxVaults")).is_some() {
+                game_hash.insert(Yaml::from_str("VaultCount"), Yaml::Integer(101));
             }
         }
         Some("Luigi's Mansion") => rename_true_false(game_hash, "door_rando", "randomized", "off"),
@@ -1212,6 +1233,67 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         Some("Lunacid") => {
             push_value_or_default(&mut notes, game_hash, "tricks_and_glitches", "[]");
             push_value_or_default(&mut notes, game_hash, "challenges", "off");
+        }
+        Some("Kirby Super Star") => {
+            if let Some(the_great_cave_offensive_gold_thresholds) = game_hash.get_mut(&Yaml::from_str("the_great_cave_offensive_gold_thresholds")) {
+                match the_great_cave_offensive_gold_thresholds {
+                    Yaml::Real(val) | Yaml::String(val) => {
+                        if let Ok(parsed) = val.parse::<f64>()
+                            && parsed < 1.0
+                        {
+                            *val = (parsed * 100.0).to_string();
+                        }
+                    }
+                    Yaml::Hash(linked_hash_map) => {
+                        let mut new_hash = LinkedHashMap::new();
+
+                        for (key, val) in linked_hash_map.iter() {
+                            if let Yaml::Real(val) | Yaml::String(val) = key
+                                && let Ok(parsed) = val.parse::<f64>()
+                                && parsed < 1.0
+                            {
+                                new_hash.insert(key.to_owned(), Yaml::Real((parsed * 100.0).to_string()));
+                            } else {
+                                new_hash.insert(key.to_owned(), val.to_owned());
+                            }
+                        }
+
+                        *linked_hash_map = new_hash;
+                    }
+                    _ => (),
+                }
+            }
+
+            if let Some(kirby_flavor) = game_hash.remove(&Yaml::from_str("kirby_flavor")) {
+                let mut flavor_hash = LinkedHashMap::new();
+                flavor_hash.insert(Yaml::from_str("default_kirby"), kirby_flavor);
+                game_hash.insert(Yaml::from_str("kirby_flavors"), Yaml::Hash(flavor_hash));
+            }
+
+            if let Some(kirby_flavor_preset) = game_hash.get_mut(&Yaml::from_str("kirby_flavor_preset")) {
+                move_option_weight(kirby_flavor_preset, "custom", "default");
+            }
+        }
+        Some("Super Mario Sunshine") => {
+            game_hash.remove(&Yaml::from_str("yoshi_mode"));
+        }
+        Some("Kirby 64 - The Crystal Shards") => {
+            if let Some(total_crystals) = game_hash.remove(&Yaml::from_str("total_crystals")) {
+                game_hash.insert(Yaml::from_str("max_crystals"), total_crystals);
+            }
+        }
+        Some("Deep Rock Galactic") => {
+            if let Some(max_hazard) = game_hash.get_mut(&Yaml::from_str("max_hazard")) {
+                move_option_weight(max_hazard, "hazard_1", "haz3");
+                move_option_weight(max_hazard, "hazard_2", "haz3");
+                move_option_weight(max_hazard, "hazard_3", "haz3");
+                move_option_weight(max_hazard, "hazard_4", "haz4");
+                move_option_weight(max_hazard, "hazard_5", "haz5");
+            }
+
+            if let Some(progression_diff) = game_hash.get_mut(&Yaml::from_str("progression_diff")) {
+                move_option_weight(progression_diff, "leaflover", "easy");
+            }
         }
         _ => (),
     };
