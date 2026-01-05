@@ -1,4 +1,4 @@
-pub const VALID_GAMES: [&str; 294] = [
+pub const VALID_GAMES: [&str; 307] = [
     "A Hat in Time",
     "A Link Between Worlds",
     "A Link to the Past",
@@ -293,4 +293,17 @@ pub const VALID_GAMES: [&str; 294] = [
     "TOEM",
     "Spicy Mycena Waffles",
     "Super Cat Planet",
+    "Castlevania: Dawn of Sorrow",
+    "Corru.Osberver",
+    "Crossword AP",
+    "Dredge",
+    "FEZ",
+    "Forged Curse",
+    "Lego Batman",
+    "Minecraft",
+    "Plok",
+    "Sonic Advance 2",
+    "West of Loathing",
+    "Donkey Kong 64",
+    "Ori and the Will of the Wisps",
 ];
