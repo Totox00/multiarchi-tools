@@ -1,4 +1,4 @@
-pub const VALID_GAMES: [&str; 307] = [
+pub const VALID_GAMES: [&str; 306] = [
     "A Hat in Time",
     "A Link Between Worlds",
     "A Link to the Past",
@@ -59,7 +59,6 @@ pub const VALID_GAMES: [&str; 307] = [
     "Dark Cloud",
     "Dark Souls II",
     "Dark Souls III",
-    "Dark Souls Remastered",
     "Deep Rock Galactic",
     "Diddy Kong Racing",
     "Digimon World",
