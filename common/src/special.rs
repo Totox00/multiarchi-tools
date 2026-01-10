@@ -210,6 +210,14 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         Some("Kingdom Hearts 2") => push_value_or_default(&mut notes, game_hash, "FightLogic", "normal"),
         Some("Kingdom Hearts") => {
             rename_true_false(game_hash, "cups", "cups", "off");
+
+            if let Some(level_checks) = game_hash.get_mut(&Yaml::from_str("level_checks")) {
+                move_option_weight(level_checks, "100", "99");
+            }
+            
+            if let Some(force_stats_on_levels) = game_hash.get_mut(&Yaml::from_str("force_stats_on_levels")) {
+                move_option_weight(force_stats_on_levels, "1", "2");
+            }
         }
         Some("A Link to the Past") => push_value_or_default(&mut notes, game_hash, "glitches_required", "no_glitches"),
         Some("Links Awakening DX") => push_value_or_default(&mut notes, game_hash, "logic", "normal"),
