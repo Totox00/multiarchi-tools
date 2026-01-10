@@ -287,7 +287,7 @@ pub const VALID_GAMES: [&str; 306] = [
     "Zork Grand Inquisitor",
     "APQuest",
     "CrosswordAP",
-    "Factorio with Bob Mods",
+    "Factorio Bob's",
     "Spyro 3",
     "TOEM",
     "Spicy Mycena Waffles",
