@@ -1295,6 +1295,24 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 move_option_weight(progression_diff, "leaflover", "easy");
             }
         }
+        Some("Powerwash Simulator") => {
+            for option in [
+                "midgar",
+                "tomb_raider",
+                "wallace_and_gromit_dlc",
+                "shrek_dlc",
+                "alice_in_wonderland_dlc",
+                "warhammer_40k_dlc",
+                "back_to_the_future_dlc",
+                "spongebob_dlc",
+            ] {
+                notes.push(if option_can_be_other_than(game_hash, option, &Yaml::from_str("Empty"), &Yaml::from_str("Empty")) {
+                    String::from("true")
+                } else {
+                    String::from("false")
+                });
+            }
+        }
         _ => (),
     };
 
