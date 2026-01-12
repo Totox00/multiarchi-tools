@@ -1,4 +1,4 @@
-pub const VALID_GAMES: [&str; 306] = [
+pub const VALID_GAMES: [&str; 304] = [
     "A Hat in Time",
     "A Link Between Worlds",
     "A Link to the Past",
@@ -33,7 +33,6 @@ pub const VALID_GAMES: [&str; 306] = [
     "Brotato",
     "Bumper Stickers",
     "Candy Box 2",
-    "Cassette Beasts",
     "Castlevania - Circle of the Moon",
     "Castlevania - Harmony of Dissonance",
     "Castlevania 64",
@@ -105,7 +104,7 @@ pub const VALID_GAMES: [&str; 306] = [
     "Isles of the Sea and Sky",
     "Ittle Dew 2",
     "Jak and Daxter",
-    "Jak and Daxter: The Precursor Legacy",
+    "Jak and Daxter The Precursor Legacy",
     "Jigsaw",
     "Kabuto Park",
     "Keep Talking and Nobody Explodes",
@@ -286,7 +285,6 @@ pub const VALID_GAMES: [&str; 306] = [
     "Zillion",
     "Zork Grand Inquisitor",
     "APQuest",
-    "CrosswordAP",
     "Factorio Bob's",
     "Spyro 3",
     "TOEM",
