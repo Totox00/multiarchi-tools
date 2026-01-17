@@ -214,7 +214,7 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             if let Some(level_checks) = game_hash.get_mut(&Yaml::from_str("level_checks")) {
                 move_option_weight(level_checks, "100", "99");
             }
-            
+
             if let Some(force_stats_on_levels) = game_hash.get_mut(&Yaml::from_str("force_stats_on_levels")) {
                 move_option_weight(force_stats_on_levels, "1", "2");
             }
@@ -361,6 +361,7 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         }
         Some("TUNIC") => {
             game_hash.remove(&Yaml::from_str("logic_rules"));
+            game_hash.remove(&Yaml::from_str("fixed_shop"));
 
             push_value_or_default(&mut notes, game_hash, "combat_logic", "off");
             push_value_or_default(&mut notes, game_hash, "lanternless", "false");
@@ -1319,6 +1320,15 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 } else {
                     String::from("false")
                 });
+            }
+        }
+        Some("TCG Card Shop Simulator") => {
+            if let Some(extra_starting_item_checks) = game_hash.get_mut(&Yaml::from_str("extra_starting_item_checks")) {
+                move_option_weight_matches(
+                    extra_starting_item_checks,
+                    |yaml| yaml.as_i64().is_some_and(|val| val < 5) || yaml.as_f64().is_some_and(|val| val < 5.0) || yaml.as_str().is_some_and(|val| val.parse::<f64>().is_ok_and(|val| val < 5.0)),
+                    "easy",
+                );
             }
         }
         _ => (),
