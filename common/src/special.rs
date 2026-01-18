@@ -906,6 +906,10 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             if let Some(goal_target_override) = game_hash.get_mut(&Yaml::from_str("goal_target_override")) {
                 move_option_weight(goal_target_override, "disable", "1");
             }
+
+            push_value_or_default(&mut notes, game_hash, "logic_preference", "normal");
+            push_value_or_default(&mut notes, game_hash, "hip_drop_storage_logic", "false");
+            push_value_or_default(&mut notes, game_hash, "prolonged_quad_jump_logic", "false");
         }
         Some("Ape Escape") => {
             push_value_or_default(&mut notes, game_hash, "logic", "normal");
