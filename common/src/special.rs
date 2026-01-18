@@ -159,7 +159,13 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         Some("DOOM II") => push_value_or_default(&mut notes, game_hash, "pro", "false"),
         Some("Final Fantasy") => push_value_or_default(&mut notes, game_hash, "permalink", "N/A"),
         Some("Final Fantasy Mystic Quest") => push_value_or_default(&mut notes, game_hash, "logic", "standard"),
-        Some("Final Fantasy 12 Open World") => push_value_or_default(&mut notes, game_hash, "character_progression_scaling", "true"),
+        Some("Final Fantasy 12 Open World") => {
+            if let Some(character_progression_scaling) = game_hash.remove(&Yaml::from_str("character_progression_scaling")) {
+                game_hash.insert(Yaml::from_str("difficulty_progressive_scaling"), character_progression_scaling);
+            }
+
+            push_value_or_default(&mut notes, game_hash, "character_progression_scaling", "true");
+        }
         Some("A Hat in Time") => {
             push_value_or_default(&mut notes, game_hash, "LogicDifficulty", "normal");
 
@@ -923,7 +929,7 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         }
         Some("Donkey Kong 64") => {
             if let Some(goal) = game_hash.get_mut(&Yaml::from_str("goal")) {
-                move_option_weight(goal, "krool", "beat_k_rool");
+                move_option_weight(goal, "krool", "acquire_key_8");
                 move_option_weight(goal, "all_keys", "acquire_key_8");
             }
 
@@ -1240,10 +1246,24 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 game_hash.insert(Yaml::from_str("trap_weights"), trap_item_weights);
             }
 
+            if let Some(mut fortunes_are_hints) = game_hash.remove(&Yaml::from_str("fortunes_are_hints")) {
+                move_option_weight(&mut fortunes_are_hints, "false", "0");
+                move_option_weight(&mut fortunes_are_hints, "true", "100");
+
+                game_hash.insert(Yaml::from_str("fortune_machine_hint_percentage"), fortunes_are_hints);
+            }
+
             game_hash.remove(&Yaml::from_str("required_locations"));
+            game_hash.remove(&Yaml::from_str("force_lategame"));
+            game_hash.remove(&Yaml::from_str("win_collects_missed_locations"));
+            game_hash.remove(&Yaml::from_str("additional_item_locations"));
+            game_hash.remove(&Yaml::from_str("item_location_step"));
         }
         Some("Nine Sols") => push_value_or_default(&mut notes, game_hash, "logic_difficulty", "vanilla"),
         Some("Lunacid") => {
+            game_hash.remove(&Yaml::from_str("experience"));
+            game_hash.remove(&Yaml::from_str("weapon_experience"));
+
             push_value_or_default(&mut notes, game_hash, "tricks_and_glitches", "[]");
             push_value_or_default(&mut notes, game_hash, "challenges", "off");
         }
@@ -1333,6 +1353,14 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                     |yaml| yaml.as_i64().is_some_and(|val| val < 5) || yaml.as_f64().is_some_and(|val| val < 5.0) || yaml.as_str().is_some_and(|val| val.parse::<f64>().is_ok_and(|val| val < 5.0)),
                     "easy",
                 );
+            }
+        }
+        Some("Yu-Gi-Oh! Dungeon Dice Monsters") => {
+            game_hash.remove(&Yaml::from_str("duelist_rematches"));
+        }
+        Some("Nodebuster") => {
+            if let Some(progressive_items) = game_hash.remove(&Yaml::from_str("progressiveItems")) {
+                game_hash.insert(Yaml::from_str("progressive_items"), progressive_items);
             }
         }
         _ => (),
