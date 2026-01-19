@@ -1,4 +1,4 @@
-pub const VALID_GAMES: [&str; 311] = [
+pub const VALID_GAMES: [&str; 310] = [
     "A Hat in Time",
     "A Link Between Worlds",
     "A Link to the Past",
@@ -305,7 +305,6 @@ pub const VALID_GAMES: [&str; 311] = [
     "Zork Grand Inquisitor",
     "BK Simulator",
     "Minecraft Dig",
-    "Nodebuster",
     "Plants vs Zombies Replanted",
     "Portal 2",
     "Refunct",

@@ -996,6 +996,8 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             }));
         }
         Some("Crystal Project") => {
+            println!("'{name}.yaml' contains a Crystal Project",);
+
             rename_true_false(game_hash, "regionsanity", "enabled", "disabled");
             rename_true_false(game_hash, "shopsanity", "enabled", "disabled");
             rename_true_false(game_hash, "levelGating", "level_set", "none");
@@ -1362,6 +1364,9 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             if let Some(progressive_items) = game_hash.remove(&Yaml::from_str("progressiveItems")) {
                 game_hash.insert(Yaml::from_str("progressive_items"), progressive_items);
             }
+        }
+        Some("Iji") => {
+            push_value_or_default(&mut notes, game_hash, "logic_difficulty", "normal_logic");
         }
         _ => (),
     };
