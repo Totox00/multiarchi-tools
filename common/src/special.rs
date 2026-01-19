@@ -518,6 +518,8 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             println!("'{name}.yaml' contains a Super Metroid Map Rando");
         }
         Some("Sonic Adventure DX") => {
+            println!("'{name}.yaml' contains a Sonic Adventure DX",);
+
             rename_true_false(game_hash, "lazy_fishing", "enabled_all", "disabled");
             push_value_or_default(&mut notes, game_hash, "logic_level", "normal_logic");
         }
