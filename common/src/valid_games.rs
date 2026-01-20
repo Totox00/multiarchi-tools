@@ -269,7 +269,7 @@ pub const VALID_GAMES: [&str; 310] = [
     "The Wind Waker",
     "The Witness",
     "Timespinner",
-    "TOEM",
+    "TOEM: A Photo Adventure",
     "Total War Warhammer 3",
     "Trackmania",
     "TUNIC",
