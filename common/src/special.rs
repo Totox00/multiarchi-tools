@@ -501,9 +501,9 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             }
             if option_can_be(game_hash, "use_advanced_characters", &Yaml::Boolean(false), &Yaml::Boolean(true)) {
                 if let Some(advanced_characters_hash) = game_hash.get(&Yaml::from_str("advanced_characters")).and_then(Yaml::as_hash) {
-                    notes.push(format!("advanced_characters: [{}]", advanced_characters_hash.keys().map(to_string).collect::<Vec<_>>().join(", ")));
+                    notes.push(format!("characters: [{}]", advanced_characters_hash.keys().map(to_string).collect::<Vec<_>>().join(", ")));
                 } else {
-                    notes.push(String::from("advanced_characters: [ironclad]"));
+                    notes.push(String::from("characters: [Ironclad]"));
                 }
             }
 
