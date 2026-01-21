@@ -1370,6 +1370,9 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         Some("Iji") => {
             push_value_or_default(&mut notes, game_hash, "logic_difficulty", "normal_logic");
         }
+        Some("Rift of the Necrodancer") => {
+            push_value_or_default(&mut notes, game_hash, "dlc_songs", "[]");
+        }
         _ => (),
     };
 
