@@ -1,4 +1,4 @@
-pub const VALID_GAMES: [&str; 310] = [
+pub const VALID_GAMES: [&str; 309] = [
     "A Hat in Time",
     "A Link Between Worlds",
     "A Link to the Past",
@@ -206,7 +206,6 @@ pub const VALID_GAMES: [&str; 310] = [
     "Satisfactory",
     "Saving Princess",
     "Scooby-Doo! Night of 100 Frights",
-    "Sea of Thieves",
     "Secret of Evermore",
     "Sentinels of the Multiverse",
     "Severed Soul",
