@@ -1,4 +1,4 @@
-pub const VALID_GAMES: [&str; 309] = [
+pub const VALID_GAMES: [&str; 308] = [
     "A Hat in Time",
     "A Link Between Worlds",
     "A Link to the Past",
@@ -49,7 +49,6 @@ pub const VALID_GAMES: [&str; 309] = [
     "Choo Choo Charles",
     "ChristmasDelivery",
     "Chrono Trigger Jets of Time",
-    "Civilization V",
     "Civilization VI",
     "Clique",
     "ClusterTruck",
