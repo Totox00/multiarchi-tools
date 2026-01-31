@@ -835,6 +835,10 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 move_option_weight(goal, "goal: wasps and cards collected!", "goal_wasps_and_cards_collected");
             }
 
+            resolve_weighted_option(game_hash, "shufflegagfinder");
+            resolve_weighted_option(game_hash, "shufflecheckeredflags");
+            resolve_weighted_option(game_hash, "shuffleebrake");
+
             if let Some(shufflegagfinder) = game_hash.get_mut(&Yaml::from_str("shufflegagfinder")) {
                 move_option_weight_to_yaml(shufflegagfinder, "false", Yaml::Array(Vec::new()));
                 move_option_weight_to_yaml(shufflegagfinder, "true", Yaml::Array(vec![Yaml::from_str("All")]));
