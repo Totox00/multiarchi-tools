@@ -797,6 +797,10 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 game_hash.insert(Yaml::from_str("walljumps"), walljumps_in_logic);
             }
 
+            rename_true_false(game_hash, "walljumps", "enabled", "disabled");
+            rename_true_false(game_hash, "hazard_runs", "normal", "disabled");
+            game_hash.remove(&Yaml::from_str("unknown_items_always_usable"));
+
             push_value_or_default(&mut notes, game_hash, "walljumps", "enabled");
             push_value_or_default(&mut notes, game_hash, "logic_difficulty", "simple");
             push_value_or_default(&mut notes, game_hash, "combat_logic_difficulty", "relaxed");
