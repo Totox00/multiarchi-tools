@@ -862,9 +862,14 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             if let Some(mut final_elevator_package) = game_hash.remove(&Yaml::from_str("final_elevator_package")) {
                 move_option_weight(&mut final_elevator_package, "one package (tiers 1-2)", "phase 1 (tiers 1-2)");
                 move_option_weight(&mut final_elevator_package, "two packages (tiers 1-4)", "phase 2 (tiers 1-4");
-                move_option_weight(&mut final_elevator_package, "three packages (tiers 1-6)", "phase 3 (tiers 1-6");
-                move_option_weight(&mut final_elevator_package, "four packages (tiers 1-8)", "phase 4 (tiers 1-8)");
-                move_option_weight(&mut final_elevator_package, "five packages (tiers 1-9)", "phase 5 (tiers 1-9)");
+                move_option_weight(&mut final_elevator_package, "three packages (tiers 1-6)", "phase 3 (tiers 1-6)");
+                move_option_weight(&mut final_elevator_package, "four packages (tiers 1-8)", "phase 3 (tiers 1-6)");
+                move_option_weight(&mut final_elevator_package, "five packages (tiers 1-9)", "phase 3 (tiers 1-6)");
+                move_option_weight(&mut final_elevator_package, "phase 4 (tiers 1-8)", "phase 3 (tiers 1-6)");
+                move_option_weight(&mut final_elevator_package, "phase 5 (tiers 1-9)", "phase 3 (tiers 1-6)");
+                move_option_weight(&mut final_elevator_package, "random", "random-range-1-3");
+                move_option_weight(&mut final_elevator_package, "random-low", "random-low-range-1-3");
+                move_option_weight(&mut final_elevator_package, "random-high", "random-high-range-1-3");
                 game_hash.insert(Yaml::from_str("final_elevator_phase"), final_elevator_package);
             }
         }
