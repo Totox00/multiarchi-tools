@@ -412,12 +412,27 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         Some("Outer Wilds") => {
             game_hash.insert(Yaml::from_str("enable_hn2_mod"), Yaml::Boolean(false));
 
-            push_value_or_default(&mut notes, game_hash, "enable_eote_dlc", "false");
-            push_value_or_default(&mut notes, game_hash, "enable_hn1_mod", "false");
-            push_value_or_default(&mut notes, game_hash, "enable_outsider_mod", "false");
-            push_value_or_default(&mut notes, game_hash, "enable_ac_mod", "false");
-            push_value_or_default(&mut notes, game_hash, "enable_hn2_mod", "false");
-            push_value_or_default(&mut notes, game_hash, "enable_fq_mod", "false");
+            let mods: Vec<_> = [
+                ("enable_eote_dlc", "eote"),
+                ("enable_hn1_mod", "hn1"),
+                ("enable_outsider_mod", "outsider"),
+                ("enable_ac_mod", "ac"),
+                ("enable_hn2_mod", "hn2"),
+                ("enable_fq_mod", "fq"),
+                ("enable_fc_mod", "fc"),
+                ("enable_eh_mod", "eh"),
+            ]
+            .iter()
+            .filter(|(option, _)| option_can_be(game_hash, option, &Yaml::Boolean(false), &Yaml::Boolean(true)))
+            .map(|(_, r#mod)| r#mod)
+            .copied()
+            .collect();
+
+            if mods.is_empty() {
+                notes.push(String::from("Mods: none"));
+            } else {
+                notes.push(format!("Mods: [{}]", mods.join(", ")));
+            }
         }
         Some("Pokemon FireRed and LeafGreen") => {
             resolve_weighted_option(game_hash, "game_version");
@@ -1385,6 +1400,23 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         }
         Some("Rift of the Necrodancer") => {
             push_value_or_default(&mut notes, game_hash, "dlc_songs", "[]");
+        }
+        Some("Ship of Harkinian") => {
+            rename_true_false(game_hash, "shuffle_scrubs", "one_time_only", "off");
+
+            if let Some(maps_and_compasses) = game_hash.get_mut(&Yaml::from_str("maps_and_compasses")) {
+                move_option_weight(maps_and_compasses, "shuffle", "anywhere");
+            }
+
+            if option_can_be(game_hash, "key_rings", &Yaml::Boolean(false), &Yaml::Boolean(true)) {
+                game_hash.insert(Yaml::from_str("key_rings_count"), Yaml::Integer(9));
+            }
+
+            rename_true_false(game_hash, "key_rings", "count", "off");
+            rename_true_false(game_hash, "bombchu_bag", "single_bag", "none");
+
+            push_value_or_default(&mut notes, game_hash, "enable_all_tricks", "false");
+            push_value_or_default(&mut notes, game_hash, "tricks_in_logic", "[]");
         }
         _ => (),
     };
