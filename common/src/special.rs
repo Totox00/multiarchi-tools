@@ -1418,6 +1418,10 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             push_value_or_default(&mut notes, game_hash, "enable_all_tricks", "false");
             push_value_or_default(&mut notes, game_hash, "tricks_in_logic", "[]");
         }
+        Some("Forged Curse") => {
+            push_value_or_default(&mut notes, game_hash, "barrier_skip", "false");
+            push_value_or_default(&mut notes, game_hash, "damage_boost", "false");
+        }
         _ => (),
     };
 
