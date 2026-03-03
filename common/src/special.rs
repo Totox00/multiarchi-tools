@@ -1422,6 +1422,8 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             push_value_or_default(&mut notes, game_hash, "barrier_skip", "false");
             push_value_or_default(&mut notes, game_hash, "damage_boost", "false");
         }
+        Some("An Untitled Story") => push_value_or_default(&mut notes, game_hash, "hard_logic", "false"),
+        Some("Portal 2") => push_value_or_default(&mut notes, game_hash, "logic_difficulty", "normal"),
         _ => (),
     };
 
