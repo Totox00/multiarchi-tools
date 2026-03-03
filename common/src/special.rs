@@ -733,7 +733,70 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 game_hash.insert(Yaml::from_str("VaultCount"), Yaml::Integer(101));
             }
         }
-        Some("Luigi's Mansion") => rename_true_false(game_hash, "door_rando", "randomized", "off"),
+        Some("Luigi's Mansion") => {
+            rename_true_false(game_hash, "door_rando", "randomized", "off");
+
+            let vacuum_upgrades = Yaml::from_str("vacuum_upgrades");
+            if game_hash.get(&vacuum_upgrades).is_none() {
+                resolve_weighted_option(game_hash, "good_vacuum");
+                if let Some(yaml) = game_hash.get(&Yaml::from_str("good_vacuum"))
+                    && let Some(upgrades) = match yaml.as_str() {
+                        Some("start_with") => Some(5),
+                        Some("include") => Some(3),
+                        Some("exclude") => Some(0),
+                        _ => None,
+                    }
+                {
+                    game_hash.insert(vacuum_upgrades, Yaml::Integer(upgrades));
+                }
+            }
+
+            let filler_weights = Yaml::from_str("filler_weights");
+            if game_hash.get(&filler_weights).is_none() {
+                let mut hash = LinkedHashMap::new();
+
+                for (new, old) in [
+                    ("Bars", "bars_weight"),
+                    ("Bills", "bill_weight"),
+                    ("Bundles", "bundle_weight"),
+                    ("Coins", "coin_weight"),
+                    ("Dust", "dust_weight"),
+                    ("Gems", "gems_weight"),
+                    ("Hearts", "heart_weight"),
+                ] {
+                    if let Some(val) = game_hash.remove(&Yaml::from_str(old)) {
+                        hash.insert(Yaml::from_str(new), val);
+                    }
+                }
+
+                game_hash.insert(filler_weights, Yaml::Hash(hash));
+            }
+
+            let trap_weights = Yaml::from_str("trap_weights");
+            if game_hash.get(&trap_weights).is_none() {
+                let mut hash = LinkedHashMap::new();
+
+                for (new, old) in [
+                    ("Banana Trap", "banana_trap_weight"),
+                    ("Bomb", "bomb_trap_weight"),
+                    ("Bonk Trap", "bonk_trap_weight"),
+                    ("Fear Trap", "fear_weight"),
+                    ("Ghost", "ghost_weight"),
+                    ("Ice Trap", "ice_trap_weight"),
+                    ("No Vac Trap", "vac_trap_weight"),
+                    ("Poison Mushroom", "poison_trap_weight"),
+                    ("Possession Trap", "poss_trap_weight"),
+                    ("Spooky Time", "spooky_weight"),
+                    ("Squash Trap", "squash_weight"),
+                ] {
+                    if let Some(val) = game_hash.remove(&Yaml::from_str(old)) {
+                        hash.insert(Yaml::from_str(new), val);
+                    }
+                }
+
+                game_hash.insert(trap_weights, Yaml::Hash(hash));
+            }
+        }
         Some("Factorio") => {
             if let Some(world_gen) = game_hash.get_mut(&Yaml::from_str("world_gen")).and_then(|yaml| yaml.as_mut_hash()) {
                 world_gen.remove(&Yaml::from_str("terrain_segmentation"));
