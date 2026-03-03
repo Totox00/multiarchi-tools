@@ -1152,6 +1152,8 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             notes.push(format!("champions: {champions}"));
         }
         Some("Rabi-Ribi") => {
+            game_hash.remove(&Yaml::from_str("open_mode"));
+
             push_value_or_default(&mut notes, game_hash, "knowledge", "basic");
             push_value_or_default(&mut notes, game_hash, "trick_difficulty", "normal");
             push_value_or_default(&mut notes, game_hash, "block_clips_required", "false");
@@ -1161,6 +1163,14 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             push_value_or_default(&mut notes, game_hash, "boring_tricks_required", "false");
         }
         Some("Spyro 3") => {
+            game_hash.remove(&Yaml::from_str("logic_haunted_agent_9_early"));
+            if let Some(easy_skateboarding) = game_hash.remove(&Yaml::from_str("easy_skateboarding")) {
+                game_hash.insert(Yaml::from_str("easy_skateboarding_lizards"), easy_skateboarding.clone());
+                game_hash.insert(Yaml::from_str("easy_skateboarding_points"), easy_skateboarding.clone());
+                game_hash.insert(Yaml::from_str("easy_skateboarding_lost_fleet"), easy_skateboarding.clone());
+                game_hash.insert(Yaml::from_str("easy_skateboarding_super_bonus_round"), easy_skateboarding);
+            }
+
             let tricks: Vec<_> = [
                 "logic_sunny_sheila_early",
                 "logic_cloud_backwards",
@@ -1486,7 +1496,40 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             push_value_or_default(&mut notes, game_hash, "damage_boost", "false");
         }
         Some("An Untitled Story") => push_value_or_default(&mut notes, game_hash, "hard_logic", "false"),
-        Some("Portal 2") => push_value_or_default(&mut notes, game_hash, "logic_difficulty", "normal"),
+        Some("Portal 2") => {
+            rename_true_false(game_hash, "open_world", "open_world", "normal");
+            if let Some(open_world) = game_hash.remove(&Yaml::from_str("open_world")) {
+                game_hash.insert(Yaml::from_str("game_mode"), open_world);
+            }
+            if let Some(cutscenelevels) = game_hash.remove(&Yaml::from_str("cutscenelevels")) {
+                game_hash.insert(Yaml::from_str("cutscene_levels"), cutscenelevels);
+            }
+            if let Some(wheatleymonitors) = game_hash.remove(&Yaml::from_str("wheatleymonitors")) {
+                game_hash.insert(Yaml::from_str("wheatley_monitors"), wheatleymonitors);
+            }
+            push_value_or_default(&mut notes, game_hash, "logic_difficulty", "normal");
+        }
+        Some("Cave Story") => rename_true_false(game_hash, "early_weapon", "good_weapons", "none"),
+        Some("Star Wars Episode I Racer") => {
+            resolve_weighted_option(game_hash, "progressive_circuits");
+            if let Some(progressive_circuits) = game_hash.remove(&Yaml::from_str("progressive_circuits"))
+                && let Some(course_unlock_mode) = game_hash.get_mut(&Yaml::from_str("course_unlock_mode"))
+            {
+                if course_unlock_mode.as_str().is_some_and(|str| str == "circuit_pass" || str == "circuit_pass_invitational") {
+                    match (progressive_circuits.as_str(), progressive_circuits.as_bool()) {
+                        (Some("true"), _) | (_, Some(true)) => {
+                            *course_unlock_mode = Yaml::from_str("progressive_circuits");
+                        }
+                        (Some("false"), _) | (_, Some(false)) => {
+                            *course_unlock_mode = Yaml::from_str("circuits");
+                        }
+                        _ => (),
+                    }
+                } else {
+                    *course_unlock_mode = Yaml::from_str("full_shuffle");
+                }
+            }
+        }
         _ => (),
     };
 
