@@ -764,6 +764,7 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                     ("Gems", "gems_weight"),
                     ("Hearts", "heart_weight"),
                 ] {
+                    resolve_weighted_option(game_hash, old);
                     if let Some(val) = game_hash.remove(&Yaml::from_str(old)) {
                         hash.insert(Yaml::from_str(new), val);
                     }
@@ -789,6 +790,7 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                     ("Spooky Time", "spooky_weight"),
                     ("Squash Trap", "squash_weight"),
                 ] {
+                    resolve_weighted_option(game_hash, old);
                     if let Some(val) = game_hash.remove(&Yaml::from_str(old)) {
                         hash.insert(Yaml::from_str(new), val);
                     }
