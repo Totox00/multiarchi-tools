@@ -26,6 +26,10 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         return notes;
     };
 
+    if hash.contains_key(&Yaml::from_str("triggers")) {
+        println!("'{name}.yaml' contains triggers");
+    }
+
     let game_hash = if let Some(game_options) = hash.get_mut(game) {
         if let Some(game_hash) = game_options.as_mut_hash() {
             game_hash
@@ -35,6 +39,10 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
     } else {
         return notes;
     };
+
+    if game_hash.contains_key(&Yaml::from_str("triggers")) {
+        println!("'{name}.yaml' contains triggers");
+    }
 
     match game.as_str() {
         Some("OpenRCT2") => {
