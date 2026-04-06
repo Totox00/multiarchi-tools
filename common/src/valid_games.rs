@@ -197,7 +197,7 @@ pub const VALID_GAMES: [&str; 324] = [
     "Prodigal",
     "Pseudoregalia",
     "Psychonauts",
-    "Rabbit & Steel",
+    "Rabbit and Steel",
     "Rabi-Ribi",
     "Raft",
     "Rain World",
