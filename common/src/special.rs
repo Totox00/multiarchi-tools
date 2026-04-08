@@ -66,6 +66,7 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
 
             change_option_name(game_hash, "trap_items", "trap_difficulty");
             push_value_or_default(&mut notes, game_hash, "mods", "[]");
+            push_value_or_default(&mut notes, game_hash, "custom_logic", "[]");
         }
         Some("osu!") => {
             game_hash.insert(Yaml::from_str("explicit_lyrics"), Yaml::Boolean(false));
@@ -266,7 +267,10 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 println!("'{name}.yaml' contains a chosen trainer name");
             }
         }
-        Some("Risk of Rain 2") => push_value_or_default(&mut notes, game_hash, "dlc_sotv", "false"),
+        Some("Risk of Rain 2") => {
+            push_value_or_default(&mut notes, game_hash, "dlc_sotv", "false");
+            push_value_or_default(&mut notes, game_hash, "dlc_sots", "false");
+        }
         Some("A Short Hike") => {
             resolve_weighted_option(game_hash, "golden_feathers");
 
@@ -415,7 +419,10 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         Some("Duke Nukem 3D") => push_value_or_default(&mut notes, game_hash, "logic_difficulty", "medium"),
         Some("The Legend of Zelda - Oracle of Ages") => push_value_or_default(&mut notes, game_hash, "logic_difficulty", "casual"),
         Some("The Legend of Zelda - Oracle of Seasons") => push_value_or_default(&mut notes, game_hash, "logic_difficulty", "casual"),
-        Some("Ori and the Blind Forest") => push_value_or_default(&mut notes, game_hash, "logic_difficulty", "casual"),
+        Some("Ori and the Blind Forest") => {
+            push_value_or_default(&mut notes, game_hash, "logic_difficulty", "casual");
+            push_value_or_default(&mut notes, game_hash, "logic_modifiers", "[AirDash, ChargeFlameBurn, Lure, DamageBoost, GrenadeJump, Rekindle, TripleJump, DoubleBash, ChargeDash]");
+        }
         Some("Ori and the Will of the Wisps") => push_value_or_default(&mut notes, game_hash, "difficulty", "moki"),
         Some("Outer Wilds") => {
             game_hash.insert(Yaml::from_str("enable_hn2_mod"), Yaml::Boolean(false));
