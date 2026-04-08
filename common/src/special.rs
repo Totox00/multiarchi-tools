@@ -17,6 +17,13 @@ const ARCHIPELA_GO_DISTANCES: phf::Map<&'static str, i64> = phf_map!(
     "100_miler" => 160934,
 );
 
+const ORI_GOAL_NAMES: phf::Map<&'static str, &'static str> = phf_map!(
+    "all_skill_trees" => "AllSkillTrees",
+    "all_maps" => "AllMaps",
+    "warmth_fragments" => "WarmthFragments",
+    "world_tour" => "WorldTour",
+);
+
 pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
     let mut notes = vec![];
 
@@ -62,6 +69,10 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
 
             if let Some(entrance_randomization) = game_hash.get_mut(&Yaml::from_str("entrance_randomization")) {
                 move_option_weight(entrance_randomization, "chaos", "disabled");
+            }
+
+            if let Some(hatsanity) = game_hash.get_mut(&Yaml::from_str("hatsanity")).and_then(|yaml| yaml.as_mut_vec()) {
+                hatsanity.retain(|yaml| yaml.as_str().is_none_or(|str| str != "Near Perfection" && str != "Post Perfection"));
             }
 
             change_option_name(game_hash, "trap_items", "trap_difficulty");
@@ -420,8 +431,40 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         Some("The Legend of Zelda - Oracle of Ages") => push_value_or_default(&mut notes, game_hash, "logic_difficulty", "casual"),
         Some("The Legend of Zelda - Oracle of Seasons") => push_value_or_default(&mut notes, game_hash, "logic_difficulty", "casual"),
         Some("Ori and the Blind Forest") => {
+            resolve_weighted_option(game_hash, "goal");
+            if let Some(goal) = game_hash.get_mut(&Yaml::from_str("goal")) {
+                *goal = Yaml::Array(goal.as_str().and_then(|str| ORI_GOAL_NAMES.get(str)).copied().map(Yaml::from_str).into_iter().collect());
+            }
+
+            resolve_weighted_option(game_hash, "logic_difficulty");
+            if let Some(yaml) = game_hash.get_mut(&Yaml::from_str("logic_difficulty"))
+                && yaml.as_str() == Some("glitched")
+            {
+                *yaml = Yaml::from_str("master");
+                game_hash.insert(
+                    Yaml::from_str("logic_modifiers"),
+                    Yaml::Array(vec![
+                        Yaml::from_str("AirDash"),
+                        Yaml::from_str("ChargeFlameBurn"),
+                        Yaml::from_str("Lure"),
+                        Yaml::from_str("DamageBoost"),
+                        Yaml::from_str("GrenadeJump"),
+                        Yaml::from_str("Rekindle"),
+                        Yaml::from_str("TripleJump"),
+                        Yaml::from_str("DoubleBash"),
+                        Yaml::from_str("ChargeDash"),
+                        Yaml::from_str("Glitches"),
+                    ]),
+                );
+            }
+
             push_value_or_default(&mut notes, game_hash, "logic_difficulty", "casual");
-            push_value_or_default(&mut notes, game_hash, "logic_modifiers", "[AirDash, ChargeFlameBurn, Lure, DamageBoost, GrenadeJump, Rekindle, TripleJump, DoubleBash, ChargeDash]");
+            push_value_or_default(
+                &mut notes,
+                game_hash,
+                "logic_modifiers",
+                "[AirDash, ChargeFlameBurn, Lure, DamageBoost, GrenadeJump, Rekindle, TripleJump, DoubleBash, ChargeDash]",
+            );
         }
         Some("Ori and the Will of the Wisps") => push_value_or_default(&mut notes, game_hash, "difficulty", "moki"),
         Some("Outer Wilds") => {
@@ -619,6 +662,27 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         }
         Some("Pokemon Crystal") => {
             rename_true_false(game_hash, "enable_mischief", "mild", "off");
+
+            if let Some(learnset_type_bias) = game_hash.get_mut(&Yaml::from_str("learnset_type_bias")) {
+                move_option_weight(learnset_type_bias, "vanilla", "none");
+            }
+
+            let trap_weights: LinkedHashMap<_, _> = [
+                "phone_trap_weight",
+                "sleep_trap_weight",
+                "poison_trap_weight",
+                "burn_trap_weight",
+                "freeze_trap_weight",
+                "paralysis_trap_weight",
+            ]
+            .into_iter()
+            .map(|trap_name| {
+                let key = Yaml::from_str(trap_name);
+                resolve_weighted_option(game_hash, trap_name);
+                game_hash.remove(&key).map(|yaml| (key.to_owned(), yaml)).unwrap_or((key, Yaml::Integer(0)))
+            })
+            .collect();
+            game_hash.insert(Yaml::from_str("trap_weights"), Yaml::Hash(trap_weights));
 
             if let Some(trainer_name) = game_hash.get(&Yaml::from_str("trainer_name")).and_then(|name| name.as_str())
                 && !trainer_name.is_empty()
@@ -890,6 +954,10 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         Some("Metroid Zero Mission") => {
             if let Some(walljumps_in_logic) = game_hash.remove(&Yaml::from_str("walljumps_in_logic")) {
                 game_hash.insert(Yaml::from_str("walljumps"), walljumps_in_logic);
+            }
+
+            if let Some(name) = game_hash.get_mut(&Yaml::from_str("name")) {
+                move_option_weight(name, "Metroid Zero Mission", "Metroid: Zero Mission");
             }
 
             rename_true_false(game_hash, "walljumps", "enabled", "disabled");
@@ -1548,6 +1616,22 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             }
         }
         Some("Donkey Kong Country 2") => push_value_or_default(&mut notes, game_hash, "logic", "strict"),
+        Some("APBingo") => {
+            if let Some(board_size) = game_hash.get_mut(&Yaml::from_str("board_size")) {
+                move_option_weight(board_size, "3", "4");
+            }
+        }
+        Some("Aquaria") => rename_true_false(game_hash, "light_needed_to_get_to_dark_places", "on", "off"),
+        Some("Plants vs. Zombies") => {
+            if let Some(name) = game_hash.get_mut(&Yaml::from_str("name")) {
+                move_option_weight(name, "Plants vs. Zombies: Replanted", "Plants vs. Zombies");
+            }
+        }
+        Some("Pokemon Stadium") => {
+            if let Some(victory_condition) = game_hash.get_mut(&Yaml::from_str("VictoryCondition")) {
+                move_option_weight(victory_condition, "clear_master_ball_cup", "clear_master_ball_cups");
+            }
+        }
         _ => (),
     };
 
