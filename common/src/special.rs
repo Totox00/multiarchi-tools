@@ -667,21 +667,28 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 move_option_weight(learnset_type_bias, "vanilla", "none");
             }
 
-            let trap_weights: LinkedHashMap<_, _> = [
-                "phone_trap_weight",
-                "sleep_trap_weight",
-                "poison_trap_weight",
-                "burn_trap_weight",
-                "freeze_trap_weight",
-                "paralysis_trap_weight",
+            let mut trap_weights: LinkedHashMap<_, _> = [
+                ("phone_trap_weight", "Phone Trap"),
+                ("sleep_trap_weight", "Sleep Trap"),
+                ("poison_trap_weight", "Poison Trap"),
+                ("burn_trap_weight", "Burn Trap"),
+                ("freeze_trap_weight", "Freeze Trap"),
+                ("paralysis_trap_weight", "Paralysis Trap"),
             ]
             .into_iter()
-            .map(|trap_name| {
-                let key = Yaml::from_str(trap_name);
-                resolve_weighted_option(game_hash, trap_name);
-                game_hash.remove(&key).map(|yaml| (key.to_owned(), yaml)).unwrap_or((key, Yaml::Integer(0)))
+            .map(|(option_name, trap_name)| {
+                resolve_weighted_option(game_hash, option_name);
+                game_hash
+                    .remove(&Yaml::from_str(option_name))
+                    .map(|yaml| (Yaml::from_str(trap_name), yaml))
+                    .unwrap_or((Yaml::from_str(trap_name), Yaml::Integer(0)))
             })
             .collect();
+
+            for trap_name in ["Explosion Trap", "Ice Trap", "Metronome Trap", "Sandstorm Trap", "Teleport Trap", "Tutorial Trap", "Whirlpool Trap"] {
+                trap_weights.insert(Yaml::from_str(trap_name), Yaml::Integer(0));
+            }
+
             game_hash.insert(Yaml::from_str("trap_weights"), Yaml::Hash(trap_weights));
 
             if let Some(trainer_name) = game_hash.get(&Yaml::from_str("trainer_name")).and_then(|name| name.as_str())
