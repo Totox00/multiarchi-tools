@@ -220,7 +220,7 @@ pub const VALID_GAMES: [&str; 337] = [
     "Severed Soul",
     "Shadow The Hedgehog",
     "shapez",
-    "Shapez 2",
+    "shapez 2",
     "Ship of Harkinian",
     "Shivers",
     "Signalis",
