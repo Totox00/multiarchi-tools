@@ -956,10 +956,6 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 game_hash.insert(Yaml::from_str("walljumps"), walljumps_in_logic);
             }
 
-            if let Some(name) = game_hash.get_mut(&Yaml::from_str("name")) {
-                move_option_weight(name, "Metroid Zero Mission", "Metroid: Zero Mission");
-            }
-
             rename_true_false(game_hash, "walljumps", "enabled", "disabled");
             rename_true_false(game_hash, "hazard_runs", "normal", "disabled");
             game_hash.remove(&Yaml::from_str("unknown_items_always_usable"));
@@ -1622,11 +1618,6 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             }
         }
         Some("Aquaria") => rename_true_false(game_hash, "light_needed_to_get_to_dark_places", "on", "off"),
-        Some("Plants vs. Zombies") => {
-            if let Some(name) = game_hash.get_mut(&Yaml::from_str("name")) {
-                move_option_weight(name, "Plants vs. Zombies: Replanted", "Plants vs. Zombies");
-            }
-        }
         Some("Pokemon Stadium") => {
             if let Some(victory_condition) = game_hash.get_mut(&Yaml::from_str("VictoryCondition")) {
                 move_option_weight(victory_condition, "clear_master_ball_cup", "clear_master_ball_cups");

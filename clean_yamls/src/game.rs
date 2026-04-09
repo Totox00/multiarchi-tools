@@ -1,15 +1,25 @@
 use common::valid_games::VALID_GAMES;
 use hashlink::LinkedHashMap;
+use phf::phf_map;
 use rand::thread_rng;
 use rand_distr::{Distribution, WeightedIndex};
 use yaml_rust2::Yaml;
+
+const GAME_RENAMES: phf::Map<&'static str, &'static str> = phf_map!(
+    "PokéPark Wii: Pikachu's Adventure [JP]" => "PokePark",
+    "PokéPark" => "PokePark",
+    "Paper Mario The Thousand Year Door" => "Paper Mario: The Thousand-Year Door",
+    "Metroid Zero Mission" => "Metroid: Zero Mission",
+    "Plants vs. Zombies: Replanted" => "Plants vs. Zombies",
+);
 
 pub fn choose_game(doc: &mut Yaml) -> Option<Yaml> {
     let game_key = Yaml::from_str("game");
 
     if let Some(hash) = doc.as_mut_hash() {
-        rename_game(hash, "PokéPark Wii: Pikachu's Adventure [JP]", "PokePark");
-        rename_game(hash, "PokéPark", "PokePark");
+        for (old, new) in GAME_RENAMES.entries() {
+            rename_game(hash, old, new);
+        }
     }
 
     if let Some(games) = doc.as_mut_hash()?.get_mut(&game_key) {
@@ -27,11 +37,8 @@ pub fn choose_game(doc: &mut Yaml) -> Option<Yaml> {
                     .collect();
 
                 for (game, _) in &mut games {
-                    if *game == "PokéPark Wii: Pikachu's Adventure [JP]" || *game == "PokéPark" {
-                        *game = "PokePark";
-                    }
-                    if *game == "Paper Mario The Thousand Year Door" {
-                        *game = "Paper Mario: The Thousand-Year Door";
+                    if let Some(new_name) = GAME_RENAMES.get(game) {
+                        *game = *new_name;
                     }
                 }
 
@@ -43,11 +50,8 @@ pub fn choose_game(doc: &mut Yaml) -> Option<Yaml> {
                 Yaml::from_str(games[dist.sample(&mut rng)].0)
             }
             Yaml::String(game) => {
-                if *game == "PokéPark Wii: Pikachu's Adventure [JP]" || *game == "PokéPark" {
-                    *game = String::from("PokePark");
-                }
-                if *game == "Paper Mario The Thousand Year Door" {
-                    *game = String::from("Paper Mario: The Thousand-Year Door");
+                if let Some(new_name) = GAME_RENAMES.get(game) {
+                    *game = String::from(*new_name);
                 }
                 Yaml::from_str(game)
             }
