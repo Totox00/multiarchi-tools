@@ -1630,6 +1630,16 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 move_option_weight(victory_condition, "clear_master_ball_cup", "clear_master_ball_cups");
             }
         }
+        Some("shapez") => {
+            if let Some(goal_amount) = game_hash.get_mut(&Yaml::from_str("goal_amount")) {
+                move_option_weight(goal_amount, "random", "random-range-1-100");
+                move_option_weight_matches(
+                    goal_amount,
+                    |yaml| yaml.as_i64().is_some_and(|v| v > 100) || yaml.as_str().is_some_and(|str| str.parse::<i64>().is_ok_and(|v| v > 100)),
+                    "100",
+                );
+            }
+        }
         _ => (),
     };
 
