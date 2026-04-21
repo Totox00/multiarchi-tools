@@ -429,7 +429,10 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         }
         Some("Duke Nukem 3D") => push_value_or_default(&mut notes, game_hash, "logic_difficulty", "medium"),
         Some("The Legend of Zelda - Oracle of Ages") => push_value_or_default(&mut notes, game_hash, "logic_difficulty", "casual"),
-        Some("The Legend of Zelda - Oracle of Seasons") => push_value_or_default(&mut notes, game_hash, "logic_difficulty", "casual"),
+        Some("The Legend of Zelda - Oracle of Seasons") => {
+            push_value_or_default(&mut notes, game_hash, "logic_difficulty", "casual");
+            push_value_or_default(&mut notes, game_hash, "cross_items", "false");
+        }
         Some("Ori and the Blind Forest") => {
             resolve_weighted_option(game_hash, "goal");
             if let Some(goal) = game_hash.get_mut(&Yaml::from_str("goal")) {
