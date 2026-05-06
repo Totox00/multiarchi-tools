@@ -1643,6 +1643,47 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 );
             }
         }
+        Some("Baba Is You") => push_value_or_default(&mut notes, game_hash, "logic_difficulty", "normal"),
+        Some("Spyro 2") => {
+            resolve_weighted_option(game_hash, "open_world_ability_and_warp_unlocks");
+            if option_can_be(game_hash, "open_world_ability_and_warp_unlocks", &Yaml::Boolean(false), &Yaml::Boolean(true)) {
+                game_hash.insert(Yaml::from_str("start_with_abilities"), Yaml::Boolean(true));
+            }
+
+            if let Some(open_world_ability_and_warp_unlocks) = game_hash.get_mut(&Yaml::from_str("open_world_ability_and_warp_unlocks")) {
+                move_option_weight(open_world_ability_and_warp_unlocks, "vanilla", "generic");
+            }
+
+            push_value_or_default(&mut notes, game_hash, "trick_difficulty", "off");
+            push_value_or_default(&mut notes, game_hash, "custom_tricks", "[]");
+        }
+        Some("Slime Rancher") => {
+            let skips: Vec<_> = ["easy_skips", "precise_movement", "dangerous_skips", "obscure_locations", "largo_jumps", "jetpack_boosts"]
+                .iter()
+                .filter(|option| option_can_be(game_hash, option, &Yaml::Boolean(false), &Yaml::Boolean(true)))
+                .copied()
+                .collect();
+
+            if skips.is_empty() {
+                notes.push(String::from("Skips: none"));
+            } else {
+                notes.push(format!("Skips: [{}]", skips.join(", ")));
+            }
+        }
+        Some("Hammerwatch") => {
+            rename_true_false(game_hash, "randomize_enemy_loot", "on", "off");
+            if let Some(key_mode) = game_hash.get_mut(&Yaml::from_str("key_mode")) {
+                move_option_weight(key_mode, "vanilla", "generic");
+            }
+        }
+        Some("Pizza Tower") => {
+            game_hash.remove(&Yaml::from_str("jumpscare"));
+        }
+        Some("Lego Star Wars: The Complete Saga") => {
+            if let Some(chapter_unlock_requirement) = game_hash.get_mut(&Yaml::from_str("chapter_unlock_requirement")) {
+                move_option_weight(chapter_unlock_requirement, "story_characters", "vanilla_characters");
+            }
+        }
         _ => (),
     };
 
