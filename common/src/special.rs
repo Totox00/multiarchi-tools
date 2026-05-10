@@ -944,11 +944,11 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 move_option_weight(goal, "kill_wicked_witch", "random_boss");
             }
         }
-//      Some("Oxygen Not Included") => {
-//          push_value_or_default(&mut notes, game_hash, "spaced_out", "true");
-//          push_value_or_default(&mut notes, game_hash, "frosty", "true");
-//          push_value_or_default(&mut notes, game_hash, "bionic", "false");
-//      }
+        //      Some("Oxygen Not Included") => {
+        //          push_value_or_default(&mut notes, game_hash, "spaced_out", "true");
+        //          push_value_or_default(&mut notes, game_hash, "frosty", "true");
+        //          push_value_or_default(&mut notes, game_hash, "bionic", "false");
+        //      }
         Some("Monster Sanctuary") => {
             push_value_or_default(&mut notes, game_hash, "logic_difficulty", "casual");
             push_value_or_default(&mut notes, game_hash, "tedious_checks", "false");
@@ -1554,11 +1554,11 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         Some("Yu-Gi-Oh! Dungeon Dice Monsters") => {
             game_hash.remove(&Yaml::from_str("duelist_rematches"));
         }
-//      Some("Nodebuster") => {
-//          if let Some(progressive_items) = game_hash.remove(&Yaml::from_str("progressiveItems")) {
-//              game_hash.insert(Yaml::from_str("progressive_items"), progressive_items);
-//          }
-//      }
+        //      Some("Nodebuster") => {
+        //          if let Some(progressive_items) = game_hash.remove(&Yaml::from_str("progressiveItems")) {
+        //              game_hash.insert(Yaml::from_str("progressive_items"), progressive_items);
+        //          }
+        //      }
         Some("Iji") => {
             push_value_or_default(&mut notes, game_hash, "logic_difficulty", "normal_logic");
         }
@@ -1669,6 +1669,8 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             } else {
                 notes.push(format!("Skips: [{}]", skips.join(", ")));
             }
+
+            push_value_or_default(&mut notes, game_hash, "enable_stylish_dlc_treasure_pods", "false");
         }
         Some("Hammerwatch") => {
             rename_true_false(game_hash, "randomize_enemy_loot", "on", "off");
