@@ -1102,6 +1102,11 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             push_value_or_default(&mut notes, game_hash, "prolonged_quad_jump_logic", "false");
         }
         Some("Ape Escape") => {
+            if let Some(entrance) = game_hash.get_mut(&Yaml::from_str("entrance")) {
+                move_option_weight(entrance, "on", "recommended");
+                move_option_weight(entrance, "lockmm", "recommended");
+            }
+
             push_value_or_default(&mut notes, game_hash, "logic", "normal");
             push_value_or_default(&mut notes, game_hash, "infinitejump", "false");
             push_value_or_default(&mut notes, game_hash, "superflyer", "false");
