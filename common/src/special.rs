@@ -24,6 +24,23 @@ const ORI_GOAL_NAMES: phf::Map<&'static str, &'static str> = phf_map!(
     "world_tour" => "WorldTour",
 );
 
+const STS_SUPPORTED_CHARACTERS: [&str; 14] = [
+    "SlimeBoss",
+    "Collector",
+    "Hermit",
+    "Snecko",
+    "Gremlins",
+    "Champ",
+    "Guardian",
+    "Automaton",
+    "Ironclad",
+    "Defect",
+    "Silent",
+    "Watcher",
+    "AwakenedOne",
+    "Hexaghost",
+];
+
 pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
     let mut notes = vec![];
 
@@ -572,15 +589,31 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 game_hash.insert(Yaml::from_str("characters"), character);
             }
             push_value_or_default(&mut notes, game_hash, "downfall", "false");
+            let mut warn_modded = false;
             if option_can_be(game_hash, "use_advanced_characters", &Yaml::Boolean(false), &Yaml::Boolean(false)) {
                 push_value_or_default(&mut notes, game_hash, "characters", "[Ironclad]");
+                if let Some(yaml) = game_hash.get(&Yaml::from_str("characters")) {
+                    warn_modded = match yaml {
+                        Yaml::Array(vec) => vec.iter().any(|yaml| yaml.as_str().is_some_and(|str| !STS_SUPPORTED_CHARACTERS.contains(&str))),
+                        Yaml::String(str) => !STS_SUPPORTED_CHARACTERS.contains(&str.as_str()),
+                        _ => false,
+                    }
+                }
             }
             if option_can_be(game_hash, "use_advanced_characters", &Yaml::Boolean(false), &Yaml::Boolean(true)) {
                 if let Some(advanced_characters_hash) = game_hash.get(&Yaml::from_str("advanced_characters")).and_then(Yaml::as_hash) {
-                    notes.push(format!("characters: [{}]", advanced_characters_hash.keys().map(to_string).collect::<Vec<_>>().join(", ")));
+                    let characters = advanced_characters_hash.keys().map(to_string).collect::<Vec<_>>();
+                    notes.push(format!("characters: [{}]", characters.join(", ")));
+                    if !warn_modded {
+                        warn_modded = characters.iter().any(|str| !STS_SUPPORTED_CHARACTERS.contains(&str.as_str()));
+                    }
                 } else {
                     notes.push(String::from("characters: [Ironclad]"));
                 }
+            }
+
+            if warn_modded {
+                println!("'{name}.yaml' contains custom characters for Slay the Spire");
             }
 
             let ascension = Yaml::from_str("ascension");
