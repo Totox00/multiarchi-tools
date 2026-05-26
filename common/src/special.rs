@@ -1691,6 +1691,10 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 move_option_weight(chapter_unlock_requirement, "story_characters", "vanilla_characters");
             }
         }
+        Some("Reventure") => {
+            push_value_or_default(&mut notes, game_hash, "hardjumps", "false");
+            push_value_or_default(&mut notes, game_hash, "logic", "{}");
+        }
         _ => (),
     };
 
