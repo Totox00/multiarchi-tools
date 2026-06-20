@@ -1,4 +1,4 @@
-pub const VALID_GAMES: [&str; 340] = [
+pub const VALID_GAMES: [&str; 353] = [
     "A Hat in Time",
     "A Link Between Worlds",
     "A Link to the Past",
@@ -339,4 +339,17 @@ pub const VALID_GAMES: [&str; 340] = [
     "Minecraft Fabric",
     "Hungry Pumpkin",
     "Peak",
+    "Castlevania: Portrait of Ruin",
+    "Legend of Zelda: A Link to the Past OWR",
+    "Kingdom Hearts Dream Drop Distance",
+    "Gato Roboto B-Side",
+    "HI-FI Rush",
+    "Mega Man X4",
+    "Ys VIII: Lacrimosa of Dana",
+    "Burnout 3",
+    "RACCOIN: Coin Pusher Roguelike",
+    "Cloverpit",
+    "Librarian: Tidy up the arcane Library",
+    "Cookie Clicker",
+    "Mega Man 1",
 ];
