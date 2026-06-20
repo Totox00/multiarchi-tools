@@ -1610,6 +1610,12 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 move_option_weight(maps_and_compasses, "shuffle", "anywhere");
             }
 
+            if let Some(shuffle_dungeon_rewards) = game_hash.get_mut(&Yaml::from_str("shuffle_dungeon_rewards")) {
+                move_option_weight(shuffle_dungeon_rewards, "dungeons", "any_dungeon");
+            }
+
+            game_hash.remove(&Yaml::from_str("skip_ganons_trials"));
+
             if option_can_be(game_hash, "key_rings", &Yaml::Boolean(false), &Yaml::Boolean(true)) {
                 game_hash.insert(Yaml::from_str("key_rings_count"), Yaml::Integer(9));
             }
@@ -1729,6 +1735,16 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             push_value_or_default(&mut notes, game_hash, "logic", "{}");
         }
         Some("CorruObserver") => push_value_or_default(&mut notes, game_hash, "mods", "[]"),
+        Some("Little Witch Nobeta") => {
+            push_value_or_default(&mut notes, game_hash, "wind_requirements", "start_without");
+            push_value_or_default(&mut notes, game_hash, "skips_in_logic", "[]");
+        }
+        Some("CrossCode") => push_value_or_default(&mut notes, game_hash, "enable_dlc", "false"),
+        Some("Backlog Expedition") => {
+            if let Some(beaten_to_goal) = game_hash.remove(&Yaml::from_str("beaten_to_goal")) {
+                game_hash.insert(Yaml::from_str("treasures_to_goal"), beaten_to_goal);
+            }
+        }
         _ => (),
     };
 
