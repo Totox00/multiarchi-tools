@@ -1574,9 +1574,9 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 "spongebob_dlc",
             ] {
                 notes.push(if option_can_be_other_than(game_hash, option, &Yaml::from_str("Empty"), &Yaml::from_str("Empty")) {
-                    String::from("true")
+                    format!("{option}: true")
                 } else {
-                    String::from("false")
+                    format!("{option}: false")
                 });
             }
         }
