@@ -1,4 +1,4 @@
-pub const VALID_GAMES: [&str; 353] = [
+pub const VALID_GAMES: [&str; 352] = [
     "A Hat in Time",
     "A Link Between Worlds",
     "A Link to the Past",
@@ -287,7 +287,6 @@ pub const VALID_GAMES: [&str; 353] = [
     "The Messenger",
     "The Minish Cap",
     "The Simpsons Hit And Run",
-    "The Sims 4",
     "The Wind Waker",
     "The Witness",
     "Timespinner",

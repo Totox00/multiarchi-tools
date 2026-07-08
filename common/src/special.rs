@@ -1740,11 +1740,11 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             push_value_or_default(&mut notes, game_hash, "skips_in_logic", "[]");
         }
         Some("CrossCode") => push_value_or_default(&mut notes, game_hash, "enable_dlc", "false"),
-        Some("Backlog Expedition") => {
-            if let Some(beaten_to_goal) = game_hash.remove(&Yaml::from_str("beaten_to_goal")) {
-                game_hash.insert(Yaml::from_str("treasures_to_goal"), beaten_to_goal);
-            }
-        }
+        //        Some("Backlog Expedition") => {
+        //            if let Some(beaten_to_goal) = game_hash.remove(&Yaml::from_str("beaten_to_goal")) {
+        //                game_hash.insert(Yaml::from_str("treasures_to_goal"), beaten_to_goal);
+        //            }
+        //        }
         _ => (),
     };
 
