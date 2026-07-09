@@ -1573,10 +1573,10 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 "back_to_the_future_dlc",
                 "spongebob_dlc",
             ] {
-                notes.push(if option_can_be_other_than(game_hash, option, &Yaml::from_str("Empty"), &Yaml::from_str("Empty")) {
-                    format!("{option}: true")
-                } else {
+                notes.push(if game_hash.get(&Yaml::from_str(option)).is_none_or(|yaml| yaml.as_vec().is_some_and(|vec| vec.is_empty())) {
                     format!("{option}: false")
+                } else {
+                    format!("{option}: true")
                 });
             }
         }
