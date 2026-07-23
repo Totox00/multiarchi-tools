@@ -1,4 +1,4 @@
-pub const VALID_GAMES: [&str; 360] = [
+pub const VALID_GAMES: [&str; 361] = [
     "A Hat in Time",
     "A Link Between Worlds",
     "A Link to the Past",
@@ -254,6 +254,7 @@ pub const VALID_GAMES: [&str; 360] = [
     "Skyward Sword",
     "Slay the Spire",
     "Slime Rancher",
+    "Slime Rancher 2",
     "Sly 2: Band of Thieves",
     "Sly Cooper and the Thievius Raccoonus",
     "Sonic Advance 2",
