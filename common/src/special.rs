@@ -1105,6 +1105,8 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 move_option_weight(&mut final_elevator_package, "five packages (tiers 1-9)", "phase 3 (tiers 1-6)");
                 move_option_weight(&mut final_elevator_package, "phase 4 (tiers 1-8)", "phase 3 (tiers 1-6)");
                 move_option_weight(&mut final_elevator_package, "phase 5 (tiers 1-9)", "phase 3 (tiers 1-6)");
+                move_option_weight(&mut final_elevator_package, "4", "3");
+                move_option_weight(&mut final_elevator_package, "5", "3");
                 move_option_weight(&mut final_elevator_package, "random", "random-range-1-3");
                 move_option_weight(&mut final_elevator_package, "random-low", "random-low-range-1-3");
                 move_option_weight(&mut final_elevator_package, "random-high", "random-high-range-1-3");
