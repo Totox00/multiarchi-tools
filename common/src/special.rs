@@ -1635,6 +1635,8 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             }
         }
         Some("Powerwash Simulator") => {
+            let mut dlc = vec![];
+
             for option in [
                 "midgar",
                 "tomb_raider",
@@ -1645,11 +1647,15 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 "back_to_the_future_dlc",
                 "spongebob_dlc",
             ] {
-                notes.push(if game_hash.get(&Yaml::from_str(option)).is_none_or(|yaml| yaml.as_vec().is_some_and(|vec| vec.is_empty())) {
-                    format!("{option}: false")
-                } else {
-                    format!("{option}: true")
-                });
+                if game_hash.get(&Yaml::from_str(option)).is_some_and(|yaml| yaml.as_vec().is_none_or(|vec| !vec.is_empty())) {
+                    dlc.push(option);
+                }
+            }
+
+            if dlc.is_empty() {
+                notes.push(String::from("dlc: none"));
+            } else {
+                notes.push(format!("dlc: [{}]", dlc.join(", ")));
             }
         }
         Some("TCG Card Shop Simulator") => {
