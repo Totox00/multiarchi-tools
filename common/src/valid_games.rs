@@ -1,4 +1,4 @@
-pub const VALID_GAMES: [&str; 360] = [
+pub const VALID_GAMES: [&str; 371] = [
     "A Hat in Time",
     "A Link Between Worlds",
     "A Link to the Past",
@@ -359,4 +359,15 @@ pub const VALID_GAMES: [&str; 360] = [
     "Funi Raccoon Game",
     "Crypt of the NecroDancer",
     "Melatonin",
+    "Dicey Dungeon",
+    "Idle Loops",
+    "Rogue Legacy 2",
+    "Burger Shop",
+    "Burger Shop 2",
+    "The Were Cleaner",
+    "Spirit Island",
+    "Legend of Zelda: Spirit Tracks",
+    "Archipelano",
+    "Mina the Hollower",
+    "Shellipelago",
 ];
