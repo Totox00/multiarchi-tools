@@ -864,6 +864,16 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
 
             notes.push(format!("megamix_mod_data: [{mod_str}]",));
         }
+        Some("Refunct") => {
+            if let Some(hash) = game_hash.get_mut(&Yaml::from_str("minigames_likeliness")).and_then(|yaml| yaml.as_mut_hash()) {
+                for minigame in &["Climb Narrow Minigame", "Clique", "Funny Bridge Game Minigame", "Rando Mountain Minigame"] {
+                    let key = Yaml::from_str(minigame);
+                    if !hash.contains_key(&key) {
+                        hash.insert(key, Yaml::Integer(0));
+                    }
+                }
+            }
+        }
         Some("Jigsaw") => {
             game_hash.remove(&Yaml::from_str("permillage_of_checks_out_of_logic"));
             game_hash.remove(&Yaml::from_str("maximum_number_of_real_items"));
