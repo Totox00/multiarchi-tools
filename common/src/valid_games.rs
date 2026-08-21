@@ -1,4 +1,4 @@
-pub const VALID_GAMES: [&str; 371] = [
+pub const VALID_GAMES: [&str; 372] = [
     "A Hat in Time",
     "A Link Between Worlds",
     "A Link to the Past",
@@ -305,7 +305,7 @@ pub const VALID_GAMES: [&str; 371] = [
     "The Legend of Zelda - Phantom Hourglass",
     "The Messenger",
     "The Minish Cap",
-    "The Simpsons Hit And Run",
+    "Simpsons Hit and Run",
     "The Wind Waker",
     "The Witness",
     "Timespinner",
@@ -370,4 +370,5 @@ pub const VALID_GAMES: [&str; 371] = [
     "Archipelano",
     "Mina the Hollower",
     "Shellipelago",
+    "Conbunn Cardboard",
 ];

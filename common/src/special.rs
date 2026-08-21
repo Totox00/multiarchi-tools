@@ -1091,7 +1091,7 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             push_value_or_default(&mut notes, game_hash, "WallJumpTrickDifficulty", "none");
             push_value_or_default(&mut notes, game_hash, "CombatDifficulty", "beginner");
         }
-        Some("The Simpsons Hit And Run") => {
+        Some("Simpsons Hit and Run") => {
             if let Some(goal) = game_hash.get_mut(&Yaml::from_str("goal")) {
                 move_option_weight(goal, "goal: all missions complete!", "goal_all_missions_complete");
                 move_option_weight(goal, "goal: all story missions complete!", "goal_all_story_missions_complete");

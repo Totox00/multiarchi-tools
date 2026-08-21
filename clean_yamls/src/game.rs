@@ -11,6 +11,7 @@ const GAME_RENAMES: phf::Map<&'static str, &'static str> = phf_map!(
     "Paper Mario The Thousand Year Door" => "Paper Mario: The Thousand-Year Door",
     "Metroid Zero Mission" => "Metroid: Zero Mission",
     "Plants vs. Zombies: Replanted" => "Plants vs. Zombies",
+    "The Simpsons Hit And Run" => "Simpsons Hit and Run"
 );
 
 pub fn choose_game(doc: &mut Yaml) -> Option<Yaml> {
