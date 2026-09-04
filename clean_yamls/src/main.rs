@@ -74,7 +74,10 @@ fn main() {
 fn process_file(item_location_mappings: &Mapping, name: &str, id: &str) -> Vec<(String, u32, Vec<String>)> {
     let mut games_in_file = vec![];
     let content = match read_to_string(PathBuf::from(BUCKET_PATH).join(format!("bucket ({id}).yaml"))) {
-        Ok(content) => content.trim_matches(|char: char| char == '\n' || char == '\r' || char == '\u{feff}').to_owned(),
+        Ok(content) => content
+            .trim_matches(|char: char| char == '\n' || char == '\r' || char == '\u{feff}')
+            .replace("\r\n", "\n")
+            .replace("\n  ]\n", "\n    ]\n"),
         Err(err) => {
             println!("Error when reading 'bucket ({id}).yaml': {err}");
             return games_in_file;
