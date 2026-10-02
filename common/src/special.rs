@@ -2050,11 +2050,11 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             let key = Yaml::from_str("start_inventory");
             if let Some(start_inventory) = game_hash.get_mut(&key) {
                 if let Some(hash) = start_inventory.as_mut_hash() {
-                    hash.insert(Yaml::from_str("Filters"), Yaml::Integer(1));
+                    hash.insert(Yaml::from_str("Progressive Filter"), Yaml::Integer(2));
                 }
             } else {
                 let mut hash = LinkedHashMap::new();
-                hash.insert(Yaml::from_str("Filters"), Yaml::Integer(1));
+                hash.insert(Yaml::from_str("Progressive Filter"), Yaml::Integer(2));
                 game_hash.insert(key, Yaml::Hash(hash));
             }
         }
