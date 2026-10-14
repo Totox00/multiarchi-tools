@@ -531,6 +531,7 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             game_hash.remove(&Yaml::from_str("regenerate_requirements"));
 
             push_value_or_default(&mut notes, game_hash, "difficulty", "moki");
+            push_value_or_default(&mut notes, game_hash, "glitches", "false");
         }
         Some("Outer Wilds") => {
             game_hash.insert(Yaml::from_str("enable_hn2_mod"), Yaml::Boolean(false));
@@ -804,6 +805,72 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
 
             game_hash.insert(Yaml::from_str("trap_weights"), Yaml::Hash(trap_weights));
 
+            resolve_weighted_option(game_hash, "goal");
+            if let Some(yaml) = game_hash.get_mut(&Yaml::from_str("goal")) {
+                if let Some(value) = yaml.as_str() {
+                    match value {
+                        "elite_four" => *yaml = Yaml::Array(vec![Yaml::from_str("Elite Four")]),
+                        "red" => *yaml = Yaml::Array(vec![Yaml::from_str("Red")]),
+                        "diploma" => *yaml = Yaml::Array(vec![Yaml::from_str("Diploma")]),
+                        "rival" => *yaml = Yaml::Array(vec![Yaml::from_str("Rival")]),
+                        "defeat_team_rocket" => *yaml = Yaml::Array(vec![Yaml::from_str("Defeat Team Rocket")]),
+                        "unown_hunt" => *yaml = Yaml::Array(vec![Yaml::from_str("Unown Hunt")]),
+                        _ => (),
+                    }
+                }
+            }
+
+            if let Some(randomize_phone_call_items) = game_hash.get_mut(&Yaml::from_str("randomize_phone_call_items")) {
+                move_option_weight(randomize_phone_call_items, "off", "false");
+                move_option_weight(randomize_phone_call_items, "on_vanilla", "true");
+                move_option_weight(randomize_phone_call_items, "on_simple", "true");
+            }
+
+            rename_true_false(game_hash, "randomize_static_pokemon", "completely_random", "vanilla");
+
+            if let Some(game_options) = game_hash.get_mut(&Yaml::from_str("game_options")).and_then(|yaml| yaml.as_mut_hash()) {
+                change_option_name(game_options, "ap_item_sound", "ap_item_notification");
+                change_option_name(game_options, "item_notification", "local_item_notification");
+                game_options.remove(&Yaml::from_str("fast_surf"));
+                let key = Yaml::from_str("battle_always_run");
+                if !game_options.contains_key(&key) {
+                    game_options.insert(key, Yaml::from_str("off"));
+                }
+                let key = Yaml::from_str("music");
+                if !game_options.contains_key(&key) {
+                    game_options.insert(key, Yaml::from_str("on"));
+                }
+                let key = Yaml::from_str("scaling_exp");
+                if !game_options.contains_key(&key) {
+                    game_options.insert(key, Yaml::from_str("off"));
+                }
+            }
+
+            if let Some(mut victory_road_access) = game_hash.remove(&Yaml::from_str("victory_road_access")) {
+                move_option_weight(&mut victory_road_access, "vanilla", "false");
+                move_option_weight(&mut victory_road_access, "strength", "true");
+                game_hash.insert(Yaml::from_str("victory_road_strength"), victory_road_access);
+            }
+
+            if let Some(hm_compatibility) = game_hash.remove(&Yaml::from_str("hm_compatibility")) {
+                game_hash.insert(Yaml::from_str("hm_same_type_compatibility"), hm_compatibility.clone());
+                game_hash.insert(Yaml::from_str("hm_other_type_compatibility"), hm_compatibility);
+            }
+
+            if let Some(tm_compatibility) = game_hash.remove(&Yaml::from_str("tm_compatibility")) {
+                game_hash.insert(Yaml::from_str("tm_same_type_compatibility"), tm_compatibility.clone());
+                game_hash.insert(Yaml::from_str("tm_other_type_compatibility"), tm_compatibility);
+            }
+
+            change_option_name(game_hash, "kanto_access_requirement", "route_22_access_requirement");
+            change_option_name(game_hash, "kanto_access_count", "route_22_access_count");
+            game_hash.remove(&Yaml::from_str("fly_cheese"));
+
+            if let Some(mut randomize_palettes) = game_hash.remove(&Yaml::from_str("randomize_palettes")) {
+                move_option_weight(&mut randomize_palettes, "completely_random", "randomize");
+                game_hash.insert(Yaml::from_str("modify_palettes"), randomize_palettes);
+            }
+
             if let Some(trainer_name) = game_hash.get(&Yaml::from_str("trainer_name")).and_then(|name| name.as_str())
                 && !trainer_name.is_empty()
             {
@@ -1063,6 +1130,19 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
 
             rename_true_false(game_hash, "star_shuffle", "all", "vanilla");
 
+            if let Some(experience_multiplier) = game_hash.get_mut(&Yaml::from_str("experience_multiplier")) {
+                move_option_weight_map(experience_multiplier, |yaml| {
+                    if let Some(value) = yaml.as_i64() {
+                        if value <= 10 {
+                            *yaml = Yaml::Integer(value * 100);
+                        }
+                        true
+                    } else {
+                        false
+                    }
+                });
+            }
+
             if option_can_be_other_than(game_hash, "yoshi_name", &Yaml::from_str("Yoshi"), &Yaml::from_str("Yoshi")) {
                 println!("'{name}.yaml' has a modified yoshi name");
             }
@@ -1091,6 +1171,13 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             if let Some(completion_goals) = game_hash.get_mut(&Yaml::from_str("completion_goals")) {
                 move_option_weight(completion_goals, "both", "dungeon_5_and_snow");
             }
+
+            change_option_name(game_hash, "npc_sanity", "shuffle_npcs");
+            change_option_name(game_hash, "scarab_sanity", "shuffle_scarabs");
+            change_option_name(game_hash, "spirit_sanity", "shuffle_spirits");
+            change_option_name(game_hash, "shard_sanity", "shuffle_xp_shards");
+            change_option_name(game_hash, "key_sanity", "shuffle_small_keys");
+            change_option_name(game_hash, "boss_key_sanity", "shuffle_boss_keys");
         }
         Some("Stacklands") => {
             if option_can_be(game_hash, "goal", &Yaml::from_str(""), &Yaml::from_str("kill_wicked_witch")) {
@@ -1155,6 +1242,7 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             push_value_or_default(&mut notes, game_hash, "dlc_kingdice_chalice_checks", "disabled");
             push_value_or_default(&mut notes, game_hash, "dlc_chess_chalice_checks", "disabled");
             push_value_or_default(&mut notes, game_hash, "dlc_cactusgirl_quest", "false");
+            push_value_or_default(&mut notes, game_hash, "dlc_kingsleap_psugar", "false");
         }
         Some("Metroid Fusion") => {
             if let Some(tricky_shinesparks_in_region_logic) = game_hash.remove(&Yaml::from_str("TrickyShinesparksInRegionLogic")) {
@@ -1252,6 +1340,12 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 game_hash.remove(&Yaml::from_str("shuffle_island_entrances"));
             }
 
+            if let Some(bellum_access) = game_hash.get_mut(&Yaml::from_str("bellum_access")) {
+                move_option_weight(bellum_access, "win", "zauz");
+            }
+
+            rename_true_false(game_hash, "exclude_non_required_dungeons", "exclude", "include");
+
             push_value_or_default(&mut notes, game_hash, "logic", "normal");
         }
         // IGNORE
@@ -1278,6 +1372,9 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                     }
                 }
             }
+
+            change_option_name(game_hash, "progressive_knowledge", "knowledge_mode");
+            rename_true_false(game_hash, "knowledge_mode", "progressive", "unlock_checks");
         }
         Some("Astalon") => rename_true_false(game_hash, "fast_blood_chalice", "always", "off"),
         Some("Anodyne") => {
@@ -1948,6 +2045,7 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
         }
         Some("Pizza Tower") => {
             game_hash.remove(&Yaml::from_str("jumpscare"));
+            push_value_or_default(&mut notes, game_hash, "difficulty", "normal");
         }
         Some("Lego Star Wars: The Complete Saga") => {
             if let Some(chapter_unlock_requirement) = game_hash.get_mut(&Yaml::from_str("chapter_unlock_requirement")) {
@@ -2140,6 +2238,37 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 game_hash.insert(Yaml::from_str("persistent_item_quantities"), permanent_item_quantities);
             }
         }
+        // IGNORE
+        Some("FNaFW") => {
+            push_value_or_default(&mut notes, game_hash, "logic_diff", "normal");
+        }
+        Some("Neon White") => {
+            push_value_or_default(&mut notes, game_hash, "difficulty_knowledge", "standard");
+            push_value_or_default(&mut notes, game_hash, "difficulty_execution", "standard");
+        }
+        Some("Plants vs Zombies Replanted") => {
+            push_value_or_default(&mut notes, game_hash, "goty_compatability_mode", "false");
+        }
+        Some("Cobalt Core") => {
+            change_option_name(game_hash, "starting_characters", "forced_starting_characters");
+            resolve_weighted_option(game_hash, "win_condition");
+            if option_can_be(game_hash, "win_condition", &Yaml::from_str("option_memory_per_character"), &Yaml::from_str("total_memories")) {
+                game_hash.insert(Yaml::from_str("characters_required"), Yaml::Integer(1));
+            } else {
+                game_hash.insert(Yaml::from_str("characters_required"), Yaml::Integer(8));
+            }
+        }
+        Some("Dicey Dungeon") => {
+            change_option_name(game_hash, "floor_5_shop_selection", "shop_selection");
+        }
+        Some("Stick Ranger") => {
+            rename_true_false(game_hash, "shop_hints", "all", "off");
+        }
+        Some("Librarian: Tidy up the arcane Library") => {
+            if let Some(unlock_mode) = game_hash.get_mut(&Yaml::from_str("unlock_mode")) {
+                move_option_weight(unlock_mode, "progressive_unlocks", "random_series_bundles");
+            }
+        }
         _ => (),
     };
 
@@ -2243,6 +2372,25 @@ fn rename_true_false(hash: &mut LinkedHashMap<Yaml, Yaml>, option_name: &str, tr
     if let Some(option) = hash.get_mut(&Yaml::from_str(option_name)) {
         move_option_weight(option, "true", true_name);
         move_option_weight(option, "false", false_name);
+    }
+}
+
+fn move_option_weight_map<T: Fn(&mut Yaml) -> bool>(value: &mut Yaml, r#fn: T) {
+    if r#fn(value) {
+        return;
+    }
+
+    if let Some(value_hash) = value.as_mut_hash() {
+        let mut new: LinkedHashMap<Yaml, Yaml> = LinkedHashMap::new();
+
+        for (mut value, weight) in value_hash.drain() {
+            r#fn(&mut value);
+            new.entry(value)
+                .and_modify(|curr_weight| *curr_weight = Yaml::Integer(curr_weight.as_i64().unwrap_or(0) + weight.as_i64().unwrap_or(0)))
+                .or_insert(weight);
+        }
+
+        *value_hash = new;
     }
 }
 
