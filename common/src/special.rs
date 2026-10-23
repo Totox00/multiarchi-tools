@@ -871,6 +871,11 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 game_hash.insert(Yaml::from_str("modify_palettes"), randomize_palettes);
             }
 
+            if let Some(ap_item_notification) = game_hash.get_mut(&Yaml::from_str("ap_item_notification")) {
+                move_option_weight(ap_item_notification, "on", "popup");
+                move_option_weight(ap_item_notification, "off", "none");
+            }
+
             if let Some(trainer_name) = game_hash.get(&Yaml::from_str("trainer_name")).and_then(|name| name.as_str())
                 && !trainer_name.is_empty()
             {
