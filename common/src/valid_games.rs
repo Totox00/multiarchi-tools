@@ -256,7 +256,7 @@ pub const VALID_GAMES: [&str; 429] = [
     "Pokemon Crystal",
     "Pokemon Emerald",
     "Pokemon FireRed and LeafGreen",
-    "Pokemon HGSS",
+    "Pokemon HeartGold and SoulSilver",
     "Pokemon Mystery Dungeon Explorers of Sky",
     "Pokemon Pinball",
     "Pokemon Platinum",
