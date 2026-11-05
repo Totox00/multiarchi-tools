@@ -1,4 +1,4 @@
-pub const VALID_GAMES: [&str; 429] = [
+pub const VALID_GAMES: [&str; 430] = [
     ".hack//INFECTION",
     "A Dance of Fire and Ice",
     "A Hat in Time",
@@ -250,7 +250,7 @@ pub const VALID_GAMES: [&str; 429] = [
     "Peggle Nights",
     "Pizza Tower",
     "Placid Plastic Duck Simulator",
-    "Plants vs Zombies Replanted",
+    "Plants vs Zombies",
     "Plok",
     "Pokemon Black and White",
     "Pokemon Crystal",
@@ -310,7 +310,7 @@ pub const VALID_GAMES: [&str; 429] = [
     "Simpsons Hit and Run",
     "Skyward Sword",
     "Slay the Spire",
-    "Slay the Spire 2",
+    "Slay the Spire II",
     "Slime Rancher",
     "Sly 2: Band of Thieves",
     "Sly Cooper and the Thievius Raccoonus",
@@ -428,4 +428,5 @@ pub const VALID_GAMES: [&str; 429] = [
     "Zelda II: The Adventure of Link",
     "Zillion",
     "Zork Grand Inquisitor",
+    "Backlog Expedition",
 ];

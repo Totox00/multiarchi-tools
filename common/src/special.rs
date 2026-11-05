@@ -2251,6 +2251,7 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             push_value_or_default(&mut notes, game_hash, "difficulty_knowledge", "standard");
             push_value_or_default(&mut notes, game_hash, "difficulty_execution", "standard");
         }
+        // IGNORE
         Some("Plants vs Zombies Replanted") => {
             push_value_or_default(&mut notes, game_hash, "goty_compatability_mode", "false");
         }
