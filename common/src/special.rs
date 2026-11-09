@@ -1482,6 +1482,8 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             if let Some(logic_difficulty) = game_hash.get_mut(&Yaml::from_str("logic_difficulty")) {
                 move_option_weight(logic_difficulty, "generous", "basic");
             }
+
+            push_value_or_default(&mut notes, game_hash, "logic_difficulty", "basic");
         }
         Some("Archipela-Go") => {
             let max_key = Yaml::from_str("maximum_distance");
@@ -2357,6 +2359,12 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             } else {
                 game_hash.insert(Yaml::from_str("characters_required"), Yaml::Integer(8));
             }
+
+            if let Some(difficulty_logic) = game_hash.get_mut(&Yaml::from_str("difficulty_logic")) {
+                move_option_weight(difficulty_logic, "dont_count", "count_rare");
+            }
+
+            push_value_or_default(&mut notes, game_hash, "cro_is_installed", "false");
         }
         Some("Dicey Dungeon") => {
             change_option_name(game_hash, "floor_5_shop_selection", "shop_selection");
