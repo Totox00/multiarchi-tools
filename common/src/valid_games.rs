@@ -1,4 +1,4 @@
-pub const VALID_GAMES: [&str; 450] = [
+pub const VALID_GAMES: [&str; 451] = [
     ".hack//INFECTION",
     "A Dance of Fire and Ice",
     "A Hat in Time",
@@ -83,7 +83,7 @@ pub const VALID_GAMES: [&str; 450] = [
     "Crystal Project",
     "Crystalis",
     "Cuphead",
-    "Dark Cloud",
+    "Dark Cloud 1",
     "Dark Souls II",
     "Dark Souls III",
     "Deep Rock Galactic",
@@ -449,4 +449,5 @@ pub const VALID_GAMES: [&str; 450] = [
     "Tetris Effect: Connected",
     "Twiddly Gems",
     "Lego Batman The Video Game",
+    "High Roller",
 ];
