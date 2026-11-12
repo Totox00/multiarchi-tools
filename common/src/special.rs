@@ -879,6 +879,15 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
                 if !game_options.contains_key(&key) {
                     game_options.insert(key, Yaml::from_str("off"));
                 }
+
+                if let Some(ap_item_notification) = game_options.get_mut(&Yaml::from_str("ap_item_notification")) {
+                    move_option_weight(ap_item_notification, "on", "popup");
+                    move_option_weight(ap_item_notification, "off", "none");
+                }
+
+                if let Some(local_item_notification) = game_options.get_mut(&Yaml::from_str("local_item_notification")) {
+                    move_option_weight(local_item_notification, "popup", "text");
+                }
             }
 
             if let Some(mut victory_road_access) = game_hash.remove(&Yaml::from_str("victory_road_access")) {
@@ -904,11 +913,6 @@ pub fn handle_special(doc: &mut Yaml, game: &Yaml, name: &str) -> Vec<String> {
             if let Some(mut randomize_palettes) = game_hash.remove(&Yaml::from_str("randomize_palettes")) {
                 move_option_weight(&mut randomize_palettes, "completely_random", "randomize");
                 game_hash.insert(Yaml::from_str("modify_palettes"), randomize_palettes);
-            }
-
-            if let Some(ap_item_notification) = game_hash.get_mut(&Yaml::from_str("ap_item_notification")) {
-                move_option_weight(ap_item_notification, "on", "popup");
-                move_option_weight(ap_item_notification, "off", "none");
             }
 
             if let Some(trainer_name) = game_hash.get(&Yaml::from_str("trainer_name")).and_then(|name| name.as_str())
